@@ -1,6 +1,6 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: install.py,v 1.1 2004/06/29 16:41:01 guido Exp $
+# $Id: install.py,v 1.2 2004/07/02 15:35:27 guido Exp $
 """Install for Silva Blog
 """
 
@@ -19,6 +19,8 @@ def install(root):
     root.manage_permission('Add Silva Software Packages',
                            ['Author', 'Editor', 'ChiefEditor', 'Manager'])
     root.manage_permission('Add Silva Software Releases',
+                           ['Author', 'Editor', 'ChiefEditor', 'Manager'])
+    root.manage_permission('Add Silva Software Files',
                            ['Author', 'Editor', 'ChiefEditor', 'Manager'])
 
     configureAddables(root)
@@ -39,20 +41,27 @@ def registerViews(reg):
                     ['edit', 'Container', 'SilvaSoftwarePackage'])
     reg.register('edit', 'Silva Software Release', 
                     ['edit', 'Container', 'SilvaSoftwareRelease'])
+    reg.register('edit', 'Silva Software File', 
+                    ['edit', 'Asset', 'SilvaSoftwareFile'])
     # public
     reg.register('public', 'Silva Software Package', 
                     ['public', 'SilvaSoftwarePackage'])
     reg.register('public', 'Silva Software Release', 
                     ['public', 'SilvaSoftwareRelease'])
+    reg.register('public', 'Silva Software File', 
+                    ['public', 'SilvaSoftwareFile'])
     # add
     reg.register('add', 'Silva Software Package', 
                     ['add', 'SilvaSoftwarePackage'])
     reg.register('add', 'Silva Software Release', 
                     ['add', 'SilvaSoftwareRelease'])
+    reg.register('add', 'Silva Software File', 
+                    ['add', 'SilvaSoftwareFile'])
     
 def unregisterViews(reg):
     for meta_type in ['Silva Software Package', 
-                        'Silva Software Release']:
+                        'Silva Software Release',
+                        'Silva Software File']:
         reg.unregister('edit', meta_type)
         reg.unregister('public', meta_type)
         reg.unregister('add', meta_type)
@@ -62,10 +71,11 @@ def configureAddables(root):
     current_addables = root.get_silva_addables_allowed_in_publication()
     new_addables = []
     for a in current_addables:
-        if a != 'Silva Software Release':
+        if a not in ['Silva Software Release', 'Silva Software File']:
             new_addables.append(a)
-    if 'Silva Software Package' not in new_addables:
-        new_addables.append('Silva Software Package')
+    for type in ['Silva Software Package']:
+        if type not in new_addables:
+            new_addables.append(type)
     root.set_silva_addables_allowed_in_publication(new_addables)
 
 def configureMetadata(root):
@@ -88,8 +98,9 @@ def configureMetadata(root):
     mapping = root.service_metadata.getTypeMapping()
     default = ''
     tm = (
-        {'type':'Silva Software Release',   'chain':'silva-content, silva-extra, silva-software'},
-        {'type':'Silva Software Package',           'chain':'silva-content, silva-extra'},
+        {'type':'Silva Software Release',       'chain':'silva-content, silva-extra, silva-software'},
+        {'type':'Silva Software Package',       'chain':'silva-content, silva-extra'},
+        {'type':'Silva Software File',          'chain':'silva-content, silva-extra'},
         )
     mapping.editMappings(default, tm)
 
