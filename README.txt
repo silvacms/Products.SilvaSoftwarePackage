@@ -3,10 +3,10 @@ See also LICENSE.txt
 
 Meta::
 
-  Valid for:  SilvaSoftwarePackage 0.3
+  Valid for:  SilvaSoftwarePackage 0.4
   Author:     Guido Wesdorp
   Email:      guido@infrae.com
-  CVS:        $Revision: 1.5 $
+  CVS:        $Revision: 1.6 $
 
   SilvaSoftwarePackage:
 
@@ -27,7 +27,7 @@ Meta::
 
     Requirements:
 
-        Silva 1.0 and it's requirements.
+        Silva 1.0 or 1.1 and it's requirements.
 
     Installation:
     
