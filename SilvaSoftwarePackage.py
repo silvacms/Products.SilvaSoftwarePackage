@@ -1,6 +1,6 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: SilvaSoftwarePackage.py,v 1.4 2004/09/03 10:49:36 guido Exp $
+# $Id: SilvaSoftwarePackage.py,v 1.5 2004/10/04 13:44:41 guido Exp $
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -36,12 +36,14 @@ class SilvaSoftwarePackage(Publication):
         """get all (published) software releases contained"""
         ret = []
         publishables = self.get_ordered_publishables()
+        test = [p.id for p in publishables]
         publishables = [obj for obj in publishables 
                           if obj.meta_type == 'Silva Software Release']
         publishables.sort(self._sort_by_version)
         if published:
             publishables = [obj for obj in publishables 
                               if obj.get_default().get_public_version()]
+        test.sort(self._sort_by_version_helper)
         return publishables
     
     def get_silva_addables_allowed_in_publication(self):
@@ -65,6 +67,9 @@ class SilvaSoftwarePackage(Publication):
         bbinding = self.service_metadata.getMetadata(b)
         aver = abinding.get('silva-software', 'releaseversion')
         bver = bbinding.get('silva-software', 'releaseversion')
+        return self._sort_by_version_helper(aver, bver)
+
+    def _sort_by_version_helper(self, aver, bver):
         # first split the versions into tuples and compare the numbers
         atup = aver.split('.')
         btup = bver.split('.')
@@ -82,11 +87,11 @@ class SilvaSoftwarePackage(Publication):
         # now check for the complex bit at the end
         match = self._lastbitreg.search(atup[i])
         anum = match.group(1)
-        atype = match.group(2)
+        atype = match.group(2).strip()
         aver = match.group(3)
         match = self._lastbitreg.search(btup[i])
         bnum = match.group(1)
-        btype = match.group(2)
+        btype = match.group(2).strip()
         bver = match.group(3)
         if anum > bnum:
             return -1
@@ -100,6 +105,8 @@ class SilvaSoftwarePackage(Publication):
                 return -1
             elif btype > atype:
                 return 1
+        elif not atype and btype:
+            return -1
         if aver or bver:
             if aver and not bver:
                 return -1
