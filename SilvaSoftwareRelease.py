@@ -1,6 +1,6 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: SilvaSoftwareRelease.py,v 1.1 2004/06/29 16:41:01 guido Exp $
+# $Id: SilvaSoftwareRelease.py,v 1.2 2004/07/02 16:15:37 guido Exp $
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -12,8 +12,6 @@ from Products.Silva.Publication import Publication
 from Products.Silva.interfaces import IPublication, IContainer, IAsset, IFile
 from DateTime import DateTime
 from Products.Silva.ExtensionRegistry import extensionRegistry
-
-import re
 
 icon = "www/silvageneric.gif"
 
