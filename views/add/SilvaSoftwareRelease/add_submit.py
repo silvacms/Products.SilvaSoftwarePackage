@@ -23,19 +23,12 @@ if id_check != id.OK:
         message=view.get_id_status_text(id))
 id = str(id)
 
-# try to cope with absence of title in form
-if result.has_key('object_title'):
-    title = result['object_title']
-    del result['object_title']
-else:
-    title = ""
-
 # process data in result and add using validation result
 view = context
 
 try:
-    model.manage_addProduct['SilvaSoftwarePackage'].manage_addSilvaSoftwareRelease(
-                                        id, title, version=result['version'])
+    # gets only an id ('version')
+    model.manage_addProduct['SilvaSoftwarePackage'].manage_addSilvaSoftwareRelease(id)
 except IOError, e:
     return view.add_form(message_type="error", message=e)
 except TypeError, e:

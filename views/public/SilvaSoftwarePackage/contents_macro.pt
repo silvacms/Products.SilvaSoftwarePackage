@@ -1,26 +1,32 @@
 <html>
   <body>
     <div metal:define-macro="package">
-      <table class="list" tal:define="mangle modules/Products/Silva/mangle">
+      <table class="silvatable list" tal:define="mangle modules/Products/Silva/mangle">
         <thead>
           <tr>
-            <th>Release title</th>
             <th>Release version</th>
             <th>Release date</th>
+            <th>Release files</th>
           </tr>
         </thead>
         <tr tal:repeat="release python:model.get_releases(get_public)">
-          <tal:block define="relbinding python: here.get_metadata(release)">
-            <td>
-              <a tal:condition="get_public" 
-                  tal:attributes="href release/absolute_url" tal:content="release/get_title" />
-              <a tal:condition="not: get_public"
-                  tal:attributes="href string:${release/absolute_url}/edit/tab_preview"
-                  tal:content="release/get_title" />
-            </td>
-            <td tal:content="python: relbinding.get('silva-software')['releaseversion']" />
-            <td tal:content="python: mangle.DateTime(release.get_default().get_public_version_publication_datetime()).toStr()" />
-          </tal:block>
+          <td tal:define="title python: '%s %s' % (model.get_title(), release.id)">
+            <a tal:condition="get_public" 
+                tal:attributes="href release/absolute_url" 
+                tal:content="title">
+            </a>
+            <a tal:condition="not: get_public"
+                tal:attributes="href string:${release/absolute_url}/edit/tab_preview"
+                tal:content="title">
+            </a>
+          </td>
+          <td tal:content="python: mangle.DateTime(release.get_default().get_public_version_publication_datetime()).toStr()" />
+          <td tal:define="files python: here.get_software_files(release)">
+            <tal:block repeat="file files">
+              <a tal:attributes="href file/absolute_url"
+                  tal:content="file/get_filename">filename</a><br />
+            </tal:block>
+          </td>
         </tr>
       </table>
     </div>

@@ -1,6 +1,6 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: __init__.py,v 1.2 2004/07/02 15:35:27 guido Exp $
+# $Id: __init__.py,v 1.3 2004/10/12 15:18:54 guido Exp $
 
 from Products.Silva.ExtensionRegistry import extensionRegistry
 from Products.Silva.ImporterRegistry import importer_registry
@@ -13,9 +13,6 @@ import SilvaSoftwarePackage
 import SilvaSoftwareRelease
 import SilvaSoftwareService
 import SilvaSoftwareFile
-
-from Products.Formulator.FieldRegistry import FieldRegistry
-from VersionField import VersionField
 
 def initialize(context):
     extensionRegistry.register(
@@ -30,7 +27,7 @@ def initialize(context):
         )
 
     registerDirectory('views', globals())
-    FieldRegistry.registerField(VersionField,
-                                'www/StringField.gif')
-    
-    FieldRegistry.initializeFields()
+
+from AccessControl import allow_module
+
+allow_module('Products.SilvaSoftwarePackage.SilvaSoftwareRelease')

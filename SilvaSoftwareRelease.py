@@ -1,8 +1,8 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: SilvaSoftwareRelease.py,v 1.4 2004/08/17 12:27:50 roman Exp $
+# $Id: SilvaSoftwareRelease.py,v 1.5 2004/10/12 15:18:54 guido Exp $
 from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
+from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.SilvaMetadata.Compatibility import registerTypeForMetadata
 from Products.Silva import SilvaPermissions
@@ -14,7 +14,19 @@ from DateTime import DateTime
 from Products.Silva.ExtensionRegistry import extensionRegistry
 from interfaces import ISilvaSoftwareFile
 
+module_security = ModuleSecurityInfo('Products.SilvaSoftwarePackage.SilvaSoftwareRelease')
+
+import re
+
 icon = "www/software_release.png"
+
+module_security.declareProtected(SilvaPermissions.ReadSilvaContent,
+                                    'test_version_string')
+_version_reg = re.compile('^[0-9]+(\.[0-9]+)*(\.[0-9]+)?((a|b|rc)[0-9]*)?$')
+def test_version_string(version):
+    """test whether the version conforms to the required format"""
+    if not _version_reg.search(version):
+        raise TypeError, 'Version string has incorrect format!'
 
 class SilvaSoftwareRelease(Publication):
     """Silva Software Release"""
@@ -56,23 +68,24 @@ class SilvaSoftwareRelease(Publication):
 
 InitializeClass(SilvaSoftwareRelease)
 
-def manage_addSilvaSoftwareRelease(self, id, title, version, REQUEST=None):
-    if not mangle.Id(self, id).isValid():
+def manage_addSilvaSoftwareRelease(self, version, REQUEST=None):
+    if not mangle.Id(self, version).isValid():
         return
-    o = SilvaSoftwareRelease(id)
-    self._setObject(id, o)
-    object = getattr(self, id)
-    object.set_title(title)
+
+    # see whether the id is correct for usage as version
+    test_version_string(version)
+        
+    o = SilvaSoftwareRelease(version)
+    self._setObject(version, o)
+    object = getattr(self, version)
+    object.set_title(version)
     
     binding = self.service_metadata.getMetadata(object)
-    errors = binding.setValues('silva-software', {'releaseversion': version.encode('UTF-8')})
-    if errors is not None:
-        raise TypeError, errors['releaseversion']
-
+    
     # add index document
-    object.manage_addProduct['SilvaDocument'].manage_addDocument('index', title)
+    object.manage_addProduct['SilvaDocument'].manage_addDocument('index', version)
 
-    add_and_edit(self, id, REQUEST)
+    add_and_edit(self, version, REQUEST)
     return ''
 
 manage_addSilvaSoftwareReleaseForm = PageTemplateFile("www/silvaSoftwareReleaseAdd", 

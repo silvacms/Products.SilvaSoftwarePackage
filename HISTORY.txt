@@ -1,0 +1,22 @@
+Copyright (c) 2002-2004 Infrae. All rights reserved.
+See also LICENSE.txt
+
+SilvaSoftwarePackage changes
+
+  0.4
+
+    Bugs fixed:
+
+      * Installation will now create a service_software automatically.
+
+      * It's no longer possible to add SilvaSoftwareFiles to 
+        SilvaSoftwarePackage objects.
+
+    Features added:
+
+      * The filenames are now shown in the SilvaSoftwarePackage views, not
+        only from SilvaSoftwareRelease (less clicking for the client).
+
+      * Instead of filling in an id, title and version, only the version can
+        be filled in when a client creates a SilvaSoftwareRelease, this version
+        is also used as id and to generate nice looking titles.

@@ -1,6 +1,6 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: SilvaSoftwarePackage.py,v 1.5 2004/10/04 13:44:41 guido Exp $
+# $Id: SilvaSoftwarePackage.py,v 1.6 2004/10/12 15:18:54 guido Exp $
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -15,6 +15,7 @@ from DateTime import DateTime
 from Products.Silva.ExtensionRegistry import extensionRegistry
 
 from Products.ProxyIndex.ProxyIndex import RecordStyle
+from Products.SilvaSoftwarePackage.interfaces import ISilvaSoftwareFile
 
 import re
 
@@ -54,6 +55,7 @@ class SilvaSoftwarePackage(Publication):
         for addable in addables:
             if (addable.has_key('instance') and
                     IAsset.isImplementedByInstancesOf(addable['instance']) and
+                    not ISilvaSoftwareFile.isImplementedByInstancesOf(addable['instance']) and
                     self.service_view_registry.has_view('add', 
                         addable['name'])):
                 result.append(addable['name'])
@@ -63,11 +65,7 @@ class SilvaSoftwarePackage(Publication):
     _lastbitreg = re.compile('^([0-9]*)([a-z]*)([0-9]*?)$')
     def _sort_by_version(self, a, b):
         """comparison function for sorting a list of Release objects"""
-        abinding = self.service_metadata.getMetadata(a)
-        bbinding = self.service_metadata.getMetadata(b)
-        aver = abinding.get('silva-software', 'releaseversion')
-        bver = bbinding.get('silva-software', 'releaseversion')
-        return self._sort_by_version_helper(aver, bver)
+        return self._sort_by_version_helper(a.id, b.id)
 
     def _sort_by_version_helper(self, aver, bver):
         # first split the versions into tuples and compare the numbers
@@ -119,7 +117,7 @@ class SilvaSoftwarePackage(Publication):
         return 0
 
     security.declareProtected(SilvaPermissions.ChangeSilvaContent,
-                                'get_software_files')
+                                'get_software_file_paths')
     def get_software_file_paths(self):
         """Get all contained software files"""
         query = {'meta_type': 'Silva Software File',

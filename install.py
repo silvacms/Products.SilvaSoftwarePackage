@@ -1,6 +1,6 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: install.py,v 1.2 2004/07/02 15:35:27 guido Exp $
+# $Id: install.py,v 1.3 2004/10/12 15:18:54 guido Exp $
 """Install for Silva Blog
 """
 
@@ -25,6 +25,13 @@ def install(root):
 
     configureAddables(root)
     configureMetadata(root)
+
+    # add a Software service if none's available
+    if not hasattr(root, 'service_software'):
+        root.manage_addProduct['SilvaSoftwarePackage'].\
+                    manage_addSilvaSoftwareService('service_software',
+                                                    'Software Service',
+                                                    'service_software')
 
 def uninstall(root):
     unregisterViews(root.service_view_registry)
@@ -87,18 +94,12 @@ def configureMetadata(root):
     ssp_docs = path.join(ssp_home, 'doc')
 
     collection = root.service_metadata.getCollection()
-    if 'silva-software' in collection.objectIds():
-        collection.manage_delObjects(['silva-software'])
-
-    xml_file = path.join(ssp_docs, 'silva-software.xml')
-    fh = open(xml_file, 'r')        
-    collection.importSet(fh)
 
     # (re) set the default type mapping
     mapping = root.service_metadata.getTypeMapping()
     default = ''
     tm = (
-        {'type':'Silva Software Release',       'chain':'silva-content, silva-extra, silva-software'},
+        {'type':'Silva Software Release',       'chain':'silva-content, silva-extra'},
         {'type':'Silva Software Package',       'chain':'silva-content, silva-extra'},
         {'type':'Silva Software File',          'chain':'silva-content, silva-extra'},
         )
