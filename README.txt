@@ -6,7 +6,7 @@ Meta::
   Valid for:  SilvaSoftwarePackage 0.1
   Author:     Guido Wesdorp
   Email:      guido@infrae.com
-  CVS:        $Revision: 1.2 $
+  CVS:        $Revision: 1.3 $
 
   SilvaSoftwarePackage:
 
@@ -34,6 +34,31 @@ Meta::
         Installation is a matter of unpacking the tarball into Zope's Products
         directory, restarting Zope and pressing the 'Install' button in the
         SilvaSoftwarePackage box in 'service_extensions' in the Silva root.
+
+  Using:
+
+    First create a SilvaSoftwarePackage and edit it's default document (this
+    will be the 'frontpage' of the software package, so it should contain some
+    general information about the piece of software). Add a (number of)
+    SilvaSoftwareRelease(s) to the package, those will contain different
+    versions of the package. Edit the default documents in those, they should
+    contain information more specific to the release. Add a (number of)
+    SilvaSoftwareFile object(s) to the release, this/these will be the actual
+    downloadable file(s). When done, publish the default documents and the
+    software package is publically viewable.
+
+    As you will notice both the SilvaSoftwarePackage and SilvaSoftwareRelease
+    objects can contain other documents and asset objects (files etc.), this
+    allows you to build a more complex public view: you can add licenses,
+    screenshots etc.  to the package/release this way. Also this way you can
+    add a new document if you, for some reason, removed the original one.  Note
+    that SilvaFile and SilvaAsset objects will not be shown in the table of
+    downloadable files: this will only display the SilvaSoftwareFile type
+    objects in the release.
+    
+    To publish a SilvaSoftwarePackage or a SilvaSoftwareRelease you will have
+    to publish the default document. If this document is not published or
+    deleted, the package will not be viewable by the public.
 
   Questions and remarks:
 
