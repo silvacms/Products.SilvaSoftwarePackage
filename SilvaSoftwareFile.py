@@ -11,11 +11,12 @@ from Products.Silva import SilvaPermissions
 from Products.Silva.File import ZODBFile, FileSystemFile
 from Products.Silva.interfaces import IFile, IAsset
 from Products.Silva.helpers import add_and_edit
+from interfaces import ISilvaSoftwareFile
 
 class SilvaSoftwareFile(SilvaObject):
     security = ClassSecurityInfo()
     meta_type = 'Silva Software File'
-    __implements__ = (WriteLockInterface, IFile)
+    __implements__ = (WriteLockInterface, ISilvaSoftwareFile, IFile)
 
     security.declareProtected(SilvaPermissions.View, 'index_html')
     def index_html(self, *args, **kwargs):
@@ -38,12 +39,16 @@ InitializeClass(SilvaSoftwareFile)
 class ZODBSoftwareFile(ZODBFile, SilvaSoftwareFile):
     """File object that has some extra features"""
 
+    __implements__ = (WriteLockInterface, ISilvaSoftwareFile, IFile)
+
     index_html = SilvaSoftwareFile.index_html
     
 InitializeClass(ZODBSoftwareFile)
 
 class FileSystemSoftwareFile(FileSystemFile, SilvaSoftwareFile):
     """File object that has some extra features"""
+
+    __implements__ = (WriteLockInterface, ISilvaSoftwareFile, IFile)
 
     index_html = SilvaSoftwareFile.index_html
 

@@ -1,6 +1,6 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: SilvaSoftwareRelease.py,v 1.2 2004/07/02 16:15:37 guido Exp $
+# $Id: SilvaSoftwareRelease.py,v 1.3 2004/07/02 16:28:16 guido Exp $
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -9,9 +9,10 @@ from Products.Silva import SilvaPermissions
 from Products.Silva.helpers import add_and_edit
 from Products.Silva import mangle
 from Products.Silva.Publication import Publication
-from Products.Silva.interfaces import IPublication, IContainer, IAsset, IFile
+from Products.Silva.interfaces import IPublication, IContainer, IAsset
 from DateTime import DateTime
 from Products.Silva.ExtensionRegistry import extensionRegistry
+from interfaces import ISilvaSoftwareFile
 
 icon = "www/silvageneric.gif"
 
@@ -44,7 +45,7 @@ class SilvaSoftwareRelease(Publication):
         """returns a list with all the contained files"""
         ret = []
         for obj in self.objectValues():
-            if IFile.isImplementedBy(obj):
+            if ISilvaSoftwareFile.isImplementedBy(obj):
                 ret.append(obj)
         return ret
 
