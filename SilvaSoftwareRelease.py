@@ -1,6 +1,6 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: SilvaSoftwareRelease.py,v 1.5 2004/10/12 15:18:54 guido Exp $
+# $Id: SilvaSoftwareRelease.py,v 1.6 2005/03/04 15:35:03 guido Exp $
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -14,7 +14,8 @@ from DateTime import DateTime
 from Products.Silva.ExtensionRegistry import extensionRegistry
 from interfaces import ISilvaSoftwareFile
 
-module_security = ModuleSecurityInfo('Products.SilvaSoftwarePackage.SilvaSoftwareRelease')
+module_security = ModuleSecurityInfo(
+    'Products.SilvaSoftwarePackage.SilvaSoftwareRelease')
 
 import re
 
@@ -59,6 +60,7 @@ class SilvaSoftwareRelease(Publication):
         for obj in self.objectValues():
             if ISilvaSoftwareFile.isImplementedBy(obj):
                 ret.append(obj)
+        ret.sort(lambda a, b: cmp(a.id, b.id))
         return ret
 
     def is_transparent(self):
@@ -83,12 +85,14 @@ def manage_addSilvaSoftwareRelease(self, version, REQUEST=None):
     binding = self.service_metadata.getMetadata(object)
     
     # add index document
-    object.manage_addProduct['SilvaDocument'].manage_addDocument('index', version)
+    object.manage_addProduct['SilvaDocument'].manage_addDocument(
+                                                    'index', version)
 
     add_and_edit(self, version, REQUEST)
     return ''
 
-manage_addSilvaSoftwareReleaseForm = PageTemplateFile("www/silvaSoftwareReleaseAdd", 
-                globals(), __name__ = 'manage_addSilvaSoftwareReleaseForm')
+manage_addSilvaSoftwareReleaseForm = PageTemplateFile(
+                "www/silvaSoftwareReleaseAdd", globals(), 
+                __name__ = 'manage_addSilvaSoftwareReleaseForm')
 
 registerTypeForMetadata(SilvaSoftwareRelease.meta_type)
