@@ -20,3 +20,6 @@ SilvaSoftwarePackage changes
       * Instead of filling in an id, title and version, only the version can
         be filled in when a client creates a SilvaSoftwareRelease, this version
         is also used as id and to generate nice looking titles.
+
+      * Paths are now sorted alphabetically in the stats tab of the 
+        SilvaSoftwareService.

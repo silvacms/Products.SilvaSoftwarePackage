@@ -225,7 +225,9 @@ class SilvaSoftwareService(SimpleItem):
                                 'get_paths')
     def get_paths(self):
         """returns all the paths for which stats are available"""
-        return self._stats_by_path.keys()
+        paths = self._stats_by_path.keys()
+        paths.sort()
+        return paths
 
     security.declareProtected(SilvaPermissions.ChangeSilvaContent,
                                 'stats_by_path')
