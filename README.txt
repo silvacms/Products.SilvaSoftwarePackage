@@ -6,7 +6,7 @@ Meta::
   Valid for:  SilvaSoftwarePackage 0.1
   Author:     Guido Wesdorp
   Email:      guido@infrae.com
-  CVS:        $Revision: 1.1 $
+  CVS:        $Revision: 1.2 $
 
   SilvaSoftwarePackage:
 
@@ -25,9 +25,15 @@ Meta::
 
   Installing:
 
-    Installation is a matter of unpacking the tarball into Zope's Products
-    directory, restarting Zope and pressing the 'Install' button in the
-    SilvaSoftwarePackage box in 'service_extensions' in the Silva root.
+    Requirements:
+
+        Silva 1.0 and it's requirements.
+
+    Installation:
+    
+        Installation is a matter of unpacking the tarball into Zope's Products
+        directory, restarting Zope and pressing the 'Install' button in the
+        SilvaSoftwarePackage box in 'service_extensions' in the Silva root.
 
   Questions and remarks:
 
