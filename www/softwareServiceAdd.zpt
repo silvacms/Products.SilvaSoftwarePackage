@@ -1,7 +1,7 @@
 <!--
 Copyright (c) 2002-2004 Infrae. All rights reserved.
 See also LICENSE.txt
-Version of this file: $Revision: 1.1 $
+Version of this file: $Revision: 1.2 $
 -->
 <h1 tal:replace="structure here/manage_page_header">Header</h1>
 
@@ -21,9 +21,9 @@ and provides some views on that logfile.
         Id
       </div>
     </td>
-      <td align="left" valign="top">
-        <input type="text" name="id" size="40" value="service_software" disabled="disabled" />
-      </td>
+    <td align="left" valign="top">
+      <input type="text" name="id" size="40" value="service_software" disabled="disabled" />
+    </td>
   </tr>
   <tr>
     <td align="left" valign="top">
@@ -31,19 +31,20 @@ and provides some views on that logfile.
         Title
       </div>
     </td>
-      <td align="left" valign="top">
-        <input type="text" name="title" size="40" value="Silva Software Service" />
-      </td>
+    <td align="left" valign="top">
+      <input type="text" name="title" size="40" value="Silva Software Service" />
+    </td>
   </tr>
   <tr>
     <td align="left" valign="top">
       <div class="form-label">
-        Path to logfile
+        Path to logfile<br />
+        (absolute or relative from $INSTANCE_HOME/var)
       </div>
     </td>
-      <td align="left" valign="top">
-        <input type="text" name="logfile_path" size="40" value="var/software_log" />
-      </td>
+    <td align="left" valign="top">
+      <input type="text" name="logfile_path" size="40" value="software_log" />
+    </td>
   </tr>
   <tr>
     <td colspan="2" align="left" valign="top">
