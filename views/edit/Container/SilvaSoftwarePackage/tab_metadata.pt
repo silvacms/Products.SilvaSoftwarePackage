@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html tal:omit-tag=""
+  lang="en"
+  xml:lang="en"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:notal="http://www.infrae.com/silva/notal"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  tal:define="
+    global vein string:properties;
+">
+
+<metal:block use-macro="here/macro_index/macros/master">
+<metal:block fill-slot="main">
+<metal:block use-macro="here/aq_parent/tab_metadata/macros/master">
+  <metal:block fill-slot="top_controls">
+    <a class="transport"
+      style="float:right;"
+      href="tab_stats"
+      title="view download statistics: alt-v"
+      accesskey="v">
+      <u>v</u>iew download statistics
+    </a>
+  </metal:block>
+</metal:block>
+</metal:block>
+</metal:block>
+
+</html>

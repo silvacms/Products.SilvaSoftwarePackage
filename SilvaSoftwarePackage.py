@@ -1,6 +1,6 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: SilvaSoftwarePackage.py,v 1.1 2004/06/29 16:41:01 guido Exp $
+# $Id: SilvaSoftwarePackage.py,v 1.2 2004/07/28 17:29:41 guido Exp $
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -114,6 +114,16 @@ class SilvaSoftwarePackage(Publication):
             if bver < aver:
                 return -1
         return 0
+
+    security.declareProtected(SilvaPermissions.ChangeSilvaContent,
+                                'get_software_files')
+    def get_software_file_paths(self):
+        """Get all contained software files"""
+        query = {'meta_type': 'Silva Software File',
+                    'path': '/'.join(self.getPhysicalPath())}
+        result = self.service_catalog(query)
+        result = [b.getPath() for b in result]
+        return result
 
 InitializeClass(SilvaSoftwarePackage)
 
