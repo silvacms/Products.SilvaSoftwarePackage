@@ -1,6 +1,6 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: SilvaSoftwarePackage.py,v 1.6 2004/10/12 15:18:54 guido Exp $
+# $Id: SilvaSoftwarePackage.py,v 1.7 2004/12/15 15:36:50 guido Exp $
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -37,14 +37,13 @@ class SilvaSoftwarePackage(Publication):
         """get all (published) software releases contained"""
         ret = []
         publishables = self.get_ordered_publishables()
-        test = [p.id for p in publishables]
         publishables = [obj for obj in publishables 
                           if obj.meta_type == 'Silva Software Release']
         publishables.sort(self._sort_by_version)
         if published:
-            publishables = [obj for obj in publishables 
+            publishables = [obj for obj in publishables
                               if obj.get_default().get_public_version()]
-        test.sort(self._sort_by_version_helper)
+        publishables.sort(self._sort_by_version)
         return publishables
     
     def get_silva_addables_allowed_in_publication(self):
@@ -84,10 +83,14 @@ class SilvaSoftwarePackage(Publication):
                 return 1
         # now check for the complex bit at the end
         match = self._lastbitreg.search(atup[i])
+        if not match:
+            raise Exception, 'Version not valid: %s' % aver
         anum = match.group(1)
         atype = match.group(2).strip()
         aver = match.group(3)
         match = self._lastbitreg.search(btup[i])
+        if not match:
+            raise Exception, 'Version not valid: %s' % bver
         bnum = match.group(1)
         btype = match.group(2).strip()
         bver = match.group(3)
