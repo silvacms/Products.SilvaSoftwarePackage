@@ -1,7 +1,7 @@
 <!--
 Copyright (c) 2002-2004 Infrae. All rights reserved.
 See also LICENSE.txt
-Version of this file: $Revision: 1.2 $
+Version of this file: $Revision: 1.3 $
 -->
 <h1 tal:replace="structure here/manage_page_header">Header</h1>
 
@@ -32,7 +32,7 @@ Version of this file: $Revision: 1.2 $
     </tr>
     <tal:block repeat="path paths">
       <tr tal:define="record python:here.service_software.stats_by_path(path)">
-        <td class="form-text">
+        <td class="form-text" tal:on-error="path">
           <a tal:attributes="href python: '%s/edit/tab_stats' % (
                 here.restrictedTraverse(path.split('/')).absolute_url())" 
               tal:content="path">path</a>
