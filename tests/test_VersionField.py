@@ -1,16 +1,27 @@
 # Copyright (c) 2002-2004 Infrae. All rights reserved.
 # See also LICENSE.txt
-# $Revision: 1.1 $
+# $Revision: 1.2 $
 import os, sys
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
-from Testing.ZopeTestCase import ZopeTestCase
+import SilvaTestCase
 from Products.SilvaSoftwarePackage.VersionField import test_version_string
 
-class VersionFieldTestCase(ZopeTestCase):
+from Testing import ZopeTestCase
+
+_user_name = ZopeTestCase._user_name
+
+class VersionFieldTestCase(SilvaTestCase.SilvaTestCase):
     """Test simple membership.
     """
+
+    def afterSetUp(self):
+        ZopeTestCase.installProduct('SilvaSoftwarePackage')
+        self.root.service_extensions.install('SilvaSoftwarePackage')
+        self.softwarepackage = self.root.\
+                manage_addProduct['SilvaSoftwarePackage'].\
+                manage_addSilvaSoftwarePackage('sp', 'SP')
 
     def test_test_version_string(self):
         """test whether the version string test works"""
@@ -37,6 +48,39 @@ class VersionFieldTestCase(ZopeTestCase):
                     test_version_string(test)
                 except TypeError, e:
                     self.fail(e)
+
+    def test_sort_by_version(self):
+        sp = self.root.sp
+        
+        # second should always be higher
+        versiontuples = [('0', '1'),
+                            ('0.1a', '0.1b'),
+                            ('0.1b', '0.1b2'),
+                            ('1.3423.342342a1', '1.3423.342342a2'),
+                            ('1.0a1', '1.0a2'),
+                            ('1.0b2', '1.0rc1'),
+                            ('1.0rc2', '1.0'),
+                            ('1.0.0.0.1b1', '1.0.0.0.1b2'),
+                            ('1.0.0.0.1a2', '1.0.0.0.1b1'),
+                            ('1.0.0.0.1b2', '1.0.0.0.1rc1'),
+                            ('1.0.0.0.1rc1', '1.0.0.0.1'),
+                            ('1.0.2', '1.1b1'),
+                            ]
+        
+        for version1, version2 in versiontuples:
+            sr1 = self._add_software_release(sp, 'sr1', version1)
+            sr2 = self._add_software_release(sp, 'sr2', version2)
+            try:
+                self.assertEquals(sp._sort_by_version(sr1, sr2), 1)
+            except AssertionError, e:
+                self.fail('AssertionError: %s - (%s, %s)' % (e, version1, version2))
+            sp.manage_delObjects([sr1.id, sr2.id])
+        
+    def _add_software_release(self, sp, id, version):
+        sp.manage_addProduct['SilvaSoftwarePackage'].\
+            manage_addSilvaSoftwareRelease(id, id, version)
+        sr = getattr(sp, id)
+        return sr
     
 if __name__ == '__main__':
     framework()
@@ -44,6 +88,6 @@ else:
     import unittest
     def test_suite():
         suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(SimpleMembershipTestCase))
+        suite.addTest(unittest.makeSuite(VersionFieldTestCase))
         return suite
 

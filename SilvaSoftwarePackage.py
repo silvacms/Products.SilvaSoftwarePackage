@@ -1,6 +1,6 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: SilvaSoftwarePackage.py,v 1.3 2004/08/17 12:27:50 roman Exp $
+# $Id: SilvaSoftwarePackage.py,v 1.4 2004/09/03 10:49:36 guido Exp $
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -58,7 +58,7 @@ class SilvaSoftwarePackage(Publication):
         return result
 
     _numreg = re.compile('^[0-9]+$')
-    _lastbitreg = re.compile('^([0-9]*)([a-z]*)([0-9]*)$')
+    _lastbitreg = re.compile('^([0-9]*)([a-z]*)([0-9]*?)$')
     def _sort_by_version(self, a, b):
         """comparison function for sorting a list of Release objects"""
         abinding = self.service_metadata.getMetadata(a)
@@ -80,10 +80,6 @@ class SilvaSoftwarePackage(Publication):
             elif int(atup[i]) < int(btup[i]):
                 return 1
         # now check for the complex bit at the end
-        if self._numreg.search(atup[i]) and not self._numreg.search(btup[i]):
-            return -1
-        elif self._numreg.search(btup[i]) and not self._numreg.search(atup[i]):
-            return 1
         match = self._lastbitreg.search(atup[i])
         anum = match.group(1)
         atype = match.group(2)
@@ -98,7 +94,7 @@ class SilvaSoftwarePackage(Publication):
             return 1
         if atype:
             if not btype:
-                return -1
+                return 1
             # it seems we can just do a string compare here, 'a' < 'b' < 'rc'
             if atype > btype:
                 return -1
