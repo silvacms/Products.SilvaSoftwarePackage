@@ -173,7 +173,7 @@ class SilvaSoftwareService(SimpleItem):
         try:
             self._parse_helper(fp)
             # back the logfile up
-            currtime = time.time().strftime('%Y%m%d-%H%M%S')
+            currtime = time.strftime('%Y%m%d-%H%M%S')
             bakpath = '%s_%s.bak' % (self.logfile_path, currtime)
             bfp = open(bakpath, 'w')
             fp.seek(0)
