@@ -184,6 +184,7 @@ class SilvaSoftwareService(SimpleItem):
                 bfp.write(line)
             bfp.close()
             fp.truncate(0)
+            self._seek = 0
         finally:
             fcntl.flock(fileno, fcntl.LOCK_UN)
 
