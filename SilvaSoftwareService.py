@@ -10,6 +10,7 @@ from Products.Silva import SilvaPermissions
 import fcntl
 import re
 import os
+import time
 
 class Permissions:
     view_software_data = 'View Silva software data'
@@ -172,21 +173,17 @@ class SilvaSoftwareService(SimpleItem):
         try:
             self._parse_helper(fp)
             # back the logfile up
-            i = 0
+            currtime = time.time().strftime('%Y%m%d-%H%M%S')
+            bakpath = '%s_%s.bak' % (self.logfile_path, currtime)
+            bfp = open(bakpath, 'w')
+            fp.seek(0)
             while 1:
-                bakpath = '%s_%s.bak' % (self.logfile_path, i)
-                if not os.path.exists(bakpath):
-                    bfp = open(bakpath, 'w')
-                    fp.seek(0)
-                    while 1:
-                        line = fp.readline()
-                        if not line:
-                            break
-                        bfp.write(line)
-                    bfp.close()
-                    fp.truncate(0)
+                line = fp.readline()
+                if not line:
                     break
-                i += 1
+                bfp.write(line)
+            bfp.close()
+            fp.truncate(0)
         finally:
             fcntl.flock(fileno, fcntl.LOCK_UN)
 
