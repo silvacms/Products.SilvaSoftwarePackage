@@ -24,7 +24,7 @@ class SilvaSoftwareService(SimpleItem):
                       {'label': 'Edit', 'action': 'edit_tab'},
                       ) + SimpleItem.manage_options
 
-    manage_main = edit_tab = PageTemplateFile('www/softwareServiceTab',
+    manage_main = edit_tab = PageTemplateFile('www/softwareServiceEditTab',
                                               globals(), __name__='edit_tab')
 
     def __init__(self, id, title, logfile_path):
@@ -70,6 +70,14 @@ class SilvaSoftwareService(SimpleItem):
             fp.write(logline)
         finally:
             fcntl.flock(fp, fcntl.LOCK_UN)
+
+    security.declareProtected(Permissions.edit_software_services,
+                                'manage_edit')
+    def manage_edit(self, title, logfile_path):
+        """update from the edit tab"""
+        self.title = title
+        self.logfile_path = logfile_path
+        return self.edit_tab(manage_tabs_message='Data updated')
 
 InitializeClass(SilvaSoftwareService)
 
