@@ -1,6 +1,6 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: SilvaSoftwareRelease.py,v 1.6 2005/03/04 15:35:03 guido Exp $
+# $Id: SilvaSoftwareRelease.py,v 1.7 2005/03/14 11:22:58 guido Exp $
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -12,7 +12,7 @@ from Products.Silva.Publication import Publication
 from Products.Silva.interfaces import IPublication, IContainer, IAsset
 from DateTime import DateTime
 from Products.Silva.ExtensionRegistry import extensionRegistry
-from interfaces import ISilvaSoftwareFile
+from interfaces import ISilvaSoftwareFile, ISilvaSoftwareRelease
 
 module_security = ModuleSecurityInfo(
     'Products.SilvaSoftwarePackage.SilvaSoftwareRelease')
@@ -34,7 +34,7 @@ class SilvaSoftwareRelease(Publication):
 
     security = ClassSecurityInfo()
     meta_type = 'Silva Software Release'
-    __implements__ = (IPublication, IContainer)
+    __implements__ = (IPublication, IContainer, ISilvaSoftwareRelease)
 
     def __init__(self, id):
         SilvaSoftwareRelease.inheritedAttribute('__init__')(self, id)

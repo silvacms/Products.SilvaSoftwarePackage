@@ -1,13 +1,12 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: SilvaSoftwarePackage.py,v 1.7 2004/12/15 15:36:50 guido Exp $
+# $Id: SilvaSoftwarePackage.py,v 1.8 2005/03/14 11:22:58 guido Exp $
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from Products.SilvaMetadata.Compatibility import registerTypeForMetadata
 from Products.Silva import SilvaPermissions
 from Products.Silva.helpers import add_and_edit
-from Products.Silva.SilvaObject import SilvaObject
 from Products.Silva.Publication import Publication
 from Products.Silva.interfaces import IContainer, IPublication, IAsset
 from Products.Silva import mangle
@@ -15,7 +14,8 @@ from DateTime import DateTime
 from Products.Silva.ExtensionRegistry import extensionRegistry
 
 from Products.ProxyIndex.ProxyIndex import RecordStyle
-from Products.SilvaSoftwarePackage.interfaces import ISilvaSoftwareFile
+from Products.SilvaSoftwarePackage.interfaces import \
+    ISilvaSoftwarePackage, ISilvaSoftwareFile
 
 import re
 
@@ -26,7 +26,7 @@ class SilvaSoftwarePackage(Publication):
 
     security = ClassSecurityInfo()
     meta_type = 'Silva Software Package'
-    __implements__ = (IContainer, IPublication)
+    __implements__ = (IContainer, IPublication, ISilvaSoftwarePackage)
 
     def __init__(self, id):
         Publication.__init__(self, id)
