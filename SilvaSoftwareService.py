@@ -86,11 +86,12 @@ class SilvaSoftwareService(SimpleItem):
             fp = open(self.logfile_path, 'a')
         except IOError:
             fp = open(self.logfile_path, 'w')
-        fcntl.flock(fp, fcntl.LOCK_EX)
+        fileno = fp.fileno()
+        fcntl.flock(fileno, fcntl.LOCK_EX)
         try:
             fp.write(logline)
         finally:
-            fcntl.flock(fp, fcntl.LOCK_UN)
+            fcntl.flock(fileno, fcntl.LOCK_UN)
 
     security.declareProtected(Permissions.edit_software_services,
                                 'view_log')
