@@ -1,6 +1,6 @@
 # Copyright (c) 2004 Guido Wesdorp. All rights reserved.
 # See also LICENSE.txt
-# $Id: SilvaSoftwarePackage.py,v 1.2 2004/07/28 17:29:41 guido Exp $
+# $Id: SilvaSoftwarePackage.py,v 1.3 2004/08/17 12:27:50 roman Exp $
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -18,7 +18,7 @@ from Products.ProxyIndex.ProxyIndex import RecordStyle
 
 import re
 
-icon = "www/silvageneric.gif"
+icon = "www/software_package.png"
 
 class SilvaSoftwarePackage(Publication):
     """Silva Software Package"""

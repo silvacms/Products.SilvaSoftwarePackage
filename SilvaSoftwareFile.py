@@ -14,6 +14,8 @@ from Products.SilvaMetadata.Compatibility import registerTypeForMetadata
 from Products.Silva.helpers import add_and_edit
 from interfaces import ISilvaSoftwareFile
 
+icon = "www/software_file.png"
+
 class SilvaSoftwareFile(SilvaObject):
     security = ClassSecurityInfo()
     meta_type = 'Silva Software File'
