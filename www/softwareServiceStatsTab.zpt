@@ -1,7 +1,7 @@
 <!--
 Copyright (c) 2002-2004 Infrae. All rights reserved.
 See also LICENSE.txt
-Version of this file: $Revision: 1.1 $
+Version of this file: $Revision: 1.2 $
 -->
 <h1 tal:replace="structure here/manage_page_header">Header</h1>
 
@@ -14,6 +14,13 @@ Version of this file: $Revision: 1.1 $
 <h3>Build stats</h3>
 <form action="./parse_logfile" method="POST">
   <div class="form-text">Build stats from logfile (may take a while!)</div>
+  <input type="submit" value="Build" />
+</form>
+<form action="./parse_logfile_and_purge" method="POST">
+  <div class="form-text">
+    Build stats from logfile (may take a while!) and purge it. A
+    backup will be written to disk.
+  </div>
   <input type="submit" value="Build" />
 </form>
 <h3>Stats</h3>

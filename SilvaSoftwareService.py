@@ -9,6 +9,7 @@ from Products.Silva import SilvaPermissions
 
 import fcntl
 import re
+import os
 
 class Permissions:
     view_software_data = 'View Silva software data'
@@ -122,19 +123,79 @@ class SilvaSoftwareService(SimpleItem):
         self.logfile_path = logfile_path
         return self.edit_tab(manage_tabs_message='Data updated')
 
-    reg_line = re.compile(r'^([^-]+) - ([0-9\.]+) \(([^\)]*)\) - ([^-]*) - ([^\ ]+) \((.*)\)$')
+    reg_line = re.compile((r'^([^-]+) - ([0-9\.]+) \(([^\)]*)\) '
+                                '- ([^-]*) - ([^\ ]+) \((.*)\)$'))
     security.declareProtected(Permissions.edit_software_services,
                                 'parse_logfile')
     def parse_logfile(self, restart=0):
-        """parse a logfile
+        """parse the logfile
 
             THIS SHOULD BE USED WITH CARE!!!
+
+            It is advisable to call this method often, since parsing the
+            file can take long if the logfile is large, but preferrably
+            on quiet moments for the webserver, since it locks the logfile,
+            which makes logging actions get blocked as long as it's busy.
         """
         if restart:
             self._seek = 0
             self._stats_by_path = {}
         fp = open(self.logfile_path)
         fp.seek(self._seek)
+        fileno = fp.fileno()
+        fcntl.flock(fileno, fcntl.LOCK_EX)
+        try:
+            self._parse_helper(fp)
+        finally:
+            fcntl.flock(fileno, fcntl.LOCK_UN)
+
+        self._p_changed = 1
+
+        return self.stats_tab()
+
+    security.declareProtected(Permissions.edit_software_services,
+                                'parse_logfile_and_purge')
+    def parse_logfile_and_purge(self, restart=0):
+        """parse the logfile, write the contents to a backup and purge it
+
+            THIS SHOULD BE USED WITH CARE!!!
+
+            For more details see the 'parse_logfile' method above
+        """
+        if restart:
+            self._seek = 0
+            self._stats_by_path = {}
+        fp = open(self.logfile_path, 'r+')
+        fp.seek(self._seek)
+        fileno = fp.fileno()
+        fcntl.flock(fileno, fcntl.LOCK_EX)
+        try:
+            self._parse_helper(fp)
+            # back the logfile up
+            i = 0
+            while 1:
+                bakpath = '%s_%s.bak' % (self.logfile_path, i)
+                if not os.path.exists(bakpath):
+                    bfp = open(bakpath, 'w')
+                    fp.seek(0)
+                    while 1:
+                        line = fp.readline()
+                        if not line:
+                            break
+                        bfp.write(line)
+                    bfp.close()
+                    fp.truncate(0)
+                    break
+                i += 1
+        finally:
+            fcntl.flock(fileno, fcntl.LOCK_UN)
+
+        self._p_changed = 1
+
+        return self.stats_tab()
+
+    def _parse_helper(self, fp):
+        """Does the actual parsing"""
         while 1:
             line = fp.readline()
             if not line:
@@ -162,10 +223,6 @@ class SilvaSoftwareService(SimpleItem):
             # now replace the current record with the new one or add it
             self._stats_by_path[path] = record
 
-        self._p_changed = 1
-
-        return self.stats_tab()
-
     security.declareProtected(Permissions.edit_software_services,
                                 'get_paths')
     def get_paths(self):
@@ -184,7 +241,8 @@ manage_addSilvaSoftwareServiceForm = PageTemplateFile(
         'www/softwareServiceAdd', globals(),
         __name__ = 'manage_addSilvaSoftwareServiceForm')
 
-def manage_addSilvaSoftwareService(self, id, title, logfile_path, REQUEST=None):
+def manage_addSilvaSoftwareService(self, id, title, logfile_path, 
+                                    REQUEST=None):
     """Add service to folder
     """
     # add actual object
