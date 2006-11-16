@@ -3,6 +3,12 @@ See also LICENSE.txt
 
 SilvaSoftwarePackage changes
 
+  0.5
+
+    Features added:
+    
+      * Now works with zope3 style interfaces.
+
   0.4
 
     Bugs fixed:
