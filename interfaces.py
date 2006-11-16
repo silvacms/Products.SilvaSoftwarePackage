@@ -1,6 +1,6 @@
-from Interface import Base
+from zope.interface import Interface
 
-class ISilvaSoftwarePackage(Base):
+class ISilvaSoftwarePackage(Interface):
     """A Silva Software Package is a collection of SilvaSoftwareReleases"""
 
     def get_releases(published=1):
@@ -12,13 +12,13 @@ class ISilvaSoftwarePackage(Base):
     def get_software_file_paths():
         """Returns a list of all contained SilvaSoftwareFile objects"""
 
-class ISilvaSoftwareRelease(Base):
+class ISilvaSoftwareRelease(Interface):
     """A set of SilvaSoftwareFile objects and some documentation"""
 
     def get_files():
         """Returns a list of contained SilvaSoftwareFile objects"""
 
-class ISilvaSoftwareFile(Base):
+class ISilvaSoftwareFile(Interface):
     """A Silva Software File is a mixin for File objects
 
         It makes the file object send a notification to a service

@@ -4,6 +4,7 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zope.interface import implements
 from Products.SilvaMetadata.Compatibility import registerTypeForMetadata
 from Products.Silva import SilvaPermissions
 from Products.Silva.helpers import add_and_edit
@@ -26,7 +27,7 @@ class SilvaSoftwarePackage(Publication):
 
     security = ClassSecurityInfo()
     meta_type = 'Silva Software Package'
-    __implements__ = (IContainer, IPublication, ISilvaSoftwarePackage)
+    implements(ISilvaSoftwarePackage)
 
     def __init__(self, id):
         Publication.__init__(self, id)

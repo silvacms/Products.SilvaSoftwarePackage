@@ -4,6 +4,7 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zope.interface import implements
 from Products.SilvaMetadata.Compatibility import registerTypeForMetadata
 from Products.Silva import SilvaPermissions
 from Products.Silva.helpers import add_and_edit
@@ -34,7 +35,7 @@ class SilvaSoftwareRelease(Publication):
 
     security = ClassSecurityInfo()
     meta_type = 'Silva Software Release'
-    __implements__ = (IPublication, IContainer, ISilvaSoftwareRelease)
+    implements(ISilvaSoftwareRelease)
 
     def __init__(self, id):
         SilvaSoftwareRelease.inheritedAttribute('__init__')(self, id)

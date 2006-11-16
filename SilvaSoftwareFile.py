@@ -4,6 +4,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Globals import InitializeClass
 from webdav.WriteLockInterface import WriteLockInterface
+from zope.interface import implements
 # Silva
 from Products.Silva import mangle
 from Products.Silva.SilvaObject import SilvaObject
@@ -19,7 +20,7 @@ icon = "www/software_file.png"
 class SilvaSoftwareFile(SilvaObject):
     security = ClassSecurityInfo()
     meta_type = 'Silva Software File'
-    __implements__ = (WriteLockInterface, ISilvaSoftwareFile, IFile)
+    implements(ISilvaSoftwareFile)
 
     security.declareProtected(SilvaPermissions.View, 'index_html')
     def index_html(self, *args, **kwargs):
@@ -41,7 +42,7 @@ InitializeClass(SilvaSoftwareFile)
 class ZODBSoftwareFile(ZODBFile, SilvaSoftwareFile):
     """File object that has some extra features"""
 
-    __implements__ = (WriteLockInterface, ISilvaSoftwareFile, IFile)
+    implements(ISilvaSoftwareFile)
     meta_type = 'Silva Software File'
 
     index_html = SilvaSoftwareFile.index_html
@@ -51,7 +52,7 @@ InitializeClass(ZODBSoftwareFile)
 class FileSystemSoftwareFile(FileSystemFile, SilvaSoftwareFile):
     """File object that has some extra features"""
 
-    __implements__ = (WriteLockInterface, ISilvaSoftwareFile, IFile)
+    implements(ISilvaSoftwareFile)
     meta_type = 'Silva Software File'
 
     index_html = SilvaSoftwareFile.index_html
