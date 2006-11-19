@@ -3,29 +3,33 @@ See also LICENSE.txt
 
 SilvaSoftwarePackage changes
 
+  0.6 unreleased
+
+    - Removed the tab_metadata file, thereby adding features!
+
   0.5
 
     Features added:
     
-      * Now works with zope3 style interfaces.
+      - Now works with zope3 style interfaces.
 
   0.4
 
     Bugs fixed:
 
-      * Installation will now create a service_software automatically.
+      - Installation will now create a service_software automatically.
 
-      * It's no longer possible to add SilvaSoftwareFiles to 
+      - It's no longer possible to add SilvaSoftwareFiles to 
         SilvaSoftwarePackage objects.
 
     Features added:
 
-      * The filenames are now shown in the SilvaSoftwarePackage views, not
+      - The filenames are now shown in the SilvaSoftwarePackage views, not
         only from SilvaSoftwareRelease (less clicking for the client).
 
-      * Instead of filling in an id, title and version, only the version can
+      - Instead of filling in an id, title and version, only the version can
         be filled in when a client creates a SilvaSoftwareRelease, this version
         is also used as id and to generate nice looking titles.
 
-      * Paths are now sorted alphabetically in the stats tab of the 
+      - Paths are now sorted alphabetically in the stats tab of the 
         SilvaSoftwareService.
