@@ -1,4 +1,4 @@
-# Copyright (c) 2004 Guido Wesdorp. All rights reserved.
+# Copyright (c) 2004-2007 Infrae. All rights reserved.
 # See also LICENSE.txt
 # $Id: __init__.py,v 1.3 2004/10/12 15:18:54 guido Exp $
 

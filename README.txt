@@ -3,9 +3,9 @@ See also LICENSE.txt
 
 Meta::
 
-  Valid for:  SilvaSoftwarePackage 0.4
-  Author:     Guido Wesdorp
-  Email:      guido@infrae.com
+  Valid for:  SilvaSoftwarePackage 0.5
+  Author:     Guido Wesdorp plus the usual suspects
+  Email:      info@infrae.com
   CVS:        $Revision: 1.6 $
 
   SilvaSoftwarePackage:
@@ -27,7 +27,7 @@ Meta::
 
     Requirements:
 
-        Silva 1.0 or 1.1 and it's requirements.
+        Silva 1.0+ and it's requirements.
 
     Installation:
     
@@ -63,8 +63,8 @@ Meta::
   Questions and remarks:
 
     If you have any questions or remarks about this product, please send an
-    email to guido@infrae.com.
+    email to info@infrae.com.
 
 We hope you enjoy the product!
 
-  the Infrae team
+   The Infrae team
