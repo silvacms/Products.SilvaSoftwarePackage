@@ -3,15 +3,16 @@ See also LICENSE.txt
 
 SilvaSoftwarePackage changes
 
-  0.6 unreleased
+  0.5 unreleased
+
+    Features added:
+
+    - Tweaked the icon to differentiate it from a S3PSPackage, so nobody
+      mistakenly adds the wrong type.
 
     - Removed the tab_metadata file, thereby adding features!
 
-  0.5
-
-    Features added:
-    
-      - Now works with zope3 style interfaces.
+    - Now works with zope3 style interfaces.
 
   0.4
 
