@@ -13,7 +13,23 @@
     <group>
       <title>default</title>
       <fields multiple="true">
-
+      <field><id>file</id> <type>FileField</type>
+        <values>
+          <display_maxwidth></display_maxwidth>
+          <alternate_name></alternate_name>
+          <hidden type="int">0</hidden>
+          <display_width type="int">54</display_width>
+          <css_class></css_class>
+          <default></default>
+          <title>file</title>
+          <extra></extra>
+          <description>&lt;b&gt;Tip:&lt;/b&gt; You don't have to fill in the id and title.</description>
+          <external_validator></external_validator>
+          <required type="int">1</required>
+        </values>
+        <tales>
+        </tales>
+      </field>
       <field><id>object_id</id> <type>StringField</type>
         <values>
           <alternate_name></alternate_name>
@@ -51,23 +67,6 @@
           <description></description>
           <extra>class="store"</extra>
           <unicode>1</unicode>
-        </values>
-        <tales>
-        </tales>
-      </field>
-      <field><id>file</id> <type>FileField</type>
-        <values>
-          <display_maxwidth></display_maxwidth>
-          <alternate_name></alternate_name>
-          <hidden type="int">0</hidden>
-          <display_width type="int">54</display_width>
-          <css_class></css_class>
-          <default></default>
-          <title>file</title>
-          <extra></extra>
-          <description>&lt;b&gt;Tip:&lt;/b&gt; You don't have to fill in the id and title.</description>
-          <external_validator></external_validator>
-          <required type="int">1</required>
         </values>
         <tales>
         </tales>
