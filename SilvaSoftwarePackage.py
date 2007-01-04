@@ -54,8 +54,8 @@ class SilvaSoftwarePackage(Publication):
         result = ['Silva Document', 'Silva Software Release']
         for addable in addables:
             if (addable.has_key('instance') and
-                    IAsset.isImplementedByInstancesOf(addable['instance']) and
-                    not ISilvaSoftwareFile.isImplementedByInstancesOf(addable['instance']) and
+                    IAsset.implementedBy(addable['instance']) and
+                    not ISilvaSoftwareFile.implementedBy(addable['instance']) and
                     self.service_view_registry.has_view('add', 
                         addable['name'])):
                 result.append(addable['name'])

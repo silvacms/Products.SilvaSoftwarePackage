@@ -1,4 +1,5 @@
 from zope.interface import Interface
+from Products.Silva.interfaces import IAsset
 
 class ISilvaSoftwarePackage(Interface):
     """A Silva Software Package is a collection of SilvaSoftwareReleases"""
@@ -18,7 +19,7 @@ class ISilvaSoftwareRelease(Interface):
     def get_files():
         """Returns a list of contained SilvaSoftwareFile objects"""
 
-class ISilvaSoftwareFile(Interface):
+class ISilvaSoftwareFile(IAsset):
     """A Silva Software File is a mixin for File objects
 
         It makes the file object send a notification to a service

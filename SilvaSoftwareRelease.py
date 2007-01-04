@@ -47,7 +47,7 @@ class SilvaSoftwareRelease(Publication):
         result = ['Silva Document']
         for addable in addables:
             if (addable.has_key('instance') and
-                    IAsset.isImplementedByInstancesOf(addable['instance']) and
+                    IAsset.implementedBy(addable['instance']) and
                     self.service_view_registry.has_view('add', 
                         addable['name'])):
                 result.append(addable['name'])
@@ -59,7 +59,7 @@ class SilvaSoftwareRelease(Publication):
         """returns a list with all the contained files"""
         ret = []
         for obj in self.objectValues():
-            if ISilvaSoftwareFile.isImplementedBy(obj):
+            if obj.provides(ISilvaSoftwareFile):
                 ret.append(obj)
         ret.sort(lambda a, b: cmp(a.id, b.id))
         return ret
