@@ -59,7 +59,7 @@ class SilvaSoftwareRelease(Publication):
         """returns a list with all the contained files"""
         ret = []
         for obj in self.objectValues():
-            if obj.provides(ISilvaSoftwareFile):
+            if ISilvaSoftwareFile.providedBy(obj):
                 ret.append(obj)
         ret.sort(lambda a, b: cmp(a.id, b.id))
         return ret
