@@ -13,7 +13,7 @@ tabs = [('edit', 'tab_edit', 'tab_edit', '!', '1', '6'),
         ('preview', 'tab_preview', 'tab_preview', '@', '2', '7'),
         ('properties', 'tab_metadata', 'tab_metadata', '#', '3', '8'),
         ('access', 'tab_access', 'tab_access', '$', '4', '9'),
-        ('stats', 'tab_stats', 'tab_access', '%', '5', '0'),
+        ('stats', 'tab_stats', 'tab_publish', '%', '5', '0'),
        ]
 
 return tabs
