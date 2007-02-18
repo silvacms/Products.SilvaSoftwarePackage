@@ -42,14 +42,14 @@
          <external_validator></external_validator>   
          <display_maxwidth></display_maxwidth>   
          <display_width type="int">20</display_width>    
-         <required type="int">1</required>   
-         <css_class></css_class>   
+         <required type="int">0</required>   
+         <css_class>store</css_class>   
          <default></default>   
          <title>title</title>    
          <truncate type="int">0</truncate>   
          <description>The title will be publicly visible, and is used for the link in indexes.</description>   
-         <extra>class="store"</extra>   
-         <unicode>0</unicode>    
+         <extra></extra>   
+         <unicode>1</unicode>    
         </values>   
         <tales>   
         </tales>    
