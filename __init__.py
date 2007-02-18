@@ -24,6 +24,7 @@ def initialize(context):
         SilvaSoftwareService.SilvaSoftwareService,
         constructors = (SilvaSoftwareService.manage_addSilvaSoftwareServiceForm,
                         SilvaSoftwareService.manage_addSilvaSoftwareService),
+        icon = "www/software_service.png"
         )
 
     registerDirectory('views', globals())
