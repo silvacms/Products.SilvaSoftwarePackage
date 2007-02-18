@@ -49,7 +49,7 @@
          <truncate type="int">0</truncate>   
          <description>The title will be publicly visible, and is used for the link in indexes.</description>   
          <extra>class="store"</extra>   
-         <unicode>1</unicode>    
+         <unicode>0</unicode>    
         </values>   
         <tales>   
         </tales>    
