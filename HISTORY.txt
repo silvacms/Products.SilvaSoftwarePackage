@@ -7,6 +7,9 @@ SilvaSoftwarePackage changes
 
     Features added:
 
+    - Up the addable_priority to 9, so these (probably) Infrae-only products 
+      appear last in the list, leaving room for other parties in between
+    
     - Tweaked the icon to differentiate it from a S3PSPackage, so nobody
       mistakenly adds the wrong type.
 
