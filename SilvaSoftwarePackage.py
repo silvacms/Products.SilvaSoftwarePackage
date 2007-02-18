@@ -21,7 +21,7 @@ from Products.SilvaSoftwarePackage.interfaces import \
 import re
 
 icon = "www/software_package.png"
-addable_priority = 4
+addable_priority = 9
 
 class SilvaSoftwarePackage(Publication):
     """Silva Software Package"""

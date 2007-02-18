@@ -21,7 +21,7 @@ module_security = ModuleSecurityInfo(
 import re
 
 icon = "www/software_release.png"
-addable_priority = 4
+addable_priority = 9
 
 module_security.declareProtected(SilvaPermissions.ReadSilvaContent,
                                     'test_version_string')

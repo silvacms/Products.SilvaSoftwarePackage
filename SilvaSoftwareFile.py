@@ -16,7 +16,7 @@ from Products.Silva.helpers import add_and_edit
 from interfaces import ISilvaSoftwareFile
 
 icon = "www/software_file.png"
-addable_priority = 4
+addable_priority = 9
 
 class SilvaSoftwareFile(SilvaObject):
     security = ClassSecurityInfo()
