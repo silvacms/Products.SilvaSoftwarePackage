@@ -7,6 +7,9 @@ SilvaSoftwarePackage changes
 
     Features added:
 
+    - Changed the listing date from get_public_version_publication_datetime
+      to get_creation_datetime because a republish changes the 'Release Date'.
+
     - Up the addable_priority to 9, so these (probably) Infrae-only products 
       appear last in the list, leaving room for other parties in between
     
