@@ -20,7 +20,7 @@
                 tal:content="title">
             </a>
           </td>
-          <td tal:content="python: mangle.DateTime(release.get_default().get_public_version_publication_datetime()).toStr()" />
+          <td tal:content="python: mangle.DateTime(release.get_default().get_creation_datetime()).toStr()" />
           <td tal:define="files python: here.get_software_files(release)">
             <tal:block repeat="file files">
               <a tal:attributes="href file/absolute_url"
