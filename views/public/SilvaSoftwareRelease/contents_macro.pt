@@ -1,7 +1,7 @@
 <html>
   <body>
     <div metal:define-macro="release">
-      <table class="list" tal:define="mangle modules/Products/Silva/mangle">
+      <table class="silvatable list" tal:define="mangle modules/Products/Silva/mangle">
         <thead>
           <tr>
             <th>Filename</th>
