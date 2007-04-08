@@ -2,10 +2,10 @@
 <div tal:omit-tag="" tal:define="model request/model">
 <tal:plug condition="model/get_default | nothing" 
   replace="structure python:model.get_default().view()" />
+<p><strong>License:<strong> <a tal:attributes="href string:${model/LICENSE.txt/absolute_url}">New BSD</a></p>
 <tal:def define="get_public python:1">
 <div metal:use-macro="here/package_macros/macros/package">
   release table
 </div>
 </tal:def>
-<p><a tal:attributes="href string:${model/absolute_url}/LICENSE.txt">LICENSE.txt</a></p>
 </div>
