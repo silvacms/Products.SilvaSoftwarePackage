@@ -1,8 +1,11 @@
+<tal:comment replace="nothing"> _______ package _______ </tal:comment>
 <div tal:omit-tag="" tal:define="model request/model">
-<p tal:condition="model/get_default | nothing" 
-   tal:replace="structure python:model.get_default().view()">View</p>
-<tal:block define="get_public python:1">
-<div metal:use-macro="here/contents_macro/macros/package">
-  Release table</div>
-</tal:block>
+<tal:plug condition="model/get_default | nothing" 
+  replace="structure python:model.get_default().view()" />
+<tal:def define="get_public python:1">
+<div metal:use-macro="here/package_macros/macros/package">
+  release table
+</div>
+</tal:def>
+<p><a tal:attributes="href string:${model/absolute_url}/LICENSE.txt">LICENSE.txt</a></p>
 </div>

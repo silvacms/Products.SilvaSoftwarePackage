@@ -1,8 +1,9 @@
+<tal:comment replace="nothing"> _______ release _______ </tal:comment>
 <div tal:omit-tag="" tal:define="model request/model">
 <p tal:condition="model/get_default | nothing" 
-   tal:replace="structure python:model.get_default().view()">View</p>
-<tal:block define="get_public python:1">
-<div metal:use-macro="here/contents_macro/macros/release">
-  Release table</div>
-</tal:block>
+  tal:replace="structure python:model.get_default().view()">View</p>
+<tal:def define="get_public python:1">
+<div metal:use-macro="here/package_macros/macros/release">
+  release table</div>
+</tal:def>
 </div>
