@@ -3,16 +3,20 @@ See also LICENSE.txt
 
 SilvaSoftwarePackage changes
 
-  0.5 unreleased
+  0.6
 
     Features added:
 
     - Changed the listing date from get_public_version_publication_datetime
       to get_creation_datetime because a republish changes the 'Release Date'.
 
-    - Up the addable_priority to 9, so these (probably) Infrae-only products 
+    - Up the addable_priority to 9, so these (probably) Infrae-only products
       appear last in the list, leaving room for other parties in between
-    
+
+  0.5
+
+    Features added:
+
     - Tweaked the icon to differentiate it from a S3PSPackage, so nobody
       mistakenly adds the wrong type.
 
@@ -26,7 +30,7 @@ SilvaSoftwarePackage changes
 
       - Installation will now create a service_software automatically.
 
-      - It's no longer possible to add SilvaSoftwareFiles to 
+      - It's no longer possible to add SilvaSoftwareFiles to
         SilvaSoftwarePackage objects.
 
     Features added:
@@ -38,5 +42,5 @@ SilvaSoftwarePackage changes
         be filled in when a client creates a SilvaSoftwareRelease, this version
         is also used as id and to generate nice looking titles.
 
-      - Paths are now sorted alphabetically in the stats tab of the 
+      - Paths are now sorted alphabetically in the stats tab of the
         SilvaSoftwareService.

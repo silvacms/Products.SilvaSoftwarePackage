@@ -3,10 +3,9 @@ See also LICENSE.txt
 
 Meta::
 
-  Valid for:  SilvaSoftwarePackage 0.5
+  Valid for:  SilvaSoftwarePackage 0.5, SilvaSoftwarePackage 0.6
   Author:     Guido Wesdorp plus the usual suspects
   Email:      info@infrae.com
-  CVS:        $Revision: 1.6 $
 
   SilvaSoftwarePackage:
 
@@ -30,7 +29,7 @@ Meta::
         Silva 1.0+ and it's requirements.
 
     Installation:
-    
+
         Installation is a matter of unpacking the tarball into Zope's Products
         directory, restarting Zope and pressing the 'Install' button in the
         SilvaSoftwarePackage box in 'service_extensions' in the Silva root.
@@ -55,7 +54,7 @@ Meta::
     that SilvaFile and SilvaAsset objects will not be shown in the table of
     downloadable files: this will only display the SilvaSoftwareFile type
     objects in the release.
-    
+
     To publish a SilvaSoftwarePackage or a SilvaSoftwareRelease you will have
     to publish the default document. If this document is not published or
     deleted, the package will not be viewable by the public.
