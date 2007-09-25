@@ -93,8 +93,4 @@ def manage_addSilvaSoftwareRelease(self, version, REQUEST=None):
     add_and_edit(self, version, REQUEST)
     return ''
 
-manage_addSilvaSoftwareReleaseForm = PageTemplateFile(
-                "www/silvaSoftwareReleaseAdd", globals(), 
-                __name__ = 'manage_addSilvaSoftwareReleaseForm')
-
 registerTypeForMetadata(SilvaSoftwareRelease.meta_type)

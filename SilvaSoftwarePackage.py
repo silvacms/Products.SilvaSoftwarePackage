@@ -145,9 +145,4 @@ def manage_addSilvaSoftwarePackage(self, id, title, REQUEST=None):
     add_and_edit(self, id, REQUEST)
     return ''
 
-manage_addSilvaSoftwarePackageForm = PageTemplateFile(
-                                "www/silvaSoftwarePackageAdd", 
-                                globals(),
-                                __name__='manage_addSilvaSoftwarePackageForm')
-
 registerTypeForMetadata(SilvaSoftwarePackage.meta_type)

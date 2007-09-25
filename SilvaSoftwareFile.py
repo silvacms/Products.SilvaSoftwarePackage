@@ -60,8 +60,6 @@ class FileSystemSoftwareFile(FileSystemFile, SilvaSoftwareFile):
 
 InitializeClass(FileSystemSoftwareFile)
 
-manage_addSilvaSoftwareFileForm = PageTemplateFile(
-    "www/softwareFileAdd", globals(), __name__='manage_addSilvaSoftwareFileForm')
 
 def manage_addSilvaSoftwareFile(self, id, title, file):
     """Add a SilvaSoftwareFile
