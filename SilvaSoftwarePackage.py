@@ -20,9 +20,6 @@ from Products.SilvaSoftwarePackage.interfaces import \
 
 import re
 
-icon = "www/software_package.png"
-addable_priority = 9
-
 class SilvaSoftwarePackage(Publication):
     """Silva Software Package"""
 
@@ -144,5 +141,3 @@ def manage_addSilvaSoftwarePackage(self, id, title, REQUEST=None):
                                                     'index', title)
     add_and_edit(self, id, REQUEST)
     return ''
-
-registerTypeForMetadata(SilvaSoftwarePackage.meta_type)

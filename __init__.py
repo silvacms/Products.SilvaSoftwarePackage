@@ -15,11 +15,6 @@ import SilvaSoftwareService
 import SilvaSoftwareFile
 
 def initialize(context):
-    extensionRegistry.register(
-        'SilvaSoftwarePackage', 'Silva Software Package', context, 
-        [SilvaSoftwareRelease, SilvaSoftwarePackage, SilvaSoftwareFile], install, 
-        depends_on='SilvaDocument')
-        
     context.registerClass(
         SilvaSoftwareService.SilvaSoftwareService,
         constructors = (SilvaSoftwareService.manage_addSilvaSoftwareServiceForm,

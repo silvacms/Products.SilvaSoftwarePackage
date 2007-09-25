@@ -15,9 +15,6 @@ from Products.SilvaMetadata.Compatibility import registerTypeForMetadata
 from Products.Silva.helpers import add_and_edit
 from interfaces import ISilvaSoftwareFile
 
-icon = "www/software_file.png"
-addable_priority = 9
-
 class SilvaSoftwareFile(SilvaObject):
     security = ClassSecurityInfo()
     meta_type = 'Silva Software File'
@@ -60,7 +57,6 @@ class FileSystemSoftwareFile(FileSystemFile, SilvaSoftwareFile):
 
 InitializeClass(FileSystemSoftwareFile)
 
-
 def manage_addSilvaSoftwareFile(self, id, title, file):
     """Add a SilvaSoftwareFile
     """
@@ -84,5 +80,3 @@ def manage_addSilvaSoftwareFile(self, id, title, file):
     object.set_title(title)
     object._set_file_data_helper(file)
     return object
-
-registerTypeForMetadata(SilvaSoftwareFile.meta_type)

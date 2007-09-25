@@ -20,9 +20,6 @@ module_security = ModuleSecurityInfo(
 
 import re
 
-icon = "www/software_release.png"
-addable_priority = 9
-
 module_security.declareProtected(SilvaPermissions.ReadSilvaContent,
                                     'test_version_string')
 _version_reg = re.compile('^[0-9]+(\.[0-9]+)*(\.[0-9]+)?((a|b|rc)[0-9]*)?$')
@@ -93,4 +90,3 @@ def manage_addSilvaSoftwareRelease(self, version, REQUEST=None):
     add_and_edit(self, version, REQUEST)
     return ''
 
-registerTypeForMetadata(SilvaSoftwareRelease.meta_type)
