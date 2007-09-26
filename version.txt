@@ -1,1 +1,1 @@
-SilvaSoftwarePackage 1.0
+SilvaSoftwarePackage 1.1 (unreleased)
