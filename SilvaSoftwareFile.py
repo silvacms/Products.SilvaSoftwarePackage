@@ -71,8 +71,7 @@ def manage_addSilvaSoftwareFile(self, id, title, file):
     assert service_files is not None, "There is no service_files. " \
         "Refresh your silva root."
     if service_files.useFSStorage():        
-        object = FileSystemSoftwareFile(id, title, 
-            service_files.filesystem_path())
+        object = FileSystemSoftwareFile(id)
     else:
         object = ZODBSoftwareFile(id, title)
     self._setObject(id, object)
