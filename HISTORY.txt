@@ -3,6 +3,12 @@ See also LICENSE.txt
 
 SilvaSoftwarePackage changes
 
+  1.0.1
+
+    Bugs fixed:
+
+    - changed to work with ExtFile 2.0.2
+
   1.0
 
     Bugs fixed:
