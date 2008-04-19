@@ -5,6 +5,11 @@ SilvaSoftwarePackage changes
 
   1.0.1
 
+    Features added:
+
+    - Set the addable priority to -9 so SilvaSoftwareFile is the first item,
+      thus less likely to be confused with SilvaFile which doesn't show up.
+
     Bugs fixed:
 
     - changed to work with ExtFile 2.0.2
