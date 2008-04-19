@@ -19,7 +19,7 @@
     content=".SilvaSoftwareFile.SilvaSoftwareFile"
     extension_name="SilvaSoftwarePackage"
     icon="www/software_file.png"
-    priority="9"
+    priority="-9"
     content_factory=".SilvaSoftwareFile.manage_addSilvaSoftwareFile"
     />
 
