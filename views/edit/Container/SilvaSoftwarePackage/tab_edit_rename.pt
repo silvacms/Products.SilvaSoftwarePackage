@@ -51,7 +51,7 @@
         <tal:repeat repeat="objectid objects">
         <tal:define define="object python:getattr(model, objectid)">
         <tr class="odd" valign="top">
-          <td class="align-right" i18n:translate="id" 
+          <td class="align-right"
                 tal:content="python: object.meta_type == 'Silva Software Release' and 'version' or 'id'">
             id
           </td>
