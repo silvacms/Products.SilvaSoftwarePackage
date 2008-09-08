@@ -10,7 +10,7 @@
     i18n:domain="silva"
     >
 
-<metal:use-macro use-macro="view/macro_asset_edit/macros/editor">
+<metal:use-macro use-macro="view/macro__edit/macros/editor-three-col">
 
 <metal:fill-slot fill-slot="info">
   <div class="info">
