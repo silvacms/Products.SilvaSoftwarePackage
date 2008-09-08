@@ -14,6 +14,8 @@ SilvaSoftwarePackage changes
 
     - changed to work with ExtFile 2.0.2
 
+    - edit.pt has been replaced with tab_edit.pt as described in developers.txt
+
   1.0
 
     Bugs fixed:
