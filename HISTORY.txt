@@ -18,8 +18,6 @@ SilvaSoftwarePackage changes
 
     - fix for error that was raised when using ZODB storage
 
-    - fix for rendering the silva software icon
-
   1.0
 
     Bugs fixed:
