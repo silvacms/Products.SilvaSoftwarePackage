@@ -17,6 +17,9 @@ SilvaSoftwarePackage changes
     - edit.pt has been replaced with tab_edit.pt as described in developers.txt
 
     - fix for error that was raised when using ZODB storage
+
+    - fix for rendering the silva software icon
+
   1.0
 
     Bugs fixed:
