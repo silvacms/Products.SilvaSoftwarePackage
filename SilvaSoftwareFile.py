@@ -73,7 +73,7 @@ def manage_addSilvaSoftwareFile(self, id, title, file):
     if service_files.useFSStorage():        
         object = FileSystemSoftwareFile(id)
     else:
-        object = ZODBSoftwareFile(id, title)
+        object = ZODBSoftwareFile(id)
     self._setObject(id, object)
     object = getattr(self, id)
     object.set_title(title)
