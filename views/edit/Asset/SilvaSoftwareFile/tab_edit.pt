@@ -11,6 +11,7 @@
     >
 
 <metal:block use-macro="here/macro_edit/macros/editor">
+
 <metal:fill-slot fill-slot="info">
   <div class="info">
     <h3>
@@ -42,7 +43,6 @@
   <metal:block use-macro="view/macro_asset_edit/macros/uploader" />
 </metal:fill-slot>
 
-  </metal:use-macro>
 </metal:block>
 
 </html>
