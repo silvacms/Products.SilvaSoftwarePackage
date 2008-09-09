@@ -18,7 +18,7 @@
   <silva:content
     content=".SilvaSoftwareFile.SilvaSoftwareFile"
     extension_name="SilvaSoftwarePackage"
-    icon="www/software_file.png"
+    icon="www/silva_software_file.png"
     priority="-9"
     content_factory=".SilvaSoftwareFile.manage_addSilvaSoftwareFile"
     />
