@@ -11,9 +11,6 @@
     >
 
 <metal:block use-macro="here/macro_edit/macros/editor">
- <metal:fill-editor-slot fill-slot="main">
-  <metal:use-macro use-macro="here/macro_edit/macros/three-col-layout">
-
 <metal:fill-slot fill-slot="info">
   <div class="info">
     <h3>
@@ -46,7 +43,6 @@
 </metal:fill-slot>
 
   </metal:use-macro>
- </metal:fill-editor-slot>
 </metal:block>
 
 </html>
