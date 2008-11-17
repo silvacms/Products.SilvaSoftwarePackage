@@ -58,9 +58,9 @@ def addDefaultDocument(package, event):
     if event.oldParent is None:
         package.manage_addProduct['SilvaDocument'].manage_addDocument(
             'index', package.get_title())
-        package = getattr(object, 'index')
-        package.set_unapproved_version_publication_datetime(DateTime.DateTime())
-        package.approve_version()
+        index = getattr(package, 'index')
+        index.set_unapproved_version_publication_datetime(DateTime.DateTime())
+        index.approve_version()
 
 
 
