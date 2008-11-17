@@ -2,10 +2,8 @@
 # See also LICENSE.txt
 # $Revision: 1.4 $
 import os, sys
-if __name__ == '__main__':
-    execfile(os.path.join(sys.path[0], 'framework.py'))
 
-import SilvaTestCase
+from Products.Silva.tests import SilvaTestCase
 from Products.SilvaSoftwarePackage.SilvaSoftwareRelease import test_version_string
 
 from Testing import ZopeTestCase
@@ -119,12 +117,9 @@ class SilvaSoftwarePackageTestCase(SilvaTestCase.SilvaTestCase):
         sr.get_default().approve_version()
         return sr
     
-if __name__ == '__main__':
-    framework()
-else:
-    import unittest
-    def test_suite():
-        suite = unittest.TestSuite()
-        suite.addTest(unittest.makeSuite(SilvaSoftwarePackageTestCase))
-        return suite
+import unittest
+def test_suite():
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(SilvaSoftwarePackageTestCase))
+    return suite
 

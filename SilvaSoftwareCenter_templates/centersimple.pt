@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title tal:content="context/get_title_or_id">Title</title>
+
+    <meta name="generator" content="Silva" /> 
+
+  </head>
+  <body>
+
+    <ul>
+      <li tal:repeat="release view/get_releases">
+        <a href="#"
+           tal:attributes="href release/url"
+           tal:content="release/name">
+          Name
+        </a>
+      </li>
+    </ul>
+
+  </body>
+</html>

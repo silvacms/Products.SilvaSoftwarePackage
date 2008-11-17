@@ -1,29 +1,56 @@
-# Copyright (c) 2004-2007 Infrae. All rights reserved.
+# Copyright (c) 2004-2008 Infrae. All rights reserved.
 # See also LICENSE.txt
-# $Id: __init__.py,v 1.3 2004/10/12 15:18:54 guido Exp $
+# $Id$
 
-from Products.Silva.ExtensionRegistry import extensionRegistry
-from Products.Silva.ImporterRegistry import importer_registry
-import install
+from zope.interface import Interface
+from silva.core import conf as silvaconf
+from silva.core.conf.installer import DefaultInstaller
 
-from Products.Silva.fssite import registerDirectory
-from Products.SilvaMetadata.Compatibility import registerTypeForMetadata
+silvaconf.extensionName('SilvaSoftwarePackage')
+silvaconf.extensionTitle('Silva Software Package')
+silvaconf.extensionDepends('SilvaDocument')
 
-import SilvaSoftwarePackage
-import SilvaSoftwareRelease
-import SilvaSoftwareService
-import SilvaSoftwareFile
+class SilvaSoftwarePackageInstaller(DefaultInstaller):
 
-def initialize(context):
-    context.registerClass(
-        SilvaSoftwareService.SilvaSoftwareService,
-        constructors = (SilvaSoftwareService.manage_addSilvaSoftwareServiceForm,
-                        SilvaSoftwareService.manage_addSilvaSoftwareService),
-        icon = "www/software_service.png"
-        )
+    def isGloballyAddable(self, content):
+        if content['name'] in ['Silva Software Release',
+                               'Silva Software Package']:
+            return False
+        return super(SilvaSoftwarePackageInstaller,
+                     self).isGloballyAddable(content)
 
-    registerDirectory('views', globals())
 
-from AccessControl import allow_module
+    def registerViews(self, reg):
+        """Register core views on registry.
+        """
 
-allow_module('Products.SilvaSoftwarePackage.SilvaSoftwareRelease')
+        # edit
+        reg.register('edit', 'Silva Software Package', 
+                     ['edit', 'Container', 'SilvaSoftwarePackage'])
+        reg.register('edit', 'Silva Software Release', 
+                     ['edit', 'Container', 'SilvaSoftwareRelease'])
+        # add
+        reg.register('add', 'Silva Software Release', 
+                     ['add', 'SilvaSoftwareRelease'])
+    
+    def unregisterViews(self, reg):
+
+        for meta_type in ['Silva Software Package', 
+                          'Silva Software Release',]:
+            reg.unregister('edit', meta_type)
+            reg.unregister('add', meta_type)
+
+    def customizeInstall(self, root):
+
+        # security
+        root.manage_permission('Add Silva Software Packages',
+                               ['Author', 'Editor', 'ChiefEditor', 'Manager'])
+        root.manage_permission('Add Silva Software Releases',
+                               ['Author', 'Editor', 'ChiefEditor', 'Manager'])
+
+
+class ISilvaSoftwarePackageExtension(Interface):
+    pass
+
+install = SilvaSoftwarePackageInstaller('SilvaSoftwarePackage',
+                                        ISilvaSoftwarePackageExtension)

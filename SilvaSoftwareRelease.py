@@ -1,28 +1,30 @@
-# Copyright (c) 2004 Guido Wesdorp. All rights reserved.
+# Copyright (c) 2004-2008 Infrae. All rights reserved.
 # See also LICENSE.txt
-# $Id: SilvaSoftwareRelease.py,v 1.7 2005/03/14 11:22:58 guido Exp $
+# $Id$
+
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.interface import implements
-from Products.SilvaMetadata.Compatibility import registerTypeForMetadata
 from Products.Silva import SilvaPermissions
 from Products.Silva.helpers import add_and_edit
 from Products.Silva import mangle
 from Products.Silva.Publication import Publication
-from Products.Silva.interfaces import IPublication, IContainer, IAsset
-from DateTime import DateTime
+from Products.Silva.interfaces import IAsset, IFile
 from Products.Silva.ExtensionRegistry import extensionRegistry
-from interfaces import ISilvaSoftwareFile, ISilvaSoftwareRelease
+from interfaces import ISilvaSoftwareRelease
 
 module_security = ModuleSecurityInfo(
     'Products.SilvaSoftwarePackage.SilvaSoftwareRelease')
 
 import re
 
+from silva.core import conf as silvaconf
+from silva.core.views import views as silvaviews
+
+
 module_security.declareProtected(SilvaPermissions.ReadSilvaContent,
                                     'test_version_string')
-_version_reg = re.compile('^[0-9]+(\.[0-9]+)*(\.[0-9]+)?((a|b|rc)[0-9]*)?$')
+_version_reg = re.compile('^[0-9]+(\.[0-9]+)*(dev-r[0-9]+)?((a|b|rc)[0-9]*)?$')
 def test_version_string(version):
     """test whether the version conforms to the required format"""
     if not _version_reg.search(version):
@@ -35,29 +37,30 @@ class SilvaSoftwareRelease(Publication):
     meta_type = 'Silva Software Release'
     implements(ISilvaSoftwareRelease)
 
-    def __init__(self, id):
-        SilvaSoftwareRelease.inheritedAttribute('__init__')(self, id)
+    silvaconf.factory('manage_addSilvaSoftwareRelease')
+    silvaconf.icon('software_release.png')
+    silvaconf.priority(9)
 
     def get_silva_addables_allowed_in_publication(self):
-        """return a list of allowed meta types in this type of object"""
-        root = self.get_root()
+
+        allowed = super(SilvaSoftwareRelease, self).\
+                  get_silva_addables_allowed_in_publication()
         addables = extensionRegistry.get_addables()
-        result = ['Silva Document']
+        result = []
+
         for addable in addables:
-            if (addable.has_key('instance') and
-                    IAsset.implementedBy(addable['instance']) and
-                    self.service_view_registry.has_view('add', 
-                        addable['name'])):
+            if (addable['name'] in allowed and
+                IAsset.implementedBy(addable['instance'])):
                 result.append(addable['name'])
         return result
 
     security.declareProtected(SilvaPermissions.AccessContentsInformation,
                                 'get_files')
     def get_files(self):
-        """returns a list with all the contained files"""
+
         ret = []
         for obj in self.objectValues():
-            if ISilvaSoftwareFile.providedBy(obj):
+            if IFile.providedBy(obj):
                 ret.append(obj)
         ret.sort(lambda a, b: cmp(a.id, b.id))
         return ret
@@ -75,18 +78,29 @@ def manage_addSilvaSoftwareRelease(self, version, REQUEST=None):
 
     # see whether the id is correct for usage as version
     test_version_string(version)
-        
+
     o = SilvaSoftwareRelease(version)
     self._setObject(version, o)
     object = getattr(self, version)
     object.set_title(version)
-    
-    binding = self.service_metadata.getMetadata(object)
-    
+
     # add index document
     object.manage_addProduct['SilvaDocument'].manage_addDocument(
                                                     'index', version)
 
     add_and_edit(self, version, REQUEST)
     return ''
+
+class ReleaseView(silvaviews.View):
+
+    silvaconf.context(ISilvaSoftwareRelease)
+
+    def get_files(self):
+        for entry in self.content.get_files():
+            mod_date = entry.get_modification_datetime()
+            size = entry.get_file_size()
+            yield {'name': entry.get_filename(),
+                   'url': entry.absolute_url(),
+                   'date': mangle.DateTime(mod_date).toStr(),
+                   'size': mangle.Bytes(size)}
 

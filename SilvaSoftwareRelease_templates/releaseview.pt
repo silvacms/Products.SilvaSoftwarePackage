@@ -1,0 +1,26 @@
+<tal:release>
+
+  <p tal:define="index content/get_default | nothing" 
+     tal:condition="index" 
+     tal:replace="structure index/view">View</p>
+
+  <table class="silvatable list">
+    <thead>
+      <tr>
+        <th class="align-left">Filename</th>
+        <th class="align-left">Release date</th>
+        <th class="align-left">Size</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr tal:repeat="file view/get_files">
+        <td>
+          <a tal:attributes="href file/url" 
+             tal:content="file/name" />
+        </td>
+        <td tal:content="file/date"></td>
+        <td tal:content="file/size"></td>
+      </tr>
+    </tbody>
+  </table>
+</tal:release>

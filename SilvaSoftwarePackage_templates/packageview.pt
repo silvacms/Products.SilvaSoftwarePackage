@@ -1,0 +1,42 @@
+<tal:package>
+
+  <p tal:define="index content/get_default | nothing" 
+     tal:condition="index" 
+     tal:replace="structure index/view">View</p>
+
+  <p>
+    <strong>License:</strong> 
+    <a tal:attributes="href string:${content/absolute_url}/LICENSE.txt">
+      New BSD
+    </a>
+  </p>
+
+  <table class="silvatable list">
+    <thead>
+      <tr>
+        <th class="align-left">Release version</th>
+        <th class="align-left">Release date</th>
+        <th class="align-left">Release files</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr tal:repeat="release view/get_releases">
+        <td>
+          <a tal:attributes="href release/url" 
+             tal:content="release/name">
+          </a>
+        </td>
+        <td tal:content="release/date" />
+        <td>
+          <tal:block tal:repeat="file release/files">
+            <a tal:attributes="href file/url"
+               tal:content="file/name">
+              filename
+              </a><br />
+          </tal:block>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</tal:package>

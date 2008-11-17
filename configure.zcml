@@ -1,42 +1,9 @@
 <configure
-    xmlns="http://namespaces.zope.org/zope"
-    xmlns:silva="http://infrae.com/ns/silvaconf"
-    >
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:grok="http://namespaces.zope.org/grok"
+  >
 
-  <include package="Products.Silva" />
+  <!-- register -->
+  <grok:grok package="." />
 
-
-  <!-- define Silva core as the root 'extension' -->
-  <silva:extension
-    name="SilvaSoftwarePackage"
-    title="Silva Software Package"
-    depends="SilvaDocument"
-    />
-
-  <!-- register content types -->
-
-  <silva:content
-    content=".SilvaSoftwareFile.SilvaSoftwareFile"
-    extension_name="SilvaSoftwarePackage"
-    icon="www/silva_software_file.png"
-    priority="-9"
-    content_factory=".SilvaSoftwareFile.manage_addSilvaSoftwareFile"
-    />
-
-  <silva:content
-    content=".SilvaSoftwarePackage.SilvaSoftwarePackage"
-    extension_name="SilvaSoftwarePackage"
-    icon="www/software_package.png"
-    priority="9"
-    content_factory=".SilvaSoftwarePackage.manage_addSilvaSoftwarePackage"
-    />
-
-  <silva:content
-    content=".SilvaSoftwareRelease.SilvaSoftwareRelease"
-    extension_name="SilvaSoftwarePackage"
-    icon="www/software_release.png"
-    priority="9"
-    content_factory=".SilvaSoftwareRelease.manage_addSilvaSoftwareRelease"
-    />
-  
 </configure>
