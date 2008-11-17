@@ -17,6 +17,7 @@ module_security = ModuleSecurityInfo(
     'Products.SilvaSoftwarePackage.SilvaSoftwareRelease')
 
 import re
+import DateTime
 
 from silva.core import conf as silvaconf
 from silva.core.views import views as silvaviews
@@ -87,6 +88,9 @@ def manage_addSilvaSoftwareRelease(self, version, REQUEST=None):
     # add index document
     object.manage_addProduct['SilvaDocument'].manage_addDocument(
                                                     'index', version)
+    index = getattr(object, 'index')
+    index.set_unapproved_version_publication_datetime(DateTime.DateTime())
+    index.approve_version()
 
     add_and_edit(self, version, REQUEST)
     return ''

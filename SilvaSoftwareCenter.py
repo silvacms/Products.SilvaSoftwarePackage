@@ -17,6 +17,8 @@ from silva.core.views import views as silvaviews
 
 from silva.core.views.interfaces import IPreviewLayer
 
+import DateTime
+
 class SilvaSoftwareCenter(Publication):
     security = ClassSecurityInfo()
     meta_type = 'Silva Software Center'
@@ -25,7 +27,7 @@ class SilvaSoftwareCenter(Publication):
     silvaconf.icon('software_package.png')
     silvaconf.priority(9)
 
-    def get_silva_addables_allowed_in_publication(self):        
+    def get_silva_addables_allowed_in_publication(self):
         return ['Silva Software Package']
 
 InitializeClass(SilvaSoftwareCenter)
@@ -36,6 +38,10 @@ def addDefaultDocument(center, event):
     if event.oldParent is None:
         center.manage_addProduct['SilvaDocument'].manage_addDocument(
             'index', center.get_title())
+        index = getattr(center, 'index')
+        index.set_unapproved_version_publication_datetime(DateTime.DateTime())
+        index.approve_version()
+
 
 
 class CenterAdd(z3cforms.AddForm):
@@ -53,7 +59,7 @@ class CenterView(silvaviews.View):
         publishables = self.content.get_ordered_publishables()
         publishables = [obj for obj in publishables
                         if ISilvaSoftwarePackage.providedBy(obj)]
-        
+
         if not IPreviewLayer.providedBy(self.request):
             publishables = [obj for obj in publishables
                             if obj.get_default().get_public_version()]
@@ -105,7 +111,7 @@ class CenterRegister(silvaviews.Template):
         release = self._get_release(package, package_version)
 
         binding = self.context.service_metadata.getMetadata(release)
-        binding.setValues('silva-extra', 
+        binding.setValues('silva-extra',
                           {'contactname': self.request['author'],
                            'contactemail': self.request['author_email'],
                            'keywords': self.request['keywords'],
@@ -130,7 +136,7 @@ class CenterUpload(CenterRegister):
         if archive is not None:
             self.response.setStatus(409) # Conflict
             return u'Already uploaded'
-        
+
         factory = release.manage_addProduct['Silva']
         factory.manage_addFile(filename, filename, self.request['content'])
 
