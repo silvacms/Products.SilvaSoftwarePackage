@@ -17,6 +17,7 @@ from Products.SilvaSoftwarePackage.interfaces import \
     ISilvaSoftwarePackage, ISilvaSoftwareRelease
 
 import re
+import DateTime
 from pkg_resources import parse_version
 
 from silva.core import conf as silvaconf
@@ -57,7 +58,11 @@ def addDefaultDocument(package, event):
     if event.oldParent is None:
         package.manage_addProduct['SilvaDocument'].manage_addDocument(
             'index', package.get_title())
-        
+        package = getattr(object, 'index')
+        package.set_unapproved_version_publication_datetime(DateTime.DateTime())
+        package.approve_version()
+
+
 
 class PackageAdd(z3cforms.AddForm):
 
@@ -74,7 +79,7 @@ class PackageView(silvaviews.View):
         publishables = self.content.get_ordered_publishables()
         publishables = [obj for obj in publishables
                         if ISilvaSoftwareRelease.providedBy(obj)]
-        
+
         if not IPreviewLayer.providedBy(self.request):
             publishables = [obj for obj in publishables
                             if obj.get_default().get_public_version()]

@@ -17,7 +17,6 @@ from silva.core.views import views as silvaviews
 
 from silva.core.views.interfaces import IPreviewLayer
 
-import DateTime
 
 class SilvaSoftwareCenter(Publication):
     security = ClassSecurityInfo()
@@ -38,10 +37,6 @@ def addDefaultDocument(center, event):
     if event.oldParent is None:
         center.manage_addProduct['SilvaDocument'].manage_addDocument(
             'index', center.get_title())
-        index = getattr(center, 'index')
-        index.set_unapproved_version_publication_datetime(DateTime.DateTime())
-        index.approve_version()
-
 
 
 class CenterAdd(z3cforms.AddForm):
