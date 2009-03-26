@@ -3,7 +3,7 @@ See also LICENSE.txt
 
 SilvaSoftwarePackage changes
 
-  1.0.1
+  1.1 (2009-03-26)
 
     Features added:
 
