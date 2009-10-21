@@ -14,8 +14,10 @@ from Products.SilvaSoftwarePackage.interfaces import \
 from silva.core import conf as silvaconf
 from silva.core.views import z3cforms
 from silva.core.views import views as silvaviews
-
 from silva.core.views.interfaces import IPreviewLayer
+
+from five import grok
+
 
 
 class SilvaSoftwareCenter(Publication):
@@ -64,11 +66,13 @@ class CenterView(silvaviews.View):
                    'url': entry.absolute_url()}
 
 
-class CenterRegister(silvaviews.Template):
+class CenterRegister(grok.View):
+    """Register support for distutils.
+    """
 
-    silvaconf.context(ISilvaSoftwareCenter)
-    #silvaconf.require('silva.ChangeSilvaContent')
-    silvaconf.name('submit')
+    grok.context(ISilvaSoftwareCenter)
+    #grok.require('silva.ChangeSilvaContent')
+    grok.name('submit')
 
 
     def _get_package(self):
@@ -117,10 +121,12 @@ class CenterRegister(silvaviews.Template):
 
 
 class CenterUpload(CenterRegister):
+    """Upload support for distutils.
+    """
 
-    silvaconf.context(ISilvaSoftwareCenter)
-    silvaconf.require('silva.ChangeSilvaContent')
-    silvaconf.name('file_upload')
+    grok.context(ISilvaSoftwareCenter)
+    grok.require('silva.ChangeSilvaContent')
+    grok.name('file_upload')
 
     def render(self):
         package, package_name, package_version = self._get_package()
@@ -139,10 +145,12 @@ class CenterUpload(CenterRegister):
         return u'Uploaded'
 
 
-class CenterSimple(silvaviews.Template):
+class CenterSimple(grok.View):
+    """Simple view listing package of the center.
+    """
 
-    silvaconf.context(ISilvaSoftwareCenter)
-    silvaconf.name('simple')
+    grok.context(ISilvaSoftwareCenter)
+    grok.name('simple')
 
     def get_releases(self):
         query = {'meta_type': 'Silva File',
