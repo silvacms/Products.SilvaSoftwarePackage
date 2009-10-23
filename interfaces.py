@@ -2,7 +2,7 @@
 # See also LICENSE.txt
 # $Id$
 
-from Products.Silva import interfaces
+from silva.core import interfaces
 
 class ISilvaSoftwarePackage(interfaces.IPublication):
     """A Silva Software Package is a collection of
@@ -32,4 +32,4 @@ class ISilvaSoftwareCenter(interfaces.IPublication):
     """A Silva software center.
     """
 
-    
+
