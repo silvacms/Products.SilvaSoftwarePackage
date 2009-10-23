@@ -52,5 +52,18 @@ class SilvaSoftwarePackageInstaller(DefaultInstaller):
 class ISilvaSoftwarePackageExtension(Interface):
     pass
 
+
 install = SilvaSoftwarePackageInstaller('SilvaSoftwarePackage',
                                         ISilvaSoftwarePackageExtension)
+
+
+CLASS_CHANGES = {
+    'Products.Silva3PSP.Silva3PExtensionPage Silva3PExtensionPage':
+        'Products.SilvaSoftwarePackage.SilvaSoftwareCenter SilvaSoftwareCenter',
+    'Products.Silva3PSP.Silva3PSoftwarePackage Silva3PSoftwarePackage':
+        'Products.SilvaSoftwarePackage.SilvaSoftwarePackage SilvaSoftwarePackage',
+    'Products.Silva3PSP.Silva3PSoftwareRelease Silva3PSoftwareRelease':
+        'Products.SilvaSoftwarePackage.SilvaSoftwareRelease SilvaSoftwareRelease',
+    'Products.SilvaSoftwarePackage.SilvaSoftwareFile FileSystemSoftwareFile':
+        'Products.Silva.File FileSystemFile',
+    }
