@@ -10,7 +10,6 @@ from zope.app.container.interfaces import IObjectAddedEvent
 from Products.Silva import SilvaPermissions
 from Products.Silva.helpers import add_and_edit
 from Products.Silva.Publication import Publication
-from Products.Silva.interfaces import IAsset
 from Products.Silva import mangle
 from Products.Silva.ExtensionRegistry import extensionRegistry
 from Products.SilvaSoftwarePackage.interfaces import \
@@ -23,6 +22,7 @@ from pkg_resources import parse_version
 from silva.core import conf as silvaconf
 from silva.core.views import z3cforms
 from silva.core.views import views as silvaviews
+from silva.core.interfaces import IAsset
 
 from silva.core.views.interfaces import IPreviewLayer
 

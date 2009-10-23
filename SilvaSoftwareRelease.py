@@ -9,7 +9,6 @@ from Products.Silva import SilvaPermissions
 from Products.Silva.helpers import add_and_edit
 from Products.Silva import mangle
 from Products.Silva.Publication import Publication
-from Products.Silva.interfaces import IAsset, IFile
 from Products.Silva.ExtensionRegistry import extensionRegistry
 from interfaces import ISilvaSoftwareRelease
 
@@ -21,7 +20,7 @@ import DateTime
 
 from silva.core import conf as silvaconf
 from silva.core.views import views as silvaviews
-
+from silva.core.interfaces import IAsset, IFile
 
 module_security.declareProtected(SilvaPermissions.ReadSilvaContent,
                                     'test_version_string')
