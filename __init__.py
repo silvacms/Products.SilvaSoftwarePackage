@@ -25,17 +25,17 @@ class SilvaSoftwarePackageInstaller(DefaultInstaller):
         """
 
         # edit
-        reg.register('edit', 'Silva Software Package', 
+        reg.register('edit', 'Silva Software Package',
                      ['edit', 'Container', 'SilvaSoftwarePackage'])
-        reg.register('edit', 'Silva Software Release', 
+        reg.register('edit', 'Silva Software Release',
                      ['edit', 'Container', 'SilvaSoftwareRelease'])
         # add
-        reg.register('add', 'Silva Software Release', 
+        reg.register('add', 'Silva Software Release',
                      ['add', 'SilvaSoftwareRelease'])
-    
+
     def unregisterViews(self, reg):
 
-        for meta_type in ['Silva Software Package', 
+        for meta_type in ['Silva Software Package',
                           'Silva Software Release',]:
             reg.unregister('edit', meta_type)
             reg.unregister('add', meta_type)
@@ -66,4 +66,6 @@ CLASS_CHANGES = {
         'Products.SilvaSoftwarePackage.SilvaSoftwareRelease SilvaSoftwareRelease',
     'Products.SilvaSoftwarePackage.SilvaSoftwareFile FileSystemSoftwareFile':
         'Products.Silva.File FileSystemFile',
+    'Products.SilvaSoftwarePackage.SilvaSoftwareFile ZODBSoftwareFile':
+        'Products.Silva.File ZODBFile',
     }
