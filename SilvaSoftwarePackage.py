@@ -56,11 +56,13 @@ InitializeClass(SilvaSoftwarePackage)
 @silvaconf.subscribe(ISilvaSoftwarePackage, IObjectAddedEvent)
 def addDefaultDocument(package, event):
     if event.oldParent is None:
-        package.manage_addProduct['SilvaDocument'].manage_addDocument(
-            'index', package.get_title())
-        index = getattr(package, 'index')
-        index.set_unapproved_version_publication_datetime(DateTime.DateTime())
-        index.approve_version()
+        if not hasattr(package, 'index'):
+            package.manage_addProduct['SilvaDocument'].manage_addDocument(
+                'index', package.get_title())
+            index = getattr(package, 'index')
+            index.set_unapproved_version_publication_datetime(
+                DateTime.DateTime())
+            index.approve_version()
 
 
 

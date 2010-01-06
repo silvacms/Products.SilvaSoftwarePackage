@@ -32,8 +32,9 @@ class SilvaSoftwareCenter(Publication):
 @silvaconf.subscribe(ISilvaSoftwareCenter, IObjectAddedEvent)
 def addDefaultDocument(center, event):
     if event.oldParent is None:
-        center.manage_addProduct['SilvaDocument'].manage_addDocument(
-            'index', center.get_title())
+        if not hasattr(package, 'index'):
+            center.manage_addProduct['SilvaDocument'].manage_addDocument(
+                'index', center.get_title())
 
 
 class CenterAdd(z3cforms.AddForm):
