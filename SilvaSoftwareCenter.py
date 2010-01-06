@@ -2,8 +2,6 @@
 # See also LICENSE.txt
 # $Id$
 
-from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
 from zope.interface import implements
 from zope.app.container.interfaces import IObjectAddedEvent
 
@@ -17,11 +15,10 @@ from silva.core.views import views as silvaviews
 from silva.core.views.interfaces import IPreviewLayer
 
 from five import grok
-
+import os.path
 
 
 class SilvaSoftwareCenter(Publication):
-    security = ClassSecurityInfo()
     meta_type = 'Silva Software Center'
     implements(ISilvaSoftwareCenter)
 
@@ -30,8 +27,6 @@ class SilvaSoftwareCenter(Publication):
 
     def get_silva_addables_allowed_in_container(self):
         return ['Silva Software Package']
-
-InitializeClass(SilvaSoftwareCenter)
 
 
 @silvaconf.subscribe(ISilvaSoftwareCenter, IObjectAddedEvent)
@@ -145,6 +140,8 @@ class CenterUpload(CenterRegister):
         return u'Uploaded'
 
 
+VALID_SIMPLE_FILES_EXT = ['.gz', '.tgz', '.zip', '.egg',]
+
 class CenterSimple(grok.View):
     """Simple view listing package of the center.
     """
@@ -156,8 +153,10 @@ class CenterSimple(grok.View):
         query = {'meta_type': 'Silva File',
                  'path': '/'.join(self.context.getPhysicalPath())}
         for brain in self.context.service_catalog(query):
-            yield {'name': brain.id,
-                   'url': brain.getURL()}
+            name, ext = os.path.splitext(brain.id)
+            if ext in VALID_SIMPLE_FILES_EXT:
+                yield {'name': brain.id,
+                       'url': brain.getURL()}
 
 
 
