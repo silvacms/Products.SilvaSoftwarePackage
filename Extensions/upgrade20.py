@@ -33,6 +33,22 @@ def upgrade(root):
     fix_meta_type(root)
     if hasattr(root, 'service_software'):
         root.manage_delObjects(['service_software',])
+    reg = root.service_view_registry
+    reg.unregister('add', 'Silva 3rd Party Extension Page')
+    reg.unregister('add', 'Silva 3rd Party Software Package')
+    reg.unregister('add', 'Silva 3rd Party Software Release')
+    reg.unregister('edit', 'Silva 3rd Party Extension Page')
+    reg.unregister('edit', 'Silva 3rd Party Software Package')
+    reg.unregister('edit', 'Silva 3rd Party Software Release')
+    reg.unregister('public', 'Silva 3rd Party Extension Page')
+    reg.unregister('public', 'Silva 3rd Party Software Package')
+    reg.unregister('public', 'Silva 3rd Party Software Release')
+    reg.unregister('add', 'Silva Software File')
+    reg.unregister('edit', 'Silva Software File')
+    reg.unregister('public', 'Silva Software File')
+    reg.unregister('add', 'Silva Software Package')
+    reg.unregister('public', 'Silva Software Package')
+    reg.unregister('public', 'Silva Software Release')
 
 
 def convert_to_center(publication):
@@ -41,3 +57,4 @@ def convert_to_center(publication):
     assert not silva.core.interfaces.IRoot.providedBy(publication)
     assert silva.core.interfaces.IPublication.providedBy(publication)
     SwitchClass(SilvaSoftwareCenter).upgrade(publication)
+
