@@ -1,17 +1,19 @@
 <tal:package>
 
-  <p tal:define="index content/get_default | nothing" 
-     tal:condition="index" 
+  <p tal:define="index content/get_default | nothing"
+     tal:condition="index"
      tal:replace="structure index/view">View</p>
 
   <p>
-    <strong>License:</strong> 
+    <strong>License:</strong>
     <a tal:attributes="href string:${content/absolute_url}/LICENSE.txt">
       New BSD
     </a>
   </p>
 
-  <table class="silvatable list">
+  <table class="silvatable list"
+         tal:define="releases view/get_releases"
+         tal:condition="releases">
     <thead>
       <tr>
         <th class="align-left">Release version</th>
@@ -20,9 +22,9 @@
       </tr>
     </thead>
     <tbody>
-      <tr tal:repeat="release view/get_releases">
+      <tr tal:repeat="release releases">
         <td>
-          <a tal:attributes="href release/url" 
+          <a tal:attributes="href release/url"
              tal:content="release/name">
           </a>
         </td>
