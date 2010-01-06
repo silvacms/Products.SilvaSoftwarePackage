@@ -32,7 +32,7 @@ class SilvaSoftwareCenter(Publication):
 @silvaconf.subscribe(ISilvaSoftwareCenter, IObjectAddedEvent)
 def addDefaultDocument(center, event):
     if event.oldParent is None:
-        if not hasattr(package, 'index'):
+        if not hasattr(center, 'index'):
             center.manage_addProduct['SilvaDocument'].manage_addDocument(
                 'index', center.get_title())
 
