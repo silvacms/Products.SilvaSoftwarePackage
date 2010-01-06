@@ -28,7 +28,7 @@ class SilvaSoftwareCenter(Publication):
     silvaconf.icon('software_package.png')
     silvaconf.priority(9)
 
-    def get_silva_addables_allowed_in_publication(self):
+    def get_silva_addables_allowed_in_container(self):
         return ['Silva Software Package']
 
 InitializeClass(SilvaSoftwareCenter)
@@ -71,7 +71,7 @@ class CenterRegister(grok.View):
     """
 
     grok.context(ISilvaSoftwareCenter)
-    #grok.require('silva.ChangeSilvaContent')
+    grok.require('silva.ChangeSilvaContent')
     grok.name('submit')
 
 

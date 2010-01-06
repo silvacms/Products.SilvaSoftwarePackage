@@ -41,10 +41,10 @@ class SilvaSoftwareRelease(Publication):
     silvaconf.icon('software_release.png')
     silvaconf.priority(9)
 
-    def get_silva_addables_allowed_in_publication(self):
+    def get_silva_addables_allowed_in_container(self):
 
         allowed = super(SilvaSoftwareRelease, self).\
-                  get_silva_addables_allowed_in_publication()
+                  get_silva_addables_allowed_in_container()
         addables = extensionRegistry.get_addables()
         result = []
 
