@@ -75,7 +75,7 @@ class PackageView(silvaviews.View):
     silvaconf.context(ISilvaSoftwarePackage)
 
     def get_releases(self):
-
+        releases = []
         publishables = self.content.get_ordered_publishables()
         publishables = [obj for obj in publishables
                         if ISilvaSoftwareRelease.providedBy(obj)]
@@ -96,8 +96,9 @@ class PackageView(silvaviews.View):
         for entry in publishables:
             crea_date = entry.get_default().get_creation_datetime()
             files = map(file_detail, entry.get_files())
-            yield {'name': self.content.get_title() + ' ' + entry.id,
-                   'url': entry.absolute_url(),
-                   'date': mangle.DateTime(crea_date).toStr(),
-                   'files': files}
+            releases.append({'name': self.content.get_title() + ' ' + entry.id,
+                             'url': entry.absolute_url(),
+                             'date': mangle.DateTime(crea_date).toStr(),
+                             'files': files})
+        return releases
 
