@@ -2,12 +2,10 @@
 # See also LICENSE.txt
 # $Id$
 
-from zope.interface import implements
-from zope.app.container.interfaces import IObjectAddedEvent
+from zope.lifecycleevent.interfaces import IObjectCreatedEvent
 
 from Products.Silva.Publication import Publication
-from Products.SilvaSoftwarePackage.interfaces import \
-    ISilvaSoftwareCenter, ISilvaSoftwarePackage
+from Products.SilvaSoftwarePackage import interfaces
 
 from silva.core import conf as silvaconf
 from silva.core.views import z3cforms
@@ -17,41 +15,44 @@ from silva.core.views.interfaces import IPreviewLayer
 from five import grok
 import os.path
 
+import DateTime
+
 
 class SilvaSoftwareCenter(Publication):
     meta_type = 'Silva Software Center'
-    implements(ISilvaSoftwareCenter)
+    grok.implements(interfaces.ISilvaSoftwareCenter)
 
     silvaconf.icon('software_package.png')
     silvaconf.priority(9)
 
     def get_silva_addables_allowed_in_container(self):
-        return ['Silva Software Package']
+        return ['Silva Software Group', 'Silva Software Package',]
 
 
-@silvaconf.subscribe(ISilvaSoftwareCenter, IObjectAddedEvent)
-def addDefaultDocument(center, event):
-    if event.oldParent is None:
-        if not hasattr(center, 'index'):
-            center.manage_addProduct['SilvaDocument'].manage_addDocument(
-                'index', center.get_title())
+@grok.subscribe(interfaces.ISilvaSoftwareContent, IObjectCreatedEvent)
+def addDefaultDocument(content, event):
+    content.manage_addProduct['SilvaDocument'].manage_addDocument(
+        'index', content.get_title())
+    index = getattr(content, 'index')
+    index.set_unapproved_version_publication_datetime(DateTime.DateTime())
+    index.approve_version()
 
 
 class CenterAdd(z3cforms.AddForm):
 
-    silvaconf.context(ISilvaSoftwareCenter)
+    silvaconf.context(interfaces.ISilvaSoftwareCenter)
     silvaconf.name('Silva Software Center')
 
 
 class CenterView(silvaviews.View):
 
-    silvaconf.context(ISilvaSoftwareCenter)
+    silvaconf.context(interfaces.ISilvaSoftwareCenter)
 
     def get_packages(self):
 
         publishables = self.content.get_ordered_publishables()
         publishables = [obj for obj in publishables
-                        if ISilvaSoftwarePackage.providedBy(obj)]
+                        if interfaces.ISilvaSoftwarePackage.providedBy(obj)]
 
         if not IPreviewLayer.providedBy(self.request):
             publishables = [obj for obj in publishables
@@ -66,7 +67,7 @@ class CenterRegister(grok.View):
     """Register support for distutils.
     """
 
-    grok.context(ISilvaSoftwareCenter)
+    grok.context(interfaces.ISilvaSoftwareCenter)
     grok.require('silva.ChangeSilvaContent')
     grok.name('submit')
 
@@ -120,7 +121,7 @@ class CenterUpload(CenterRegister):
     """Upload support for distutils.
     """
 
-    grok.context(ISilvaSoftwareCenter)
+    grok.context(interfaces.ISilvaSoftwareCenter)
     grok.require('silva.ChangeSilvaContent')
     grok.name('file_upload')
 
@@ -141,13 +142,13 @@ class CenterUpload(CenterRegister):
         return u'Uploaded'
 
 
-VALID_SIMPLE_FILES_EXT = ['.gz', '.tgz', '.zip', '.egg',]
+VALID_SIMPLE_FILES_EXT = ['.gz', '.tgz', '.zip', '.egg', '.zexp']
 
 class CenterSimple(grok.View):
     """Simple view listing package of the center.
     """
 
-    grok.context(ISilvaSoftwareCenter)
+    grok.context(interfaces.ISilvaSoftwareCenter)
     grok.name('simple')
 
     def get_releases(self):

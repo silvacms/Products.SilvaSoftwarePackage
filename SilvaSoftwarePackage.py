@@ -2,36 +2,27 @@
 # See also LICENSE.txt
 # $Id$
 
-from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo
-from zope.interface import implements
-from zope.app.container.interfaces import IObjectAddedEvent
-
-from Products.Silva import SilvaPermissions
-from Products.Silva.helpers import add_and_edit
 from Products.Silva.Publication import Publication
 from Products.Silva import mangle
 from Products.Silva.ExtensionRegistry import extensionRegistry
-from Products.SilvaSoftwarePackage.interfaces import \
-    ISilvaSoftwarePackage, ISilvaSoftwareRelease
 
-import re
-import DateTime
-from pkg_resources import parse_version
+from Products.SilvaSoftwarePackage import interfaces
 
 from silva.core import conf as silvaconf
-from silva.core.views import z3cforms
-from silva.core.views import views as silvaviews
 from silva.core.interfaces import IAsset
-
+from silva.core.views import views as silvaviews
+from silva.core.views import z3cforms
 from silva.core.views.interfaces import IPreviewLayer
 
-class SilvaSoftwarePackage(Publication):
-    """Silva Software Package"""
+from five import grok
 
-    security = ClassSecurityInfo()
+from pkg_resources import parse_version
+
+
+class SilvaSoftwarePackage(Publication):
+
     meta_type = 'Silva Software Package'
-    implements(ISilvaSoftwarePackage)
+    grok.implements(interfaces.ISilvaSoftwarePackage)
 
     silvaconf.icon('software_package.png')
     silvaconf.priority(9)
@@ -50,37 +41,21 @@ class SilvaSoftwarePackage(Publication):
         return result
 
 
-InitializeClass(SilvaSoftwarePackage)
-
-
-@silvaconf.subscribe(ISilvaSoftwarePackage, IObjectAddedEvent)
-def addDefaultDocument(package, event):
-    if event.oldParent is None:
-        if not hasattr(package, 'index'):
-            package.manage_addProduct['SilvaDocument'].manage_addDocument(
-                'index', package.get_title())
-            index = getattr(package, 'index')
-            index.set_unapproved_version_publication_datetime(
-                DateTime.DateTime())
-            index.approve_version()
-
-
-
 class PackageAdd(z3cforms.AddForm):
 
-    silvaconf.context(ISilvaSoftwarePackage)
-    silvaconf.name('Silva Software Package')
+    grok.context(interfaces.ISilvaSoftwarePackage)
+    grok.name('Silva Software Package')
 
 
 class PackageView(silvaviews.View):
 
-    silvaconf.context(ISilvaSoftwarePackage)
+    grok.context(interfaces.ISilvaSoftwarePackage)
 
     def get_releases(self):
         releases = []
         publishables = self.content.get_ordered_publishables()
         publishables = [obj for obj in publishables
-                        if ISilvaSoftwareRelease.providedBy(obj)]
+                        if interfaces.ISilvaSoftwareRelease.providedBy(obj)]
 
         if not IPreviewLayer.providedBy(self.request):
             publishables = [obj for obj in publishables

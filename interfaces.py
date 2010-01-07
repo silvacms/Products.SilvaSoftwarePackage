@@ -1,10 +1,26 @@
-# Copyright (c) 2004-2010 Infrae. All rights reserved.
+# Copyright (c) 2009-2010 Infrae. All rights reserved.
 # See also LICENSE.txt
 # $Id$
 
 from silva.core import interfaces
 
-class ISilvaSoftwarePackage(interfaces.IPublication):
+
+class ISilvaSoftwareContent(interfaces.IPublication):
+    """This is a content from the Silva Software center.
+    """
+
+
+class ISilvaSoftwareCenter(ISilvaSoftwareContent):
+    """A Silva software center.
+    """
+
+
+class ISilvaSoftwareGroup(ISilvaSoftwareContent):
+    """A group of packages.
+    """
+
+
+class ISilvaSoftwarePackage(ISilvaSoftwareContent):
     """A Silva Software Package is a collection of
     SilvaSoftwareReleases.
     """
@@ -20,16 +36,12 @@ class ISilvaSoftwarePackage(interfaces.IPublication):
         """Returns a list of all contained SilvaSoftwareFile objects.
         """
 
-class ISilvaSoftwareRelease(interfaces.IPublication):
+
+class ISilvaSoftwareRelease(ISilvaSoftwareContent):
     """A set of SilvaSoftwareFile objects and some documentation.
     """
 
     def get_files():
         """Returns a list of contained File.
         """
-
-class ISilvaSoftwareCenter(interfaces.IPublication):
-    """A Silva software center.
-    """
-
 

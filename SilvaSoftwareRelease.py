@@ -4,38 +4,41 @@
 
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
-from zope.interface import implements
 from Products.Silva import SilvaPermissions
 from Products.Silva.helpers import add_and_edit
 from Products.Silva import mangle
 from Products.Silva.Publication import Publication
 from Products.Silva.ExtensionRegistry import extensionRegistry
-from interfaces import ISilvaSoftwareRelease
 
-module_security = ModuleSecurityInfo(
-    'Products.SilvaSoftwarePackage.SilvaSoftwareRelease')
+from Products.SilvaSoftwarePackage import interfaces
 
-import re
-import DateTime
+from zope.event import notify
+from zope.lifecycleevent import ObjectCreatedEvent
+from five import grok
 
 from silva.core import conf as silvaconf
 from silva.core.views import views as silvaviews
 from silva.core.interfaces import IAsset, IFile
 
-module_security.declareProtected(SilvaPermissions.ReadSilvaContent,
-                                    'test_version_string')
+import re
+
+
+module_security = ModuleSecurityInfo(
+    'Products.SilvaSoftwarePackage.SilvaSoftwareRelease')
+module_security.declareProtected(
+    SilvaPermissions.ReadSilvaContent, 'test_version_string')
 _version_reg = re.compile('^[0-9]+(\.[0-9]+)*(dev-r[0-9]+)?((a|b|rc)[0-9]*)?$')
 def test_version_string(version):
     """test whether the version conforms to the required format"""
     if not _version_reg.search(version):
         raise TypeError, 'Version string has incorrect format!'
 
+
 class SilvaSoftwareRelease(Publication):
-    """Silva Software Release"""
 
     security = ClassSecurityInfo()
     meta_type = 'Silva Software Release'
-    implements(ISilvaSoftwareRelease)
+    grok.implements(interfaces.ISilvaSoftwareRelease)
 
     silvaconf.factory('manage_addSilvaSoftwareRelease')
     silvaconf.icon('software_release.png')
@@ -72,31 +75,26 @@ class SilvaSoftwareRelease(Publication):
 
 InitializeClass(SilvaSoftwareRelease)
 
-def manage_addSilvaSoftwareRelease(self, version, REQUEST=None):
-    if not mangle.Id(self, version).isValid():
+
+def manage_addSilvaSoftwareRelease(container, version, REQUEST=None):
+    if not mangle.Id(container, version).isValid():
         return
 
     # see whether the id is correct for usage as version
     test_version_string(version)
 
-    o = SilvaSoftwareRelease(version)
-    self._setObject(version, o)
-    object = getattr(self, version)
-    object.set_title(version)
+    release = SilvaSoftwareRelease(version)
+    container._setObject(version, release)
+    release = getattr(container, version)
+    release.set_title(version)
+    notify(ObjectCreatedEvent(release))
+    add_and_edit(container, version, REQUEST)
+    return release
 
-    # add index document
-    object.manage_addProduct['SilvaDocument'].manage_addDocument(
-                                                    'index', version)
-    index = getattr(object, 'index')
-    index.set_unapproved_version_publication_datetime(DateTime.DateTime())
-    index.approve_version()
-
-    add_and_edit(self, version, REQUEST)
-    return ''
 
 class ReleaseView(silvaviews.View):
 
-    silvaconf.context(ISilvaSoftwareRelease)
+    grok.context(interfaces.ISilvaSoftwareRelease)
 
     def get_files(self):
         for entry in self.content.get_files():
