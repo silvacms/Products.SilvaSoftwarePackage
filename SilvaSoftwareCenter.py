@@ -10,7 +10,6 @@ from Products.SilvaSoftwarePackage import interfaces
 from silva.core import conf as silvaconf
 from silva.core.views import z3cforms
 from silva.core.views import views as silvaviews
-from silva.core.views.interfaces import IPreviewLayer
 
 from five import grok
 import os.path
@@ -44,23 +43,45 @@ class CenterAdd(z3cforms.AddForm):
     silvaconf.name('Silva Software Center')
 
 
-class CenterView(silvaviews.View):
+class GroupView(silvaviews.View):
 
-    silvaconf.context(interfaces.ISilvaSoftwareCenter)
+    silvaconf.context(interfaces.ISilvaSoftwareGroup)
+
+    def get_groups(self):
+        groups = []
+        query = {'meta_type': 'Silva Software Group',
+                 'path': '/'.join(self.context.getPhysicalPath())}
+        for brain in self.context.service_catalog(query):
+            groups.append(brain.getObject())
+        return groups
 
     def get_packages(self):
+        packages = []
+        query = {'meta_type': 'Silva Software Package',
+                 'path': '/'.join(self.context.getPhysicalPath())}
+        for brain in self.context.service_catalog(query):
+            package = brain.getObject()
+            if not self.is_preview:
+                if package.get_default().get_public_version() is None:
+                    continue
+            packages.append({'name': package.get_title(),
+                             'url': brain.getURL()})
+        return packages
 
-        publishables = self.content.get_ordered_publishables()
-        publishables = [obj for obj in publishables
-                        if interfaces.ISilvaSoftwarePackage.providedBy(obj)]
 
-        if not IPreviewLayer.providedBy(self.request):
-            publishables = [obj for obj in publishables
-                            if obj.get_default().get_public_version()]
+class GroupPreview(grok.View):
 
-        for entry in publishables:
-            yield {'name': entry.get_title(),
-                   'url': entry.absolute_url()}
+    grok.context(interfaces.ISilvaSoftwareGroup)
+    grok.name('group_preview')
+
+    def get_packages(self):
+        packages = []
+        query = {'meta_type': 'Silva Software Package',
+                 'path': '/'.join(self.context.getPhysicalPath())}
+        for brain in self.context.service_catalog(query):
+            packages.append({'name': brain.get_title,
+                             'url': brain.getURL()})
+        return packages
 
 
 class CenterRegister(grok.View):

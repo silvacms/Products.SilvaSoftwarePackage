@@ -10,13 +10,13 @@ class ISilvaSoftwareContent(interfaces.IPublication):
     """
 
 
-class ISilvaSoftwareCenter(ISilvaSoftwareContent):
-    """A Silva software center.
+class ISilvaSoftwareGroup(ISilvaSoftwareContent):
+    """A group of packages.
     """
 
 
-class ISilvaSoftwareGroup(ISilvaSoftwareContent):
-    """A group of packages.
+class ISilvaSoftwareCenter(ISilvaSoftwareGroup):
+    """A Silva software center.
     """
 
 

@@ -1,0 +1,31 @@
+<tal:center
+   tal:define="groups view/get_groups">
+
+  <p tal:define="index content/get_default | nothing"
+     tal:condition="index"
+     tal:replace="structure index/view">View</p>
+
+  <tal:group_presentation tal:condition="groups"
+                          tal:repeat="group groups">
+    <tal:presentation tal:content="structure group/@@group_preview" />
+  </tal:group_presentation>
+
+  <table class="silvatable list"
+         tal:condition="not:groups">
+    <thead>
+      <tr>
+        <th class="align-left">Packages</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr tal:repeat="package view/get_packages">
+        <td>
+          <a tal:attributes="href package/url"
+             tal:content="package/name">
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</tal:center>
