@@ -106,6 +106,7 @@ class CenterRegister(grok.View):
             package_title = package_name.replace('.', ' ')
             factory.manage_addSilvaSoftwarePackage(package_name, package_title)
             package = getattr(self.context, package_name)
+            package.sec_update_last_author_info()
 
         return (package, package_name, package_version)
 
@@ -115,6 +116,7 @@ class CenterRegister(grok.View):
             factory = package.manage_addProduct['SilvaSoftwarePackage']
             factory.manage_addSilvaSoftwareRelease(package_version)
             release = getattr(package, package_version)
+            release.sec_update_last_author_info()
         return release
 
     def render(self):
@@ -158,6 +160,8 @@ class CenterUpload(CenterRegister):
 
         factory = release.manage_addProduct['Silva']
         factory.manage_addFile(filename, filename, self.request['content'])
+        release_file = getattr(release, filename)
+        release_file.sec_update_last_author_info()
 
         self.response.setStatus(200)
         return u'Uploaded'
