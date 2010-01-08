@@ -30,11 +30,14 @@ class SilvaSoftwareCenter(Publication):
 
 @grok.subscribe(interfaces.ISilvaSoftwareContent, IObjectCreatedEvent)
 def addDefaultDocument(content, event):
-    content.manage_addProduct['SilvaDocument'].manage_addDocument(
-        'index', content.get_title())
-    index = getattr(content, 'index')
-    index.set_unapproved_version_publication_datetime(DateTime.DateTime())
-    index.approve_version()
+    if event.object is not content:
+        return
+    if not hasattr(content, 'index'):
+        content.manage_addProduct['SilvaDocument'].manage_addDocument(
+            'index', content.get_title())
+        index = getattr(content, 'index')
+        index.set_unapproved_version_publication_datetime(DateTime.DateTime())
+        index.approve_version()
 
 
 class CenterAdd(z3cforms.AddForm):
