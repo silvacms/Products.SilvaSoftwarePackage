@@ -19,7 +19,10 @@ class SilvaSoftwareGroup(Publication):
     silvaconf.priority(8)
 
     def get_silva_addables_allowed_in_container(self):
-        return ['Silva Software Group', 'Silva Software Package',]
+        return ['Silva Document',
+                'Silva Link',
+                'Silva Software Group',
+                'Silva Software Package',]
 
 
 class GroupAdd(z3cforms.AddForm):
