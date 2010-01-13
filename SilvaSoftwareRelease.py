@@ -45,7 +45,6 @@ class SilvaSoftwareRelease(Publication):
     silvaconf.priority(9)
 
     def get_silva_addables_allowed_in_container(self):
-
         allowed = super(SilvaSoftwareRelease, self).\
                   get_silva_addables_allowed_in_container()
         addables = extensionRegistry.get_addables()
@@ -57,10 +56,9 @@ class SilvaSoftwareRelease(Publication):
                 result.append(addable['name'])
         return result
 
-    security.declareProtected(SilvaPermissions.AccessContentsInformation,
-                                'get_files')
+    security.declareProtected(
+        SilvaPermissions.AccessContentsInformation, 'get_files')
     def get_files(self):
-
         ret = []
         for obj in self.objectValues():
             if IFile.providedBy(obj):

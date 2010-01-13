@@ -60,7 +60,7 @@ class GroupView(silvaviews.View):
 
     def get_packages(self):
         packages = []
-        query = {'meta_type': 'Silva Software Package',
+        query = {'meta_type': ['Silva Software Package', 'Silva Link',],
                  'path': '/'.join(self.context.getPhysicalPath())}
         for brain in self.context.service_catalog(query):
             package = brain.getObject()
@@ -79,7 +79,7 @@ class GroupPreview(grok.View):
 
     def get_packages(self):
         packages = []
-        query = {'meta_type': 'Silva Software Package',
+        query = {'meta_type': ['Silva Software Package', 'Silva Link',],
                  'path': '/'.join(self.context.getPhysicalPath())}
         for brain in self.context.service_catalog(query):
             packages.append({'name': brain.get_title,
