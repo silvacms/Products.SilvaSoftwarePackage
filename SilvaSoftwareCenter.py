@@ -66,7 +66,7 @@ class CenterView(silvaviews.View):
             if interfaces.ISilvaSoftwareGroup.providedBy(content):
                 self.groups.append(content)
             else:
-                if ILink.providedBy(package):
+                if ILink.providedBy(content):
                     url = content.get_viewable().get_url()
                 else:
                     url = absoluteURL(content, self.request)
