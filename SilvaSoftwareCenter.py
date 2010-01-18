@@ -46,45 +46,26 @@ class CenterAdd(z3cforms.AddForm):
     silvaconf.name('Silva Software Center')
 
 
-class GroupView(silvaviews.View):
+class CenterView(silvaviews.View):
 
-    silvaconf.context(interfaces.ISilvaSoftwareGroup)
+    silvaconf.context(interfaces.ISilvaSoftwareCenter)
 
-    def get_groups(self):
-        groups = []
-        query = {'meta_type': 'Silva Software Group',
-                 'path': '/'.join(self.context.getPhysicalPath())}
-        for brain in self.context.service_catalog(query):
-            groups.append(brain.getObject())
-        return groups
-
-    def get_packages(self):
-        packages = []
-        query = {'meta_type': ['Silva Software Package', 'Silva Link',],
-                 'path': '/'.join(self.context.getPhysicalPath())}
-        for brain in self.context.service_catalog(query):
-            package = brain.getObject()
-            if not self.is_preview:
-                if package.get_default().get_public_version() is None:
-                    continue
-            packages.append({'name': package.get_title(),
-                             'url': brain.getURL()})
-        return packages
-
-
-class GroupPreview(grok.View):
-
-    grok.context(interfaces.ISilvaSoftwareGroup)
-    grok.name('group_preview')
-
-    def get_packages(self):
-        packages = []
-        query = {'meta_type': ['Silva Software Package', 'Silva Link',],
-                 'path': '/'.join(self.context.getPhysicalPath())}
-        for brain in self.context.service_catalog(query):
-            packages.append({'name': brain.get_title,
-                             'url': brain.getURL()})
-        return packages
+    def update(self):
+        self.groups = []
+        self.packages = []
+        for content in self.context.get_ordered_publishables():
+            if (not interfaces.ISilvaSoftwareGroup.providedBy(content) or
+                not interfaces.ISilvaSoftwareRelease.providedBy(content) or
+                not ILink.providedBy(content)):
+                continue
+            if not content.is_published():
+                continue
+            if interfaces.ISilvaSoftwareGroup.providedBy(content):
+                self.groups.append(content)
+            else:
+                self.packages.append(
+                    {'name': content.get_title(),
+                     'url': absoluteURL(content, self.context)})
 
 
 class CenterRegister(grok.View):
@@ -103,6 +84,7 @@ class CenterRegister(grok.View):
         if package_name.startswith('Products.'):
             package_name = package_name[9:]
 
+        # TODO: Replace this with a catalog query
         package = getattr(self.context, package_name, None)
         if package is None:
             factory = self.context.manage_addProduct['SilvaSoftwarePackage']

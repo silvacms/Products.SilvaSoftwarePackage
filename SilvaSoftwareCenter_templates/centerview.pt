@@ -1,5 +1,5 @@
 <tal:center
-   tal:define="groups view/get_groups">
+   tal:define="groups view/groups">
 
   <p tal:define="index content/get_default | nothing"
      tal:condition="index"
@@ -18,7 +18,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr tal:repeat="package view/get_packages">
+      <tr tal:repeat="package view/packages">
         <td>
           <a tal:attributes="href package/url"
              tal:content="package/name">
