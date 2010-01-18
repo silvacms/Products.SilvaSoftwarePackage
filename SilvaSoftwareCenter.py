@@ -168,7 +168,8 @@ class CenterSimple(grok.View):
 
     def get_releases(self):
         query = {'meta_type': 'Silva File',
-                 'path': '/'.join(self.context.getPhysicalPath())}
+                 'path': '/'.join(self.context.getPhysicalPath()),
+                 'sort_on': 'id'}
         for brain in self.context.service_catalog(query):
             name, ext = os.path.splitext(brain.id)
             if ext in VALID_SIMPLE_FILES_EXT:
