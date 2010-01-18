@@ -48,7 +48,7 @@ class CenterAdd(z3cforms.AddForm):
 
 class CenterView(silvaviews.View):
 
-    silvaconf.context(interfaces.ISilvaSoftwareCenter)
+    silvaconf.context(interfaces.ISilvaSoftwareGroup)
 
     def update(self):
         self.groups = []
