@@ -48,7 +48,7 @@ class GroupPreview(grok.View):
             if not package.is_published():
                 continue
             if ILink.providedBy(package):
-                url = package.get_url()
+                url = package.get_viewable().get_url()
             else:
                 url = absoluteURL(package, self.context)
             self.packages.append(
