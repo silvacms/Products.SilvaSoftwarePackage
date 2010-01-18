@@ -54,9 +54,9 @@ class CenterView(silvaviews.View):
         self.groups = []
         self.packages = []
         for content in self.context.get_ordered_publishables():
-            if (not interfaces.ISilvaSoftwareGroup.providedBy(content) or
-                not interfaces.ISilvaSoftwareRelease.providedBy(content) or
-                not ILink.providedBy(content)):
+            if not (interfaces.ISilvaSoftwareGroup.providedBy(content) or
+                    interfaces.ISilvaSoftwareRelease.providedBy(content) or
+                    ILink.providedBy(content)):
                 continue
             if not content.is_published():
                 continue

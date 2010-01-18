@@ -42,8 +42,8 @@ class GroupPreview(grok.View):
     def update(self):
         self.packages = []
         for package in self.context.get_ordered_publishables():
-            if (not interfaces.ISilvaSoftwareRelease.providedBy(package) or
-                not ILink.providedBy(package)):
+            if not (interfaces.ISilvaSoftwareRelease.providedBy(package) or
+                    ILink.providedBy(package)):
                 continue
             if not package.is_published():
                 continue
