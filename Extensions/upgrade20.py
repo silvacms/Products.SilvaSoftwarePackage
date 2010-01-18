@@ -4,6 +4,8 @@
 
 from Products.SilvaSoftwarePackage.SilvaSoftwareCenter import \
     SilvaSoftwareCenter
+from Products.SilvaSoftwarePackage.SilvaSoftwareGroup import \
+    SilvaSoftwareGroup
 from Products.Silva.helpers import SwitchClass
 import silva.core.interfaces
 
@@ -58,3 +60,10 @@ def convert_to_center(publication):
     assert silva.core.interfaces.IPublication.providedBy(publication)
     SwitchClass(SilvaSoftwareCenter).upgrade(publication)
 
+
+def convert_to_group(publication):
+    """Convert a publication to a group.
+    """
+    assert not silva.core.interfaces.IRoot.providedBy(publication)
+    assert silva.core.interfaces.IPublication.providedBy(publication)
+    SwitchClass(SilvaSoftwareGroup).upgrade(publication)
