@@ -3,6 +3,8 @@
 # $Id$
 
 from zope.lifecycleevent.interfaces import IObjectCreatedEvent
+from zope.traversing.browser import absoluteURL
+
 
 from Products.Silva.Publication import Publication
 from Products.SilvaSoftwarePackage import interfaces
@@ -56,7 +58,7 @@ class CenterView(silvaviews.View):
         self.packages = []
         for content in self.context.get_ordered_publishables():
             if not (interfaces.ISilvaSoftwareGroup.providedBy(content) or
-                    interfaces.ISilvaSoftwareRelease.providedBy(content) or
+                    interfaces.ISilvaSoftwarePackage.providedBy(content) or
                     ILink.providedBy(content)):
                 continue
             if not content.is_published():
@@ -64,9 +66,11 @@ class CenterView(silvaviews.View):
             if interfaces.ISilvaSoftwareGroup.providedBy(content):
                 self.groups.append(content)
             else:
-                self.packages.append(
-                    {'name': content.get_title(),
-                     'url': absoluteURL(content, self.context)})
+                if ILink.providedBy(package):
+                    url = content.get_viewable().get_url()
+                else:
+                    url = absoluteURL(content, self.request)
+                self.packages.append({'name': content.get_title(), 'url': url})
 
 
 class CenterRegister(grok.View):

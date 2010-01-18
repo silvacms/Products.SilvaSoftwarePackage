@@ -41,16 +41,14 @@ class GroupPreview(grok.View):
 
     def update(self):
         self.packages = []
-        for package in self.context.get_ordered_publishables():
-            if not (interfaces.ISilvaSoftwareRelease.providedBy(package) or
-                    ILink.providedBy(package)):
+        for content in self.context.get_ordered_publishables():
+            if not (interfaces.ISilvaSoftwarePackage.providedBy(content) or
+                    ILink.providedBy(content)):
                 continue
-            if not package.is_published():
+            if not content.is_published():
                 continue
-            if ILink.providedBy(package):
-                url = package.get_viewable().get_url()
+            if ILink.providedBy(content):
+                url = content.get_viewable().get_url()
             else:
-                url = absoluteURL(package, self.context)
-            self.packages.append(
-                {'name': package.get_title(),
-                 'url': url})
+                url = absoluteURL(content, self.request)
+            self.packages.append({'name': content.get_title(), 'url': url})
