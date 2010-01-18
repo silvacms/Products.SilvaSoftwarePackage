@@ -8,6 +8,7 @@ from Products.Silva.Publication import Publication
 from Products.SilvaSoftwarePackage import interfaces
 
 from silva.core import conf as silvaconf
+from silva.core.interfaces import ILink
 from silva.core.views import z3cforms
 from silva.core.views import views as silvaviews
 
