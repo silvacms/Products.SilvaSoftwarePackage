@@ -1,26 +1,41 @@
 <tal:release>
 
-  <p tal:define="index content/get_default | nothing" 
-     tal:condition="index" 
+  <p tal:define="index content/get_default | nothing"
+     tal:condition="index"
      tal:replace="structure index/view">View</p>
 
-  <table class="silvatable list">
-    <thead>
-      <tr>
-        <th class="align-left">Filename</th>
-        <th class="align-left">Release date</th>
-        <th class="align-left">Size</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr tal:repeat="file view/get_files">
-        <td>
-          <a tal:attributes="href file/url" 
-             tal:content="file/name" />
-        </td>
-        <td tal:content="file/date"></td>
-        <td tal:content="file/size"></td>
-      </tr>
-    </tbody>
-  </table>
+  <tal:download tal:condition="view/files">
+    <h3>Download</h3>
+    <table class="silvatable list">
+      <thead>
+        <tr>
+          <th class="align-left">Filename</th>
+          <th class="align-left">Release date</th>
+          <th class="align-left">Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr tal:repeat="file view/files">
+          <td>
+            <a tal:attributes="href file/url"
+               tal:content="file/name" />
+          </td>
+          <td tal:content="file/date"></td>
+          <td tal:content="file/size"></td>
+        </tr>
+      </tbody>
+    </table>
+  </tal:download>
+
+  <tal:contact tal:condition="view/contact_name">
+    <h3>Contact</h3>
+    <p class="software-contact">
+      <acronym title="For More Information">FMI</acronym> contact
+      <span tal:replace="view/contact_name" />
+      <tal:email tal:condition="view/contact_email">:
+        <span tal:replace="view/contact_email" />.
+      </tal:email>
+    </p>
+  </tal:contact>
+
 </tal:release>

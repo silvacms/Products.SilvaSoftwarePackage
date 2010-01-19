@@ -9,12 +9,14 @@ from Products.Silva.helpers import add_and_edit
 from Products.Silva import mangle
 from Products.Silva.Publication import Publication
 from Products.Silva.ExtensionRegistry import extensionRegistry
+from Products.SilvaMetadata.interfaces import IMetadataService
 
 from Products.SilvaSoftwarePackage import interfaces
 
+from five import grok
+from zope import component
 from zope.event import notify
 from zope.lifecycleevent import ObjectCreatedEvent
-from five import grok
 
 from silva.core import conf as silvaconf
 from silva.core.views import views as silvaviews
@@ -91,15 +93,25 @@ def manage_addSilvaSoftwareRelease(container, version, REQUEST=None):
 
 
 class ReleaseView(silvaviews.View):
+    """Display a release.
+    """
 
     grok.context(interfaces.ISilvaSoftwareRelease)
 
-    def get_files(self):
+    def update(self):
+        self.files = []
         for entry in self.content.get_files():
             mod_date = entry.get_modification_datetime()
             size = entry.get_file_size()
-            yield {'name': entry.get_filename(),
-                   'url': entry.absolute_url(),
-                   'date': mangle.DateTime(mod_date).toStr(),
-                   'size': mangle.Bytes(size)}
+            self.files.append(
+                {'name': entry.get_filename(),
+                 'url': entry.absolute_url(),
+                 'date': mangle.DateTime(mod_date).toStr(),
+                 'size': mangle.Bytes(size)})
+        metadata = component.getUtility(IMetadataService)
+        binding = metadata.getMetadata(self.context)
+        self.contact_name = binding.get('silva-extra', 'contactname')
+        self.contact_email = binding.get('silva-extra', 'contactemail')
+        if self.contact_email:
+            self.contact_email = self.contact_email.replace(u'@', u' at ')
 
