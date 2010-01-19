@@ -93,7 +93,8 @@ class CenterRegister(grok.View):
         if package_name.startswith('Products.'):
             package_name = package_name[9:]
 
-        catalog = component.getUtility(ICatalogService)
+        #catalog = component.getUtility(ICatalogService)
+        catalog = self.context.service_catalog
         query = {'meta_type': 'Silva Software Package',
                  'id': package_name,
                  'path': '/'.join(self.context.getPhysicalPath())}
