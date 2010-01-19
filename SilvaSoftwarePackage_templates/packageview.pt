@@ -4,13 +4,6 @@
      tal:condition="index"
      tal:replace="structure index/view">View</p>
 
-  <p>
-    <strong>License:</strong>
-    <a tal:attributes="href string:${content/absolute_url}/LICENSE.txt">
-      New BSD
-    </a>
-  </p>
-
   <table class="silvatable list"
          tal:define="releases view/get_releases"
          tal:condition="releases">
@@ -40,5 +33,12 @@
       </tr>
     </tbody>
   </table>
+
+  <p class="software-license">
+    <strong>License:</strong>
+    <a tal:attributes="href string:${content/@@absolute_url}/LICENSE.txt">
+      New BSD
+    </a>
+  </p>
 
 </tal:package>
