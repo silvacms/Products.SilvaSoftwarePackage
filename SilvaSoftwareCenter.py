@@ -198,7 +198,8 @@ class CenterSimple(grok.View):
         query = {'meta_type': 'Silva File',
                  'path': '/'.join(self.context.getPhysicalPath()),
                  'sort_on': 'id'}
-        catalog = component.getUtility(ICatalogService)
+        #catalog = component.getUtility(ICatalogService)
+        catalog = self.context.service_catalog
         for brain in catalog(query):
             name, ext = os.path.splitext(brain.id)
             if ext in VALID_SIMPLE_FILES_EXT:
