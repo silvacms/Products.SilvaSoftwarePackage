@@ -2,22 +2,27 @@
 # See also LICENSE.txt
 # $Id$
 
+from five import grok
 from zope.lifecycleevent.interfaces import IObjectCreatedEvent
 from zope.traversing.browser import absoluteURL
-
+from zope import component
 
 from Products.Silva.Publication import Publication
+from Products.SilvaMetadata.interfaces import IMetadataService
 from Products.SilvaSoftwarePackage import interfaces
 
 from silva.core import conf as silvaconf
 from silva.core.interfaces import ILink
 from silva.core.views import z3cforms
 from silva.core.views import views as silvaviews
+from silva.core.services.interfaces import ICatalogService
 
-from five import grok
+from docutils.core import publish_parts
+import logging
 import os.path
-
 import DateTime
+
+logger = logging.getLogger('silva software center')
 
 
 class SilvaSoftwareCenter(Publication):
@@ -35,7 +40,7 @@ class SilvaSoftwareCenter(Publication):
 def addDefaultDocument(content, event):
     if event.object is not content:
         return
-    if not hasattr(content, 'index'):
+    if not hasattr(content.aq_base, 'index'):
         content.manage_addProduct['SilvaDocument'].manage_addDocument(
             'index', content.get_title())
         index = getattr(content, 'index')
@@ -81,7 +86,6 @@ class CenterRegister(grok.View):
     grok.require('silva.ChangeSilvaContent')
     grok.name('submit')
 
-
     def _get_package(self):
         package_name = self.request['name']
         package_version = self.request['version']
@@ -89,9 +93,15 @@ class CenterRegister(grok.View):
         if package_name.startswith('Products.'):
             package_name = package_name[9:]
 
-        # TODO: Replace this with a catalog query
-        package = getattr(self.context, package_name, None)
-        if package is None:
+        catalog = component.getUtility(ICatalogService)
+        query = {'meta_type': 'Silva Software Package',
+                 'id': package_name,
+                 'path': '/'.join(self.context.getPhysicalPath())}
+        package_brains = catalog(query)
+        if len(package_brains) == 1:
+            package = package_brains[0].getObject()
+        else:
+            logger.debug('Create package %s' % package_name)
             factory = self.context.manage_addProduct['SilvaSoftwarePackage']
             package_title = package_name.replace('.', ' ')
             factory.manage_addSilvaSoftwarePackage(package_name, package_title)
@@ -103,6 +113,7 @@ class CenterRegister(grok.View):
     def _get_release(self, package, package_version):
         release = getattr(package, package_version, None)
         if release is None:
+            logger.debug('Create release %s' % package_version)
             factory = package.manage_addProduct['SilvaSoftwarePackage']
             factory.manage_addSilvaSoftwareRelease(package_version)
             release = getattr(package, package_version)
@@ -114,17 +125,33 @@ class CenterRegister(grok.View):
 
         release = getattr(package, package_version, None)
         if release is not None:
-            self.response.setStatus(409) # Conflict
-            return u'Already registered'
+            logger.info('Release %s of %s already registered' %
+                        (package_version, package_name))
 
         release = self._get_release(package, package_version)
+        release_info = {'contactname': self.request['author'],
+                        'contactemail': self.request['author_email'],
+                        'keywords': self.request['keywords'],
+                        'subject': self.request['summary']}
 
-        binding = self.context.service_metadata.getMetadata(release)
-        binding.setValues('silva-extra',
-                          {'contactname': self.request['author'],
-                           'contactemail': self.request['author_email'],
-                           'keywords': self.request['keywords'],
-                           'subject': self.request['summary']})
+        metadata = component.getUtility(IMetadataService)
+        binding = metadata.getMetadata(release)
+        binding.setValues('silva-extra', release_info, reindex=1)
+        release.sec_update_last_author_info()
+
+        description = publish_parts(
+            self.request['description'],
+            parser_name='restructuredtext',
+            writer_name='html')['whole']
+
+        index = release.index
+        index.create_copy()
+        binding = metadata.getMetadata(index.get_editable())
+        binding.setValues('silva-extra', release_info, reindex=1)
+        index.editor_storage(description, editor='kupu')
+        index.sec_update_last_author_info()
+        index.set_unapproved_version_publication_datetime(DateTime.DateTime())
+        index.approve_version()
 
         self.response.setStatus(200)
         return u'Registered'
@@ -170,7 +197,8 @@ class CenterSimple(grok.View):
         query = {'meta_type': 'Silva File',
                  'path': '/'.join(self.context.getPhysicalPath()),
                  'sort_on': 'id'}
-        for brain in self.context.service_catalog(query):
+        catalog = component.getUtility(ICatalogService)
+        for brain in catalog(query):
             name, ext = os.path.splitext(brain.id)
             if ext in VALID_SIMPLE_FILES_EXT:
                 yield {'name': brain.id,
