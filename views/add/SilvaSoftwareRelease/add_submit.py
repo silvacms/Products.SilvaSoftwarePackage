@@ -1,5 +1,4 @@
 from Products.Silva import mangle
-from Products.Silva.interfaces import IAsset
 
 model = context.REQUEST.model
 view = context
