@@ -1,24 +1,22 @@
-<div class="silva-software-group">
-  <table class="silvatable list">
-    <thead>
-      <tr>
-        <th class="align-left">
-          <a href="#"
-             tal:attributes="href context/@@absolute_url"
-             tal:content="context/get_title">
-            Group Name
-          </a>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr tal:repeat="package view/packages">
-        <td>
-          <a tal:attributes="href package/url"
-             tal:content="package/name">
-          </a>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<table class="silvatable list">
+  <thead>
+    <tr>
+      <th class="align-left">
+        <a href="#"
+           tal:attributes="href context/@@absolute_url"
+           tal:content="context/get_title">
+          Group Name
+        </a>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr tal:repeat="package view/packages">
+      <td>
+        <a tal:attributes="href package/url"
+           tal:content="package/name">
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
