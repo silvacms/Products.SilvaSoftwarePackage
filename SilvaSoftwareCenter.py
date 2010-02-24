@@ -102,10 +102,9 @@ class CenterRegister(grok.View):
         if len(package_brains) == 1:
             package = package_brains[0].getObject()
         else:
-            logger.debug('Create package %s' % package_name)
+            logger.debug(u'Create package %s' % package_name)
             factory = self.context.manage_addProduct['SilvaSoftwarePackage']
-            package_title = package_name.replace('.', ' ')
-            factory.manage_addSilvaSoftwarePackage(package_name, package_title)
+            factory.manage_addSilvaSoftwarePackage(package_name, package_name)
             package = getattr(self.context, package_name)
             package.sec_update_last_author_info()
 
@@ -114,7 +113,7 @@ class CenterRegister(grok.View):
     def _get_release(self, package, package_version):
         release = getattr(package, package_version, None)
         if release is None:
-            logger.debug('Create release %s' % package_version)
+            logger.debug(u'Create release %s' % package_version)
             factory = package.manage_addProduct['SilvaSoftwarePackage']
             factory.manage_addSilvaSoftwareRelease(package_version)
             release = getattr(package, package_version)
@@ -126,33 +125,42 @@ class CenterRegister(grok.View):
 
         release = getattr(package, package_version, None)
         if release is not None:
-            logger.info('Release %s of %s already registered' %
+            logger.info(u'Release %s of %s already registered' %
                         (package_version, package_name))
 
         release = self._get_release(package, package_version)
-        release_info = {'contactname': self.request['author'],
-                        'contactemail': self.request['author_email'],
-                        'keywords': self.request['keywords'],
-                        'subject': self.request['summary']}
+        release_info = {'contactname': self.request.get('author', ''),
+                        'contactemail': self.request.get('author_email', ''),
+                        'keywords': self.request.get('keywords', ''),
+                        'subject': self.request.get('summary', '')}
+        title_info = {'maintitle': u'%s %s' % (package_name, package_version),
+                      'shorttitle': package_name}
 
         metadata = component.getUtility(IMetadataService)
         binding = metadata.getMetadata(release)
         binding.setValues('silva-extra', release_info, reindex=1)
+        binding.setValues('silva-content', title_info, reindex=1)
         release.sec_update_last_author_info()
 
-        description = publish_parts(
-            self.request['description'],
-            parser_name='restructuredtext',
-            writer_name='html')['whole']
+        if self.request.form.has_key('description'):
+            description = publish_parts(
+                self.request['description'],
+                parser_name='restructuredtext',
+                writer_name='html')['whole']
 
-        index = release.index
-        index.create_copy()
-        binding = metadata.getMetadata(index.get_editable())
-        binding.setValues('silva-extra', release_info, reindex=1)
-        index.editor_storage(description, editor='kupu')
-        index.sec_update_last_author_info()
-        index.set_unapproved_version_publication_datetime(DateTime.DateTime())
-        index.approve_version()
+            index = release.index
+            index.create_copy()
+            index.editor_storage(description, editor='kupu')
+            binding = metadata.getMetadata(index.get_editable())
+            binding.setValues('silva-extra', release_info, reindex=1)
+            binding.setValues('silva-content', title_info, reindex=1)
+            index.sec_update_last_author_info()
+            index.set_unapproved_version_publication_datetime(
+                DateTime.DateTime())
+            index.approve_version()
+        else:
+            logger.info(u'No description available for %s %s' %
+                        (package_name, package_version))
 
         self.response.setStatus(200)
         return u'Registered'
