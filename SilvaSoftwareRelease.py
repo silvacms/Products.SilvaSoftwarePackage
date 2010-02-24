@@ -31,7 +31,8 @@ module_security.declareProtected(
     SilvaPermissions.ReadSilvaContent, 'test_version_string')
 _version_reg = re.compile('^[0-9]+(\.[0-9]+)*(dev-r[0-9]+)?((a|b|rc)[0-9]*)?$')
 def test_version_string(version):
-    """test whether the version conforms to the required format"""
+    """test whether the version conforms to the required format.
+    """
     if not _version_reg.search(version):
         raise TypeError, 'Version string has incorrect format!'
 
