@@ -53,8 +53,8 @@ class ISilvaSoftwarePackageExtension(Interface):
     pass
 
 
-install = SilvaSoftwarePackageInstaller('SilvaSoftwarePackage',
-                                        ISilvaSoftwarePackageExtension)
+install = SilvaSoftwarePackageInstaller(
+    'SilvaSoftwarePackage', ISilvaSoftwarePackageExtension)
 
 
 CLASS_CHANGES = {

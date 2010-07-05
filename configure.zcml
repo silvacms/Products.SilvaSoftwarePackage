@@ -1,9 +1,12 @@
 <configure
   xmlns="http://namespaces.zope.org/zope"
-  xmlns:grok="http://namespaces.zope.org/grok"
-  >
+  xmlns:grok="http://namespaces.zope.org/grok">
 
-  <!-- register -->
+  <include package="five.grok" />
+  <include package="Products.SilvaDocument" />
+  <include package="silva.core.upgrade" />
+
+  <!-- grok -->
   <grok:grok package="." />
 
 </configure>
