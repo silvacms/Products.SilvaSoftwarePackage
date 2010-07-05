@@ -8,6 +8,8 @@ VERSION_A1='2.3a1'
 
 
 class RootUpgrader(BaseUpgrader):
+    """Clean service_view_registry from old views.
+    """
 
     def upgrade(self, root):
         reg = root.service_view_registry
