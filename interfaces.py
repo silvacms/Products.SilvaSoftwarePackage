@@ -2,15 +2,16 @@
 # See also LICENSE.txt
 # $Id$
 
+from zope.interface import Interface
 from silva.core import interfaces
 
 
-class ISilvaSoftwareContent(interfaces.IPublication):
+class ISilvaSoftwareContent(Interface, interfaces.IFolder):
     """This is a content from the Silva Software center.
     """
 
 
-class ISilvaSoftwareGroup(ISilvaSoftwareContent):
+class ISilvaSoftwareGroup(ISilvaSoftwareContent, interfaces.IPublication):
     """A group of packages.
     """
 

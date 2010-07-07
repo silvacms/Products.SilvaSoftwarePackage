@@ -7,7 +7,7 @@ from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.Silva import SilvaPermissions
 from Products.Silva.helpers import add_and_edit
 from Products.Silva import mangle
-from Products.Silva.Publication import Publication
+from Products.Silva.Folder import Folder
 from Products.Silva.ExtensionRegistry import extensionRegistry
 from Products.SilvaMetadata.interfaces import IMetadataService
 
@@ -37,7 +37,7 @@ def test_version_string(version):
         raise TypeError, 'Version string has incorrect format!'
 
 
-class SilvaSoftwareRelease(Publication):
+class SilvaSoftwareRelease(Folder):
 
     security = ClassSecurityInfo()
     meta_type = 'Silva Software Release'

@@ -2,7 +2,7 @@
 # See also LICENSE.txt
 # $Id$
 
-from Products.Silva.Publication import Publication
+from Products.Silva.Folder import Folder
 from Products.Silva import mangle
 from Products.Silva.ExtensionRegistry import extensionRegistry
 
@@ -19,7 +19,7 @@ from five import grok
 from pkg_resources import parse_version
 
 
-class SilvaSoftwarePackage(Publication):
+class SilvaSoftwarePackage(Folder):
 
     meta_type = 'Silva Software Package'
     grok.implements(interfaces.ISilvaSoftwarePackage)
