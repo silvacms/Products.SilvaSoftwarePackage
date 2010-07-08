@@ -15,9 +15,7 @@ class ISilvaSoftwareGroup(ISilvaSoftwareContent):
     """
 
 
-class ISilvaSoftwareCenter(
-    ISilvaSoftwareGroup,
-    interfaces.IPublicationinterfaces.IPublication):
+class ISilvaSoftwareCenter(ISilvaSoftwareGroup, interfaces.IPublication):
     """A Silva software center.
     """
 
