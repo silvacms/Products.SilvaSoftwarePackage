@@ -2,7 +2,7 @@
 # See also LICENSE.txt
 # $Id$
 
-from Products.Silva.Publication import Publication
+from Products.Silva.Folder import Folder
 from Products.SilvaMetadata.interfaces import IMetadataService
 from Products.SilvaSoftwarePackage import interfaces
 
@@ -15,7 +15,7 @@ from silva.core.interfaces import ILink, IFeedEntry, IFeedEntryProvider
 from silva.core.views import z3cforms
 
 
-class SilvaSoftwareGroup(Publication):
+class SilvaSoftwareGroup(Folder):
     meta_type = 'Silva Software Group'
     grok.implements(interfaces.ISilvaSoftwareGroup)
 
