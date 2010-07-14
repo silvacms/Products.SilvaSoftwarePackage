@@ -11,8 +11,8 @@ from Products.SilvaSoftwarePackage import interfaces
 from silva.core import conf as silvaconf
 from silva.core.interfaces import IAsset
 from silva.core.views import views as silvaviews
-from silva.core.views import z3cforms
 from silva.core.views.interfaces import IPreviewLayer
+from zeam.form import silva as silvaforms
 
 from five import grok
 
@@ -41,14 +41,12 @@ class SilvaSoftwarePackage(Folder):
         return result
 
 
-class PackageAdd(z3cforms.AddForm):
-
+class PackageAdd(silvaforms.AddForm):
     grok.context(interfaces.ISilvaSoftwarePackage)
     grok.name('Silva Software Package')
 
 
 class PackageView(silvaviews.View):
-
     grok.context(interfaces.ISilvaSoftwarePackage)
 
     def get_releases(self):

@@ -12,7 +12,7 @@ from zope.traversing.browser import absoluteURL
 
 from silva.core import conf as silvaconf
 from silva.core.interfaces import ILink, IFeedEntry, IFeedEntryProvider
-from silva.core.views import z3cforms
+from zeam.form import silva as silvaforms
 
 
 class SilvaSoftwareGroup(Folder):
@@ -29,7 +29,7 @@ class SilvaSoftwareGroup(Folder):
                 'Silva Software Package',]
 
 
-class GroupAdd(z3cforms.AddForm):
+class GroupAdd(silvaforms.AddForm):
     grok.context(interfaces.ISilvaSoftwareGroup)
     grok.name('Silva Software Group')
 

@@ -13,9 +13,8 @@ from Products.SilvaSoftwarePackage import interfaces
 
 from silva.core import conf as silvaconf
 from silva.core.interfaces import ILink
-from silva.core.views import z3cforms
+from zeam.form import silva as silvaforms
 from silva.core.views import views as silvaviews
-from silva.core.services.interfaces import ICatalogService
 
 from docutils.core import publish_parts
 import logging
@@ -48,15 +47,13 @@ def addDefaultDocument(content, event):
         index.approve_version()
 
 
-class CenterAdd(z3cforms.AddForm):
-
-    silvaconf.context(interfaces.ISilvaSoftwareCenter)
-    silvaconf.name('Silva Software Center')
+class CenterAdd(silvaforms.AddForm):
+    grok.context(interfaces.ISilvaSoftwareCenter)
+    grok.name('Silva Software Center')
 
 
 class CenterView(silvaviews.View):
-
-    silvaconf.context(interfaces.ISilvaSoftwareGroup)
+    grok.context(interfaces.ISilvaSoftwareGroup)
 
     def update(self):
         self.groups = []
