@@ -47,7 +47,7 @@ def addDefaultDocument(content, event):
         index.approve_version()
 
 
-class CenterAdd(silvaforms.AddForm):
+class CenterAdd(silvaforms.SMIAddForm):
     grok.context(interfaces.ISilvaSoftwareCenter)
     grok.name('Silva Software Center')
 

@@ -29,7 +29,7 @@ class SilvaSoftwareGroup(Folder):
                 'Silva Software Package',]
 
 
-class GroupAdd(silvaforms.AddForm):
+class GroupAdd(silvaforms.SMIAddForm):
     grok.context(interfaces.ISilvaSoftwareGroup)
     grok.name('Silva Software Group')
 

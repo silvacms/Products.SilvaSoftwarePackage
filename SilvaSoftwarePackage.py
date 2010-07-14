@@ -41,7 +41,7 @@ class SilvaSoftwarePackage(Folder):
         return result
 
 
-class PackageAdd(silvaforms.AddForm):
+class PackageAdd(silvaforms.SMIAddForm):
     grok.context(interfaces.ISilvaSoftwarePackage)
     grok.name('Silva Software Package')
 
