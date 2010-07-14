@@ -96,7 +96,6 @@ def manage_addSilvaSoftwareRelease(container, version, REQUEST=None):
 class ReleaseView(silvaviews.View):
     """Display a release.
     """
-
     grok.context(interfaces.ISilvaSoftwareRelease)
 
     def update(self):
