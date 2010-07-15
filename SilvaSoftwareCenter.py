@@ -10,13 +10,13 @@ from zope import component
 from Products.Silva.Publication import Publication
 from Products.SilvaMetadata.interfaces import IMetadataService
 from Products.SilvaSoftwarePackage import interfaces
+from Products.SilvaSoftwarePackage import rst_utils
 
 from silva.core import conf as silvaconf
 from silva.core.interfaces import ILink
 from zeam.form import silva as silvaforms
 from silva.core.views import views as silvaviews
 
-from docutils.core import publish_parts
 import logging
 import os.path
 import DateTime
@@ -82,7 +82,7 @@ class CenterRegister(grok.View):
     grok.require('silva.ChangeSilvaContent')
     grok.name('submit')
 
-    def _get_package(self):
+    def _get_package(self, description=None):
         package_name = self.request['name']
         package_version = self.request['version']
 
@@ -103,6 +103,17 @@ class CenterRegister(grok.View):
             factory.manage_addSilvaSoftwarePackage(package_name, package_name)
             package = getattr(self.context, package_name)
             package.sec_update_last_author_info()
+            if description is not None:
+                description = rst_utils.get_description(description)
+                index = package.index
+                index.create_copy()
+                version_index = index.get_editable()
+                version_index.set_document_xml_from(
+                    description.as_html(True), request=self.request)
+                index.sec_update_last_author_info()
+                index.set_unapproved_version_publication_datetime(
+                    DateTime.DateTime())
+                index.approve_version()
 
         return (package, package_name, package_version)
 
@@ -117,7 +128,12 @@ class CenterRegister(grok.View):
         return release
 
     def render(self):
-        package, package_name, package_version = self._get_package()
+        description = None
+        if self.request.form.has_key('description'):
+            description = rst_utils.rst_parser(
+                self.request['description'].split('\n'))
+
+        package, package_name, package_version = self._get_package(description)
         release = getattr(package, package_version, None)
         if release is not None:
             logger.info(u'Release %s of %s already registered' %
@@ -128,8 +144,7 @@ class CenterRegister(grok.View):
                         'contactemail': self.request.get('author_email', ''),
                         'keywords': self.request.get('keywords', ''),
                         'subject': self.request.get('summary', '')}
-        title_info = {'maintitle': u'%s %s' % (package_name, package_version),
-                      'shorttitle': package_name}
+        title_info = {'maintitle': u'%s %s' % (package_name, package_version)}
 
         metadata = component.getUtility(IMetadataService)
         binding = metadata.getMetadata(release)
@@ -137,17 +152,15 @@ class CenterRegister(grok.View):
         binding.setValues('silva-content', title_info, reindex=1)
         release.sec_update_last_author_info()
 
-        if self.request.form.has_key('description'):
-            description = publish_parts(
-                self.request['description'],
-                parser_name='restructuredtext',
-                writer_name='html')['whole']
+        if description is not None:
+            changes = rst_utils.get_last_changes(description)
 
             index = release.index
             index.create_copy()
             version_index = index.get_editable()
-            version_index.set_document_xml_from(
-                description, request=self.request)
+            if changes is not None:
+                version_index.set_document_xml_from(
+                    changes.as_html(False), request=self.request)
             binding = metadata.getMetadata(version_index)
             binding.setValues('silva-extra', release_info, reindex=1)
             binding.setValues('silva-content', title_info, reindex=1)

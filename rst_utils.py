@@ -2,7 +2,11 @@
 # See also LICENSE.txt
 # $Id$
 
+from cStringIO import StringIO
+
 from collections import namedtuple
+from docutils.core import publish_parts
+
 
 def line_is_rst_title_marking(line):
     """This function test if a line is only composed of the same character.
@@ -106,6 +110,14 @@ class RSTSection(object):
         if following_ones and self.next is not None:
             self.next.write(stream, following_ones=True)
 
+    def as_html(self, following_ones=False):
+        rst = StringIO()
+        self.write(rst, following_ones=following_ones)
+        return publish_parts(
+            rst.getvalue(),
+            parser_name='restructuredtext',
+            writer_name='html')['whole']
+
     def copy(self, exclude=None):
         """Copy the structure, excluding some nodes if wanted.
         """
@@ -184,22 +196,24 @@ def rst_parser(lines):
 
 HEADERS_CHANGES = ['changes', 'changelog', 'history']
 
+
 def is_changes_header(node):
     return node.title.lower() in HEADERS_CHANGES
 
-def get_last_changes(package_info, stream):
+
+def get_last_changes(package_info):
     """Return the last changes from the description.
     """
     changes = package_info.search(is_changes_header)
     if len(changes) == 1:
-        changes[0].sub.write(stream, following_ones=False)
+        return changes[0].sub
+    return None
 
 
-def get_description(package_info, stream):
+def get_description(package_info):
     """Return the description without the changes.
     """
-    description = package_info.copy(exclude=is_changes_header)
-    description.write(stream, following_ones=True)
+    return package_info.copy(exclude=is_changes_header)
 
 
 if __name__ == '__main__':
@@ -212,8 +226,8 @@ if __name__ == '__main__':
 
     # Print last changes
     print "\nLast Changes\n"
-    get_last_changes(title, sys.stdout)
+    get_last_changes(title).write(sys.stdout, following_ones=False)
 
     print "\nDescription\n"
-    get_description(title, sys.stdout)
+    get_description(title).write(sys.stdout, following_ones=True)
 

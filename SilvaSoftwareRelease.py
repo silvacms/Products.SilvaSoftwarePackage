@@ -10,7 +10,7 @@ from Products.Silva import mangle
 from Products.Silva.Folder import Folder
 from Products.Silva.ExtensionRegistry import extensionRegistry
 from Products.SilvaMetadata.interfaces import IMetadataService
-
+from Products.SilvaDocument.Document import DocumentHTML
 from Products.SilvaSoftwarePackage import interfaces
 
 from five import grok
@@ -115,3 +115,9 @@ class ReleaseView(silvaviews.View):
         if self.contact_email:
             self.contact_email = self.contact_email.replace(u'@', u' at ')
 
+        description = self.context.get_default()
+        if description is not None:
+            description = description.get_viewable()
+            if description is not None:
+                description = DocumentHTML.transform(description, self.request)
+        self.description = description

@@ -1,8 +1,7 @@
 <tal:release>
 
-  <p tal:define="index content/get_default | nothing"
-     tal:condition="index"
-     tal:replace="structure index/view">View</p>
+  <p tal:condition="view/description"
+     tal:replace="structure view/description">View</p>
 
   <tal:download tal:condition="view/files">
     <h3>Download</h3>
