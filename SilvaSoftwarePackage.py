@@ -5,13 +5,14 @@
 from Products.Silva.Folder import Folder
 from Products.Silva import mangle
 from Products.Silva.ExtensionRegistry import extensionRegistry
-
 from Products.SilvaSoftwarePackage import interfaces
 
 from silva.core import conf as silvaconf
 from silva.core.interfaces import IAsset
 from silva.core.views import views as silvaviews
 from silva.core.views.interfaces import IPreviewLayer
+
+from zope.container.interfaces import IContainerModifiedEvent
 from zeam.form import silva as silvaforms
 
 from five import grok
@@ -20,7 +21,8 @@ from pkg_resources import parse_version
 
 
 class SilvaSoftwarePackage(Folder):
-
+    """A package represent a software and contains releases.
+    """
     meta_type = 'Silva Software Package'
     grok.implements(interfaces.ISilvaSoftwarePackage)
 
@@ -39,6 +41,14 @@ class SilvaSoftwarePackage(Folder):
                 IAsset.implementedBy(addable['instance'])):
                 result.append(addable['name'])
         return result
+
+
+@grok.subscribe(interfaces.ISilvaSoftwarePackage, IContainerModifiedEvent)
+def package_modified(content, event):
+    # On add, sort releases by alphabetical order
+    content._ordered_ids.sort(
+        cmp=lambda v1, v2: cmp(parse_version(v1), parse_version(v2)),
+        reverse=True)
 
 
 class PackageAdd(silvaforms.SMIAddForm):
