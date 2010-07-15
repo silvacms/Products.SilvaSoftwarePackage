@@ -78,7 +78,6 @@ class CenterView(silvaviews.View):
 class CenterRegister(grok.View):
     """Register support for distutils.
     """
-
     grok.context(interfaces.ISilvaSoftwareCenter)
     grok.require('silva.ChangeSilvaContent')
     grok.name('submit')
@@ -119,7 +118,6 @@ class CenterRegister(grok.View):
 
     def render(self):
         package, package_name, package_version = self._get_package()
-
         release = getattr(package, package_version, None)
         if release is not None:
             logger.info(u'Release %s of %s already registered' %
@@ -147,8 +145,10 @@ class CenterRegister(grok.View):
 
             index = release.index
             index.create_copy()
-            index.editor_storage(description, editor='kupu')
-            binding = metadata.getMetadata(index.get_editable())
+            version_index = index.get_editable()
+            version_index.set_document_xml_from(
+                description, request=self.request)
+            binding = metadata.getMetadata(version_index)
             binding.setValues('silva-extra', release_info, reindex=1)
             binding.setValues('silva-content', title_info, reindex=1)
             index.sec_update_last_author_info()
@@ -166,20 +166,20 @@ class CenterRegister(grok.View):
 class CenterUpload(CenterRegister):
     """Upload support for distutils.
     """
-
     grok.context(interfaces.ISilvaSoftwareCenter)
     grok.require('silva.ChangeSilvaContent')
     grok.name('file_upload')
 
     def render(self):
+        status = u'Uploaded'
         package, package_name, package_version = self._get_package()
         release = self._get_release(package, package_version)
         filename = self.request['content'].filename
 
         archive = getattr(release, filename, None)
         if archive is not None:
-            self.response.setStatus(409) # Conflict
-            return u'Already uploaded'
+            release.manage_delObjects([filename])
+            status = u'Replaced'
 
         factory = release.manage_addProduct['Silva']
         factory.manage_addFile(filename, filename, self.request['content'])
@@ -187,7 +187,7 @@ class CenterUpload(CenterRegister):
         release_file.sec_update_last_author_info()
 
         self.response.setStatus(200)
-        return u'Uploaded'
+        return status
 
 
 VALID_SIMPLE_FILES_EXT = ['.gz', '.tgz', '.zip', '.egg', '.zexp']
@@ -195,7 +195,6 @@ VALID_SIMPLE_FILES_EXT = ['.gz', '.tgz', '.zip', '.egg', '.zexp']
 class CenterSimple(grok.View):
     """Simple view listing package of the center.
     """
-
     grok.context(interfaces.ISilvaSoftwareCenter)
     grok.name('simple')
 
