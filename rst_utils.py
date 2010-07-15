@@ -178,7 +178,7 @@ def rst_parser(lines):
                 double_title_marking = True
             else:
                 assert len(previous_line) == len(line), \
-                    "Invalid title: %s" % (previous_line)
+                    "Invalid title at line %d: %s" % (lineno, previous_line)
                 current_title = current_title.add(
                     RSTSection(
                         previous_line,
@@ -190,6 +190,9 @@ def rst_parser(lines):
             current_lines.append(line)
         previous_line_is_empty = not line.strip()
         previous_line = line
+
+    if current_lines:
+        current_title.lines = current_lines[:]
 
     return current_title.get_root()
 
