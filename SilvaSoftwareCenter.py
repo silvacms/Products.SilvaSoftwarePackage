@@ -162,7 +162,7 @@ class CenterRegister(grok.View):
                         'keywords': self.request.get('keywords', ''),
                         'subject': self.request.get('summary', '')}
         title_info = {'maintitle': u'%s %s' % (package_name, package_version),
-                      'shorttitle': u''}
+                      'shorttitle': package_version}
 
         metadata = component.getUtility(IMetadataService)
         binding = metadata.getMetadata(release)
