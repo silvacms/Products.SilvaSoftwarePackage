@@ -103,17 +103,18 @@ class CenterRegister(grok.View):
             factory.manage_addSilvaSoftwarePackage(package_name, package_name)
             package = getattr(self.context, package_name)
             package.sec_update_last_author_info()
-            if description is not None:
-                description = rst_utils.get_description(description)
-                index = package.index
-                index.create_copy()
-                version_index = index.get_editable()
-                version_index.set_document_xml_from(
-                    description.as_html(True), request=self.request)
-                index.sec_update_last_author_info()
-                index.set_unapproved_version_publication_datetime(
-                    DateTime.DateTime())
-                index.approve_version()
+        if (description is not None and
+            not interfaces.ISilvaNoAutomaticUpdate.providedBy(package)):
+            description = rst_utils.get_description(description)
+            index = package.index
+            index.create_copy()
+            version_index = index.get_editable()
+            version_index.set_document_xml_from(
+                description.as_html(True), request=self.request)
+            index.sec_update_last_author_info()
+            index.set_unapproved_version_publication_datetime(
+                DateTime.DateTime())
+            index.approve_version()
 
         return (package, package_name, package_version)
 

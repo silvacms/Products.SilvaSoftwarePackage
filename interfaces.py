@@ -2,10 +2,16 @@
 # See also LICENSE.txt
 # $Id$
 
-from silva.core import interfaces
+from silva.core.interfaces import IPublication, IFolder
+from silva.core.layout.interfaces import ICustomizableTag
 
 
-class ISilvaSoftwareContent(interfaces.IFolder):
+class ISilvaNoAutomaticUpdate(ICustomizableTag):
+    """Don't automatically update the description
+    """
+
+
+class ISilvaSoftwareContent(IFolder):
     """This is a content from the Silva Software center.
     """
 
@@ -15,7 +21,7 @@ class ISilvaSoftwareGroup(ISilvaSoftwareContent):
     """
 
 
-class ISilvaSoftwareCenter(ISilvaSoftwareGroup, interfaces.IPublication):
+class ISilvaSoftwareCenter(ISilvaSoftwareGroup, IPublication):
     """A Silva software center.
     """
 
