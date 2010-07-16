@@ -17,6 +17,8 @@ from silva.core.interfaces import ILink
 from zeam.form import silva as silvaforms
 from silva.core.views import views as silvaviews
 
+
+from pkg_resources import parse_version
 import logging
 import os.path
 import DateTime
@@ -89,6 +91,9 @@ class CenterRegister(grok.View):
         if package_name.startswith('Products.'):
             package_name = package_name[9:]
 
+        # By default the release uploaded is the last version of the package
+        is_last_version = True
+
         #catalog = component.getUtility(ICatalogService)
         catalog = self.context.service_catalog
         query = {'meta_type': 'Silva Software Package',
@@ -97,13 +102,24 @@ class CenterRegister(grok.View):
         package_brains = catalog(query)
         if len(package_brains) == 1:
             package = package_brains[0].getObject()
+
+            # Check if it is really the last version we know of
+            last_packages_version = list(package._ordered_ids)
+            if last_packages_version:
+                last_packages_version = map(
+                    parse_version, last_packages_version)
+                last_packages_version.sort()
+                if parse_version(package_version) < last_packages_version[-1]:
+                    is_last_version = False
         else:
             logger.debug(u'Create package %s' % package_name)
             factory = self.context.manage_addProduct['SilvaSoftwarePackage']
             factory.manage_addSilvaSoftwarePackage(package_name, package_name)
             package = getattr(self.context, package_name)
             package.sec_update_last_author_info()
-        if (description is not None and
+
+
+        if (description is not None and is_last_version and
             not interfaces.ISilvaNoAutomaticUpdate.providedBy(package)):
             description = rst_utils.get_description(description)
             index = package.index
