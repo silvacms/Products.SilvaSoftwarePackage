@@ -145,7 +145,8 @@ class CenterRegister(grok.View):
                         'contactemail': self.request.get('author_email', ''),
                         'keywords': self.request.get('keywords', ''),
                         'subject': self.request.get('summary', '')}
-        title_info = {'maintitle': u'%s %s' % (package_name, package_version)}
+        title_info = {'maintitle': u'%s %s' % (package_name, package_version),
+                      'shorttitle': u''}
 
         metadata = component.getUtility(IMetadataService)
         binding = metadata.getMetadata(release)
