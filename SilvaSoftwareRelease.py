@@ -21,6 +21,7 @@ from zope.lifecycleevent import ObjectCreatedEvent
 from silva.core import conf as silvaconf
 from silva.core.views import views as silvaviews
 from silva.core.interfaces import IAsset, IFile
+from zeam.form import silva as silvaforms
 
 import re
 
@@ -77,7 +78,12 @@ class SilvaSoftwareRelease(Folder):
 InitializeClass(SilvaSoftwareRelease)
 
 
-def manage_addSilvaSoftwareRelease(container, version, REQUEST=None):
+class ReleaseAddForm(silvaforms.SMIAddForm):
+    grok.context(interfaces.ISilvaSoftwareRelease)
+    grok.name('Silva Software Release')
+
+
+def manage_addSilvaSoftwareRelease(container, version, title=None):
     if not mangle.Id(container, version).isValid():
         return
 
@@ -89,7 +95,6 @@ def manage_addSilvaSoftwareRelease(container, version, REQUEST=None):
     release = getattr(container, version)
     release.set_title(version)
     notify(ObjectCreatedEvent(release))
-    add_and_edit(container, version, REQUEST)
     return release
 
 
