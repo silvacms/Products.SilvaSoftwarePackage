@@ -1,10 +1,14 @@
 <tal:release>
+  <a href="#skip-to-download" class="skip-to-download"
+     tal:condition="view/files" >
+    Download Links
+  </a>
 
   <p tal:condition="view/description"
      tal:replace="structure view/description">View</p>
 
   <tal:download tal:condition="view/files">
-    <h3>Download</h3>
+    <h3><a name="skip-to-download">Download</a></h3>
     <table class="silvatable list">
       <thead>
         <tr>
