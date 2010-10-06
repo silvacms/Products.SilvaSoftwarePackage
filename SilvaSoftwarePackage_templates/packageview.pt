@@ -1,12 +1,18 @@
-<tal:package>
+<tal:package
+   tal:define="releases view/get_releases">
+
+  <a href="#skip-to-releases" class="skip-link" style="float: right"
+     tal:condition="releases">
+    Releases Links
+  </a>
 
   <p tal:define="index content/get_default | nothing"
      tal:condition="index"
      tal:replace="structure index/view">View</p>
 
   <table class="silvatable list"
-         tal:define="releases view/get_releases"
          tal:condition="releases">
+    <h3><a name="skip-to-releases">Available releases</a></h3>
     <thead>
       <tr>
         <th class="align-left">Release version</th>

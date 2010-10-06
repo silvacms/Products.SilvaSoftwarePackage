@@ -1,5 +1,5 @@
 <tal:release>
-  <a href="#skip-to-download" class="skip-to-download"
+  <a href="#skip-to-download" class="skip-link" style="float: right"
      tal:condition="view/files" >
     Download Links
   </a>
