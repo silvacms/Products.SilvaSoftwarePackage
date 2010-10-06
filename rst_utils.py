@@ -73,15 +73,17 @@ class RSTSection(object):
             end = self.next.start_lineno
         return (self.start_lineno, end)
 
-    def search(self, criteria):
+    def search(self, criteria, only_first=False):
         """Search for a node.
         """
         matches = []
         if criteria(self):
             matches.append(self)
+            if only_first:
+                return matches
         for node in [self.sub, self.next]:
             if node is not None:
-                matches.extend(node.search(criteria))
+                matches.extend(node.search(criteria, only_first=only_first))
         return matches
 
     def get_root(self):
@@ -223,8 +225,11 @@ def get_last_changes(package_info):
     changes = package_info.search(is_changes_header)
     if len(changes) == 1:
         return changes[0].sub
-    if not len(changes):
-        changes = package_info.search(looks_like_changes_header)
+    else:
+        # We assume the developer DID A CRAP AND DIDN'T FOLLOW THE
+        # RECOMMANDATION. HE SHOULD JUST BE FIRED FOR THIS KIND OF
+        # WORD.
+        changes = package_info.search(looks_like_changes_header, True)
         if len(changes) == 1:
             return changes[0].sub
     return None
@@ -233,7 +238,7 @@ def get_last_changes(package_info):
 def get_description(package_info):
     """Return the description without the changes.
     """
-    return package_info.copy(exclude=is_changes_header)
+    return package_info.copy(exclude=looks_like_changes_header)
 
 
 if __name__ == '__main__':
