@@ -5,7 +5,6 @@
 from Globals import InitializeClass
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.Silva import SilvaPermissions
-from Products.Silva.helpers import add_and_edit
 from Products.Silva import mangle
 from Products.Silva.Folder import Folder
 from Products.Silva.ExtensionRegistry import extensionRegistry
@@ -21,6 +20,7 @@ from zope.lifecycleevent import ObjectCreatedEvent
 from silva.core import conf as silvaconf
 from silva.core.views import views as silvaviews
 from silva.core.interfaces import IAsset, IFile
+from silva.core.conf.utils import ISilvaFactoryDispatcher
 from zeam.form import silva as silvaforms
 
 import re
@@ -84,6 +84,9 @@ class ReleaseAddForm(silvaforms.SMIAddForm):
 
 
 def manage_addSilvaSoftwareRelease(container, version, title=None):
+    if ISilvaFactoryDispatcher.providedBy(container):
+        container = container.Destination()
+
     if not mangle.Id(container, version).isValid():
         return
 

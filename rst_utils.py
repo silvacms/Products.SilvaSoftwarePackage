@@ -115,8 +115,11 @@ class RSTSection(object):
     def as_html(self, following_ones=False):
         rst = StringIO()
         self.write(rst, following_ones=following_ones)
+        settings = {'initial_header_level': 2,
+                    'default_output_encoding': 'utf-8',}
         return publish_parts(
             rst.getvalue(),
+            settings_overrides=settings,
             parser_name='restructuredtext',
             writer_name='html')['whole']
 
