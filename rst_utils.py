@@ -201,7 +201,20 @@ HEADERS_CHANGES = ['changes', 'changelog', 'history']
 
 
 def is_changes_header(node):
+    """Test if the node is the changes one.
+    """
     return node.title.lower() in HEADERS_CHANGES
+
+
+def looks_like_changes_header(node):
+    """Test if the node looks the changes sections, by testing if the
+    title ends with a change title.
+    """
+    title = node.title.lower()
+    for possibility in HEADERS_CHANGES:
+        if title.endswith(possibility):
+            return True
+    return False
 
 
 def get_last_changes(package_info):
@@ -210,6 +223,10 @@ def get_last_changes(package_info):
     changes = package_info.search(is_changes_header)
     if len(changes) == 1:
         return changes[0].sub
+    if not len(changes):
+        changes = package_info.search(looks_like_changes_header)
+        if len(changes) == 1:
+            return changes[0].sub
     return None
 
 
