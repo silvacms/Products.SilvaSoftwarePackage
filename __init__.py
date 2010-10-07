@@ -23,25 +23,18 @@ class SilvaSoftwarePackageInstaller(DefaultInstaller):
     def registerViews(self, reg):
         """Register core views on registry.
         """
-
         # edit
         reg.register('edit', 'Silva Software Package',
                      ['edit', 'Container', 'SilvaSoftwarePackage'])
         reg.register('edit', 'Silva Software Release',
                      ['edit', 'Container', 'SilvaSoftwareRelease'])
-        # add
-        reg.register('add', 'Silva Software Release',
-                     ['add', 'SilvaSoftwareRelease'])
 
     def unregisterViews(self, reg):
-
         for meta_type in ['Silva Software Package',
                           'Silva Software Release',]:
             reg.unregister('edit', meta_type)
-            reg.unregister('add', meta_type)
 
     def customizeInstall(self, root):
-
         # security
         root.manage_permission('Add Silva Software Packages',
                                ['Author', 'Editor', 'ChiefEditor', 'Manager'])
