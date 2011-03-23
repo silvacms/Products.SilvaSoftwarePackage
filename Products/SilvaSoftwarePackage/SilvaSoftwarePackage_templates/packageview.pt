@@ -1,17 +1,17 @@
 <tal:package
-   tal:define="releases view/get_releases">
+  tal:define="releases view/get_releases">
 
   <a href="#skip-to-releases" class="skip-link" style="float: right"
-     tal:condition="releases">
-    Releases Links
+    tal:condition="releases">
+    Jump to releases
   </a>
 
   <p tal:define="index content/get_default | nothing"
-     tal:condition="index"
-     tal:replace="structure index/view">View</p>
+    tal:condition="index"
+    tal:replace="structure index/view">View</p>
 
   <table class="silvatable list"
-         tal:condition="releases">
+    tal:condition="releases">
     <h3><a name="skip-to-releases">Available releases</a></h3>
     <thead>
       <tr>
@@ -24,23 +24,21 @@
       <tr tal:repeat="release releases">
         <td>
           <a tal:attributes="href release/url"
-             tal:content="release/name">
+            tal:content="release/name">
           </a>
         </td>
         <td tal:content="release/date" />
         <td>
-          <tal:block tal:repeat="file release/files">
+          <tal:rep tal:repeat="file release/files">
             <a tal:attributes="href file/url"
-               tal:content="file/name">
+              tal:content="file/name">
               filename
-              </a><br />
-          </tal:block>
+            </a><br />
+          </tal:rep>
         </td>
       </tr>
     </tbody>
   </table>
-
-  <br />
 
   <p class="software-license">
     <strong>License:</strong>
