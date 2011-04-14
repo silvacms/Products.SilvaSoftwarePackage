@@ -1,21 +1,13 @@
 from setuptools import setup, find_packages
 import os
-import os.path
 
 version = '2.0dev'
-
-def read(filename, prefix=os.path.join("Products","SilvaSoftwarePackage")):
-    f = open(os.path.join(prefix, filename), 'r')
-    try:
-        return f.read()
-    finally:
-        f.close()
-
 
 setup(name='Products.SilvaSoftwarePackage',
       version=version,
       description="SilvaSoftwarePackage provides a small set of objects to present software releases to the public",
-      long_description=read("README.txt"),
+      long_description=open("README.txt").read() + "\n" +
+                       open(os.path.join("docs", "HISTORY.txt")).read(),
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Framework :: Zope2",
