@@ -5,6 +5,7 @@
 from Products.Silva.Folder import Folder
 from Products.Silva import mangle
 from Products.Silva.ExtensionRegistry import extensionRegistry
+from Products.Silva.Folder.order import OrderManager
 from Products.SilvaSoftwarePackage import interfaces
 
 from silva.core import conf as silvaconf
@@ -12,7 +13,6 @@ from silva.core.interfaces import IAsset
 from silva.core.views import views as silvaviews
 from silva.core.views.interfaces import IPreviewLayer
 
-from zope.container.interfaces import IContainerModifiedEvent
 from zeam.form import silva as silvaforms
 
 from five import grok
@@ -43,12 +43,20 @@ class SilvaSoftwarePackage(Folder):
         return result
 
 
-@grok.subscribe(interfaces.ISilvaSoftwarePackage, IContainerModifiedEvent)
-def package_modified(content, event):
-    # On add, sort releases by alphabetical order
-    content._ordered_ids.sort(
-        cmp=lambda v1, v2: cmp(parse_version(v1), parse_version(v2)),
-        reverse=True)
+class PackageOrderManager(OrderManager):
+    grok.context(interfaces.ISilvaSoftwarePackage)
+
+    def _sort(self):
+        self.order.sort(key=parse_version)
+        self._p_changed = 1
+
+    def add(self, content):
+        if super(PackageOrderManager, self).add(content):
+            self._sort()
+
+    def move(self, content, position):
+        if super(PackageOrderManager, self).move(content, position):
+            self._sort()
 
 
 class PackageAdd(silvaforms.SMIAddForm):
