@@ -42,7 +42,7 @@ def addDefaultDocument(content, event):
     if event.object is not content:
         return
     if not hasattr(content.aq_base, 'index'):
-        content.manage_addProduct['SilvaDocument'].manage_addDocument(
+        content.manage_addProduct['silva.app.document'].manage_addDocument(
             'index', content.get_title())
         index = getattr(content, 'index')
         index.set_unapproved_version_publication_datetime(DateTime.DateTime())
@@ -177,8 +177,7 @@ class CenterRegister(grok.View):
             index.create_copy()
             version_index = index.get_editable()
             if changes is not None:
-                version_index.set_document_xml_from(
-                    changes.as_html(False), request=self.request)
+                version_index.body.save_raw_text(changes.as_html(False))
             binding = metadata.getMetadata(version_index)
             binding.setValues('silva-extra', release_info, reindex=1)
             binding.setValues('silva-content', title_info, reindex=1)

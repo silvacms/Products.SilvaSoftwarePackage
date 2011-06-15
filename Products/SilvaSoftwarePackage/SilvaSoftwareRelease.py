@@ -7,9 +7,7 @@ from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.Silva import SilvaPermissions
 from Products.Silva import mangle
 from Products.Silva.Folder import Folder
-from Products.Silva.ExtensionRegistry import extensionRegistry
 from Products.SilvaMetadata.interfaces import IMetadataService
-from Products.SilvaDocument.Document import DocumentHTML
 from Products.SilvaSoftwarePackage import interfaces
 
 from five import grok
@@ -19,7 +17,7 @@ from zope.lifecycleevent import ObjectCreatedEvent
 
 from silva.core import conf as silvaconf
 from silva.core.views import views as silvaviews
-from silva.core.interfaces import IAsset, IFile
+from silva.core.interfaces import IAsset, IFile, IAddableContents
 from silva.core.conf.utils import ISilvaFactoryDispatcher
 from zeam.form import silva as silvaforms
 
@@ -49,16 +47,7 @@ class SilvaSoftwareRelease(Folder):
     silvaconf.priority(9)
 
     def get_silva_addables_allowed_in_container(self):
-        allowed = super(SilvaSoftwareRelease, self).\
-                  get_silva_addables_allowed_in_container()
-        addables = extensionRegistry.get_addables()
-        result = []
-
-        for addable in addables:
-            if (addable['name'] in allowed and
-                IAsset.implementedBy(addable['instance'])):
-                result.append(addable['name'])
-        return result
+        return IAddableContents(self).get_all_addables(IAsset)
 
     security.declareProtected(
         SilvaPermissions.AccessContentsInformation, 'get_files')
@@ -127,5 +116,5 @@ class ReleaseView(silvaviews.View):
         if description is not None:
             description = description.get_viewable()
             if description is not None:
-                description = DocumentHTML.transform(description, self.request)
+                description = description.body.render(description, self.request)
         self.description = description

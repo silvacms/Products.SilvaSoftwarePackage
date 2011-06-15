@@ -8,6 +8,7 @@ from Products.SilvaSoftwarePackage import interfaces
 
 from five import grok
 from zope import component
+from zope.interface import Interface
 from zope.traversing.browser import absoluteURL
 
 from silva.core import conf as silvaconf
@@ -57,7 +58,8 @@ class GroupPreview(grok.View):
 class ReleaseFeedEntry(object):
     grok.implements(IFeedEntry)
 
-    def __init__(self, context):
+    def __init__(self, context, request):
+        self.request = request
         self.package = context.aq_parent
         self.release = context
         service_metadata = component.getUtility(IMetadataService)
@@ -81,8 +83,7 @@ class ReleaseFeedEntry(object):
         return self.metadata.get('silva-extra', 'subject')
 
     def url(self):
-        # !@$!@$!$@!$!??????
-        return self.release.absolute_url()
+        return absoluteURL(self.release, self.request)
 
     def authors(self):
         contact = self.metadata.get('silva-extra', 'contactname')
@@ -101,14 +102,18 @@ class ReleaseFeedEntry(object):
         return [k for k in keywords.split() if k]
 
 
-class GroupFeedEntryProvider(grok.Adapter):
-    grok.context(interfaces.ISilvaSoftwareGroup)
+class GroupFeedEntryProvider(grok.MultiAdapter):
+    grok.adapts(interfaces.ISilvaSoftwareGroup, Interface)
     grok.provides(IFeedEntryProvider)
     grok.implements(IFeedEntryProvider)
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
 
     def entries(self):
         catalog = self.context.service_catalog
         query = {'meta_type': 'Silva Software Release',
                  'path': '/'.join(self.context.getPhysicalPath())}
         for brain in catalog(query):
-            yield ReleaseFeedEntry(brain.getObject())
+            yield ReleaseFeedEntry(brain.getObject(), self.request)

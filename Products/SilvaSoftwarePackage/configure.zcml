@@ -3,7 +3,7 @@
   xmlns:grok="http://namespaces.zope.org/grok">
 
   <include package="five.grok" />
-  <include package="Products.SilvaDocument" />
+  <include package="silva.app.document" />
   <include package="silva.core.upgrade" />
 
   <!-- grok -->

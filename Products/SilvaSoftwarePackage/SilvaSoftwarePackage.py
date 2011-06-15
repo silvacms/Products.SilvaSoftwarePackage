@@ -4,14 +4,14 @@
 
 from Products.Silva.Folder import Folder
 from Products.Silva import mangle
-from Products.Silva.ExtensionRegistry import extensionRegistry
 from Products.Silva.Folder.order import OrderManager
 from Products.SilvaSoftwarePackage import interfaces
 
 from silva.core import conf as silvaconf
-from silva.core.interfaces import IAsset
+from silva.core.interfaces import IAsset, IAddableContents
 from silva.core.views import views as silvaviews
 from silva.core.views.interfaces import IPreviewLayer
+from zope.traversing.browser import absoluteURL
 
 from zeam.form import silva as silvaforms
 
@@ -30,16 +30,8 @@ class SilvaSoftwarePackage(Folder):
     silvaconf.priority(9)
 
     def get_silva_addables_allowed_in_container(self):
-
-        allowed = super(SilvaSoftwarePackage, self).\
-                  get_silva_addables_allowed_in_container()
-        addables = extensionRegistry.get_addables()
         result = ['Silva Document', 'Silva Software Release']
-
-        for addable in addables:
-            if (addable['name'] in allowed and
-                IAsset.implementedBy(addable['instance'])):
-                result.append(addable['name'])
+        result.extend(IAddableContents(self).get_all_addables(IAsset))
         return result
 
 
@@ -84,13 +76,13 @@ class PackageView(silvaviews.View):
 
         def file_detail(entry):
             return {'name': entry.get_filename(),
-                    'url': entry.absolute_url()}
+                    'url': absoluteURL(entry, self.request)}
 
         for entry in publishables:
             crea_date = entry.get_default().get_creation_datetime()
             files = map(file_detail, entry.get_files())
             releases.append({'name': self.content.get_title() + ' ' + entry.id,
-                             'url': entry.absolute_url(),
+                             'url': absoluteURL(entry, self.request),
                              'date': mangle.DateTime(crea_date).toStr(),
                              'files': files})
         return releases

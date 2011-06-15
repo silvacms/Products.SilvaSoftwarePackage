@@ -29,7 +29,7 @@ setup(name='Products.SilvaSoftwarePackage',
       install_requires=[
           'setuptools',
           'Products.Silva',
-          'Products.SilvaDocument',
+          'silva.app.document',
           'silva.core.conf',
           ],
       entry_points = """
