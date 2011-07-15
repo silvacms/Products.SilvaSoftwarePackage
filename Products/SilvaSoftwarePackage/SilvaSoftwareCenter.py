@@ -2,6 +2,10 @@
 # See also LICENSE.txt
 # $Id$
 
+from pkg_resources import parse_version
+import logging
+import os.path
+
 from five import grok
 from zope.lifecycleevent.interfaces import IObjectCreatedEvent
 from zope.traversing.browser import absoluteURL
@@ -14,14 +18,9 @@ from Products.SilvaSoftwarePackage import rst_utils
 
 from silva.core import conf as silvaconf
 from silva.core.interfaces import ILink
+from silva.core.interfaces.adapters import IPublicationWorkflow
 from zeam.form import silva as silvaforms
 from silva.core.views import views as silvaviews
-
-
-from pkg_resources import parse_version
-import logging
-import os.path
-import DateTime
 
 logger = logging.getLogger('silva software center')
 
@@ -45,8 +44,7 @@ def addDefaultDocument(content, event):
         content.manage_addProduct['silva.app.document'].manage_addDocument(
             'index', content.get_title())
         index = getattr(content, 'index')
-        index.set_unapproved_version_publication_datetime(DateTime.DateTime())
-        index.approve_version()
+        IPublicationWorkflow(index).publish()
 
 
 class CenterAdd(silvaforms.SMIAddForm):
@@ -116,21 +114,16 @@ class CenterRegister(grok.View):
             factory = self.context.manage_addProduct['SilvaSoftwarePackage']
             factory.manage_addSilvaSoftwarePackage(package_name, package_name)
             package = getattr(self.context, package_name)
-            package.sec_update_last_author_info()
 
 
         if (description is not None and is_last_version and
             not interfaces.ISilvaNoAutomaticUpdate.providedBy(package)):
             description = rst_utils.get_description(description)
             index = package.index
-            index.create_copy()
+            IPublicationWorkflow(index).new_version()
             version_index = index.get_editable()
-            version_index.set_document_xml_from(
-                description.as_html(True), request=self.request)
-            index.sec_update_last_author_info()
-            index.set_unapproved_version_publication_datetime(
-                DateTime.DateTime())
-            index.approve_version()
+            version_index.body.save_raw(description.as_html(True))
+            IPublicationWorkflow(index).publish()
 
         return (package, package_name, package_version)
 
@@ -141,7 +134,6 @@ class CenterRegister(grok.View):
             factory = package.manage_addProduct['SilvaSoftwarePackage']
             factory.manage_addSilvaSoftwareRelease(package_version)
             release = getattr(package, package_version)
-            release.sec_update_last_author_info()
         return release
 
     def render(self):
@@ -174,17 +166,14 @@ class CenterRegister(grok.View):
             changes = rst_utils.get_last_changes(description)
 
             index = release.index
-            index.create_copy()
+            IPublicationWorkflow(index).new_version()
             version_index = index.get_editable()
             if changes is not None:
                 version_index.body.save_raw_text(changes.as_html(False))
             binding = metadata.getMetadata(version_index)
             binding.setValues('silva-extra', release_info, reindex=1)
             binding.setValues('silva-content', title_info, reindex=1)
-            index.sec_update_last_author_info()
-            index.set_unapproved_version_publication_datetime(
-                DateTime.DateTime())
-            index.approve_version()
+            IPublicationWorkflow(index).publish()
         else:
             logger.info(u'No description available for %s %s' %
                         (package_name, package_version))
@@ -213,9 +202,6 @@ class CenterUpload(CenterRegister):
 
         factory = release.manage_addProduct['Silva']
         factory.manage_addFile(filename, filename, self.request['content'])
-        release_file = getattr(release, filename)
-        release_file.sec_update_last_author_info()
-
         self.response.setStatus(200)
         return status
 

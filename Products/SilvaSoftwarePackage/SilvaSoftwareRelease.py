@@ -2,8 +2,10 @@
 # See also LICENSE.txt
 # $Id$
 
-from Globals import InitializeClass
-from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
+import re
+
+from App.class_init import InitializeClass
+from AccessControl import ClassSecurityInfo
 from Products.Silva import SilvaPermissions
 from Products.Silva import mangle
 from Products.Silva.Folder import Folder
@@ -17,23 +19,17 @@ from zope.lifecycleevent import ObjectCreatedEvent
 
 from silva.core import conf as silvaconf
 from silva.core.views import views as silvaviews
-from silva.core.interfaces import IAsset, IFile, IAddableContents
+from silva.core.interfaces import IFile, IAddableContents
 from silva.core.conf.utils import ISilvaFactoryDispatcher
 from zeam.form import silva as silvaforms
 
-import re
 
-
-module_security = ModuleSecurityInfo(
-    'Products.SilvaSoftwarePackage.SilvaSoftwareRelease')
-module_security.declareProtected(
-    SilvaPermissions.ReadSilvaContent, 'test_version_string')
 _version_reg = re.compile('^[0-9]+(\.[0-9]+)*(dev-r[0-9]+)?((a|b|rc)[0-9]*)?$')
 def test_version_string(version):
     """test whether the version conforms to the required format.
     """
     if not _version_reg.search(version):
-        raise TypeError, 'Version string has incorrect format!'
+        raise ValueError(u'Id is not a proper version!')
 
 
 class SilvaSoftwareRelease(Folder):
@@ -47,7 +43,7 @@ class SilvaSoftwareRelease(Folder):
     silvaconf.priority(9)
 
     def get_silva_addables_allowed_in_container(self):
-        return IAddableContents(self).get_all_addables(IAsset)
+        return IAddableContents(self).get_all_addables(IFile)
 
     security.declareProtected(
         SilvaPermissions.AccessContentsInformation, 'get_files')
@@ -58,11 +54,6 @@ class SilvaSoftwareRelease(Folder):
                 ret.append(obj)
         ret.sort(lambda a, b: cmp(a.id, b.id))
         return ret
-
-    def is_transparent(self):
-        """returns 1 to make this software package's contents show up
-            in tab_status of the package it's in"""
-        return 1
 
 InitializeClass(SilvaSoftwareRelease)
 

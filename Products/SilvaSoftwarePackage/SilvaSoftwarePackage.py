@@ -2,22 +2,21 @@
 # See also LICENSE.txt
 # $Id$
 
+from pkg_resources import parse_version
+
 from Products.Silva.Folder import Folder
 from Products.Silva import mangle
 from Products.Silva.Folder.order import OrderManager
 from Products.SilvaSoftwarePackage import interfaces
 
+from five import grok
+from zope.traversing.browser import absoluteURL
+
 from silva.core import conf as silvaconf
 from silva.core.interfaces import IAsset, IAddableContents
 from silva.core.views import views as silvaviews
 from silva.core.views.interfaces import IPreviewLayer
-from zope.traversing.browser import absoluteURL
-
 from zeam.form import silva as silvaforms
-
-from five import grok
-
-from pkg_resources import parse_version
 
 
 class SilvaSoftwarePackage(Folder):
@@ -36,19 +35,18 @@ class SilvaSoftwarePackage(Folder):
 
 
 class PackageOrderManager(OrderManager):
+    """Packages keep their content in order.
+    """
     grok.context(interfaces.ISilvaSoftwarePackage)
-
-    def _sort(self):
-        self.order.sort(key=parse_version)
-        self._p_changed = 1
 
     def add(self, content):
         if super(PackageOrderManager, self).add(content):
-            self._sort()
+            self.order.sort(key=parse_version)
+            return True
+        return False
 
     def move(self, content, position):
-        if super(PackageOrderManager, self).move(content, position):
-            self._sort()
+        return False
 
 
 class PackageAdd(silvaforms.SMIAddForm):
