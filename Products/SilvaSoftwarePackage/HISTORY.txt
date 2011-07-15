@@ -1,67 +1,89 @@
-Copyright (c) 2002-2010 Infrae. All rights reserved.
-See also LICENSE.txt
 
-SilvaSoftwarePackage changes
+Changes
+=======
 
-  1.0.1
+3.0 (unreleased)
+----------------
 
-    Features added:
+Features added:
 
-    - Set the addable priority to -9 so SilvaSoftwareFile is the first item,
-      thus less likely to be confused with SilvaFile which doesn't show up.
+- Update code for Silva 3.0.
 
-    Bugs fixed:
+2.0
+---
 
-    - changed to work with ExtFile 2.0.2
+Features added:
 
-    - edit.pt has been replaced with tab_edit.pt as described in developers.txt
+- Support egg upload from distutils / setuptools.
 
-    - fix for error that was raised when using ZODB storage
+- Add a page to list all downloadables for zc.buildout.
 
-  1.0
+- Remove superfluous content types.
 
-    Bugs fixed:
+1.0.1
+-----
 
-    - made Silva 2.0 compliant
+Features added:
 
-  0.6
+- Set the addable priority to -9 so SilvaSoftwareFile is the first item,
+  thus less likely to be confused with SilvaFile which doesn't show up.
 
-    Features added:
+Bugs fixed:
 
-    - Changed the listing date from get_public_version_publication_datetime
-      to get_creation_datetime because a republish changes the 'Release Date'.
+- changed to work with ExtFile 2.0.2
 
-    - Up the addable_priority to 9, so these (probably) Infrae-only products
-      appear last in the list, leaving room for other parties in between
+- edit.pt has been replaced with tab_edit.pt as described in developers.txt
 
-  0.5
+- fix for error that was raised when using ZODB storage
 
-    Features added:
+1.0
+---
 
-    - Tweaked the icon to differentiate it from a S3PSPackage, so nobody
-      mistakenly adds the wrong type.
+Bugs fixed:
 
-    - Removed the tab_metadata file, thereby adding features!
+- made Silva 2.0 compliant
 
-    - Now works with zope3 style interfaces.
+0.6
+---
 
-  0.4
+Features added:
 
-    Bugs fixed:
+- Changed the listing date from get_public_version_publication_datetime
+  to get_creation_datetime because a republish changes the 'Release Date'.
 
-      - Installation will now create a service_software automatically.
+- Up the addable_priority to 9, so these (probably) Infrae-only products
+  appear last in the list, leaving room for other parties in between
 
-      - It's no longer possible to add SilvaSoftwareFiles to
-        SilvaSoftwarePackage objects.
+0.5
+---
 
-    Features added:
+Features added:
 
-      - The filenames are now shown in the SilvaSoftwarePackage views, not
-        only from SilvaSoftwareRelease (less clicking for the client).
+- Tweaked the icon to differentiate it from a S3PSPackage, so nobody
+  mistakenly adds the wrong type.
 
-      - Instead of filling in an id, title and version, only the version can
-        be filled in when a client creates a SilvaSoftwareRelease, this version
-        is also used as id and to generate nice looking titles.
+- Removed the tab_metadata file, thereby adding features!
 
-      - Paths are now sorted alphabetically in the stats tab of the
-        SilvaSoftwareService.
+- Now works with zope3 style interfaces.
+
+0.4
+---
+
+Bugs fixed:
+
+- Installation will now create a service_software automatically.
+
+- It's no longer possible to add SilvaSoftwareFiles to
+  SilvaSoftwarePackage objects.
+
+Features added:
+
+- The filenames are now shown in the SilvaSoftwarePackage views, not
+  only from SilvaSoftwareRelease (less clicking for the client).
+
+- Instead of filling in an id, title and version, only the version can
+  be filled in when a client creates a SilvaSoftwareRelease, this version
+  is also used as id and to generate nice looking titles.
+
+- Paths are now sorted alphabetically in the stats tab of the
+  SilvaSoftwareService.

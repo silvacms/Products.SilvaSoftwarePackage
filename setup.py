@@ -7,7 +7,7 @@ setup(name='Products.SilvaSoftwarePackage',
       version=version,
       description="SilvaSoftwarePackage provides a small set of objects to present software releases to the public",
       long_description=open("README.txt").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+                       open(os.path.join("Products", "SilvaSoftwarePackage", "HISTORY.txt")).read(),
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Framework :: Zope2",
@@ -20,7 +20,7 @@ setup(name='Products.SilvaSoftwarePackage',
       keywords='silva software package release eggshop',
       author='Guido Wesdorp plus the usual suspects',
       author_email='info@infrae.com',
-      url='',
+      url='http://infrae.com/products/silva',
       license='BSD',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['Products'],

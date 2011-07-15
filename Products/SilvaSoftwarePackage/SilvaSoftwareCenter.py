@@ -12,12 +12,13 @@ from zope.traversing.browser import absoluteURL
 from zope import component
 
 from Products.Silva.Publication import Publication
+from Products.Silva.ExtensionRegistry import meta_types_for_interface
 from Products.SilvaMetadata.interfaces import IMetadataService
 from Products.SilvaSoftwarePackage import interfaces
 from Products.SilvaSoftwarePackage import rst_utils
 
 from silva.core import conf as silvaconf
-from silva.core.interfaces import ILink
+from silva.core.interfaces import ILink, IFile
 from silva.core.interfaces.adapters import IPublicationWorkflow
 from zeam.form import silva as silvaforms
 from silva.core.views import views as silvaviews
@@ -102,7 +103,7 @@ class CenterRegister(grok.View):
             package = package_brains[0].getObject()
 
             # Check if it is really the last version we know of
-            last_packages_version = list(package._ordered_ids)
+            last_packages_version = package.objectIds(meta_types_for_interface(IFile))
             if last_packages_version:
                 last_packages_version = map(
                     parse_version, last_packages_version)
@@ -122,7 +123,7 @@ class CenterRegister(grok.View):
             index = package.index
             IPublicationWorkflow(index).new_version()
             version_index = index.get_editable()
-            version_index.body.save_raw(description.as_html(True))
+            version_index.body.save_raw_text(description.as_html(True))
             IPublicationWorkflow(index).publish()
 
         return (package, package_name, package_version)
