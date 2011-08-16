@@ -8,7 +8,7 @@
 
   <p tal:define="index content/get_default | nothing"
     tal:condition="index"
-    tal:replace="structure index/view">View</p>
+    tal:replace="structure index/@@content.html">View</p>
 
   <table class="silvatable list"
     tal:condition="releases">

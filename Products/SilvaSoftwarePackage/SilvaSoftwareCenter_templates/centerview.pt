@@ -3,7 +3,7 @@
 
   <p tal:define="index content/get_default | nothing"
      tal:condition="index"
-     tal:replace="structure index/view">View</p>
+     tal:replace="structure index/@@content.html">View</p>
 
   <tal:group_presentation tal:condition="groups"
                           tal:repeat="group groups">
