@@ -5,7 +5,6 @@
 from pkg_resources import parse_version
 
 from Products.Silva.Folder import Folder
-from Products.Silva import mangle
 from Products.Silva.Folder.order import OrderManager
 from Products.SilvaSoftwarePackage import interfaces
 
@@ -76,12 +75,15 @@ class PackageView(silvaviews.View):
             return {'name': entry.get_filename(),
                     'url': absoluteURL(entry, self.request)}
 
+        locale = self.request.locale
+        format = locale.dates.getFormatter('dateTime', 'medium').format
+
         for entry in publishables:
             crea_date = entry.get_default().get_creation_datetime()
             files = map(file_detail, entry.get_files())
             releases.append({'name': self.content.get_title() + ' ' + entry.id,
                              'url': absoluteURL(entry, self.request),
-                             'date': mangle.DateTime(crea_date).toStr(),
+                             'date': format(crea_date.asdatetime()),
                              'files': files})
         return releases
 

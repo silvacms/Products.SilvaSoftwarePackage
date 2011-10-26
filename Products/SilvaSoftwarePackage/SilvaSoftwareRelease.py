@@ -88,13 +88,15 @@ class ReleaseView(silvaviews.View):
 
     def update(self):
         self.files = []
+        locale = self.request.locale
+        format = locale.dates.getFormatter('dateTime', 'medium').format
         for entry in self.content.get_files():
             mod_date = entry.get_modification_datetime()
             size = entry.get_file_size()
             self.files.append(
                 {'name': entry.get_filename(),
                  'url': entry.absolute_url(),
-                 'date': mangle.DateTime(mod_date).toStr(),
+                 'date': format(mod_date.asdatetime()),
                  'size': mangle.Bytes(size)})
         metadata = component.getUtility(IMetadataService)
         binding = metadata.getMetadata(self.context)
