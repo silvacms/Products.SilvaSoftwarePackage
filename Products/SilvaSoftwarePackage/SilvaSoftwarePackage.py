@@ -38,6 +38,9 @@ class PackageOrderManager(OrderManager):
     """
     grok.context(interfaces.ISilvaSoftwarePackage)
 
+    def _get_id(self, content):
+        return content.getId()
+
     def add(self, content):
         if super(PackageOrderManager, self).add(content):
             self.order.sort(key=parse_version)
