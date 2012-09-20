@@ -105,9 +105,3 @@ class ReleaseView(silvaviews.View):
         if self.contact_email:
             self.contact_email = self.contact_email.replace(u'@', u' at ')
 
-        description = self.context.get_default()
-        if description is not None:
-            description = description.get_viewable()
-            if description is not None:
-                description = description.body.render(description, self.request)
-        self.description = description

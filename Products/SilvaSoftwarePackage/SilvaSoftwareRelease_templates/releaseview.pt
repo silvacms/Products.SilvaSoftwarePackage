@@ -4,11 +4,12 @@
     Download Links
   </a>
 
-  <p tal:condition="view/description"
-     tal:replace="structure view/description">View</p>
+  <p tal:define="index content/get_default | nothing"
+    tal:condition="index"
+    tal:replace="structure index/@@content.html">View</p>
 
   <tal:download tal:condition="view/files">
-    <h3><a name="skip-to-download">Download</a></h3>
+    <h2><a name="skip-to-download">Download</a></h2>
     <table class="silvatable list">
       <thead>
         <tr>
@@ -31,7 +32,7 @@
   </tal:download>
 
   <tal:contact tal:condition="view/contact_name">
-    <h3>Contact</h3>
+    <h2>Contact</h2>
     <p class="software-contact">
       <acronym title="For More Information">FMI</acronym> contact
       <span tal:replace="view/contact_name" />

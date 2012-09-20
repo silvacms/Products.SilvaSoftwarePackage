@@ -12,7 +12,7 @@
 
   <table class="silvatable list"
     tal:condition="releases">
-    <h3><a name="skip-to-releases">Available releases</a></h3>
+    <h2><a name="skip-to-releases">Available releases</a></h2>
     <thead>
       <tr>
         <th class="align-left">Release version</th>

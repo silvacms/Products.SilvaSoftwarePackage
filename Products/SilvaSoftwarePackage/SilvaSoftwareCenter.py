@@ -7,9 +7,13 @@ import logging
 import os.path
 
 from five import grok
+from zope.cachedescriptors.property import Lazy
 from zope.lifecycleevent.interfaces import IObjectCreatedEvent
+from zope.lifecycleevent.interfaces import IObjectCopiedEvent
+from zope.lifecycleevent import ObjectModifiedEvent
 from zope.traversing.browser import absoluteURL
 from zope import component
+from zope.event import notify
 
 from Products.Silva.Publication import Publication
 from Products.Silva.ExtensionRegistry import meta_types_for_interface
@@ -20,8 +24,8 @@ from Products.SilvaSoftwarePackage import rst_utils
 from silva.core import conf as silvaconf
 from silva.core.interfaces import ILink, IFile
 from silva.core.interfaces.adapters import IPublicationWorkflow
-from zeam.form import silva as silvaforms
 from silva.core.views import views as silvaviews
+from zeam.form import silva as silvaforms
 
 logger = logging.getLogger('silva software center')
 
@@ -38,13 +42,14 @@ class SilvaSoftwareCenter(Publication):
 
 
 @grok.subscribe(interfaces.ISilvaSoftwareContent, IObjectCreatedEvent)
-def addDefaultDocument(content, event):
-    if event.object is not content:
+def add_default_document(content, event):
+    if (event.object is not content or
+        IObjectCopiedEvent.providedBy(event)):
         return
     if not hasattr(content.aq_base, 'index'):
-        content.manage_addProduct['silva.app.document'].manage_addDocument(
-            'index', content.get_title())
-        index = getattr(content, 'index')
+        factory = content.manage_addProduct['silva.app.document']
+        factory.manage_addDocument('index', content.get_title())
+        index = content._getOb('index')
         IPublicationWorkflow(index).publish()
 
 
@@ -83,6 +88,10 @@ class CenterRegister(grok.View):
     grok.require('silva.ChangeSilvaContent')
     grok.name('submit')
 
+    @Lazy
+    def _get_metadata(self):
+        return component.getUtility(IMetadataService).getMetadata
+
     def _get_package(self, description=None):
         package_name = self.request['name']
         package_version = self.request['version']
@@ -119,22 +128,27 @@ class CenterRegister(grok.View):
 
         if (description is not None and is_last_version and
             not interfaces.ISilvaNoAutomaticUpdate.providedBy(package)):
+
             description = rst_utils.get_description(description)
             index = package.index
-            IPublicationWorkflow(index).new_version()
-            version_index = index.get_editable()
-            version_index.body.save_raw_text(description.as_html(True))
+            if index.get_editable() is None:
+                IPublicationWorkflow(index).new_version()
+            version = index.get_editable()
+            version.body.save(version, self.request, description.as_html(True))
+            binding = self._get_metadata(version)
+            binding.setValues('silva-content', {'maintitle': package_name})
+            notify(ObjectModifiedEvent(version))
             IPublicationWorkflow(index).publish()
 
         return (package, package_name, package_version)
 
     def _get_release(self, package, package_version):
-        release = getattr(package, package_version, None)
+        release = package._getOb(package_version, None)
         if release is None:
             logger.debug(u'Create release %s' % package_version)
             factory = package.manage_addProduct['SilvaSoftwarePackage']
             factory.manage_addSilvaSoftwareRelease(package_version)
-            release = getattr(package, package_version)
+            release = package._getOb(package_version)
         return release
 
     def render(self):
@@ -149,7 +163,6 @@ class CenterRegister(grok.View):
             logger.info(u'Release %s of %s already registered' %
                         (package_version, package_name))
 
-        release = self._get_release(package, package_version)
         release_info = {'contactname': self.request.get('author', ''),
                         'contactemail': self.request.get('author_email', ''),
                         'keywords': self.request.get('keywords', ''),
@@ -157,23 +170,25 @@ class CenterRegister(grok.View):
         title_info = {'maintitle': u'%s %s' % (package_name, package_version),
                       'shorttitle': package_version}
 
-        metadata = component.getUtility(IMetadataService)
-        binding = metadata.getMetadata(release)
-        binding.setValues('silva-extra', release_info, reindex=1)
-        binding.setValues('silva-content', title_info, reindex=1)
-        release.sec_update_last_author_info()
+        release = self._get_release(package, package_version)
+        binding = self._get_metadata(release)
+        binding.setValues('silva-extra', release_info)
+        binding.setValues('silva-content', title_info)
+        notify(ObjectModifiedEvent(release))
 
         if description is not None:
             changes = rst_utils.get_last_changes(description)
 
             index = release.index
-            IPublicationWorkflow(index).new_version()
-            version_index = index.get_editable()
+            if index.get_editable() is None:
+                IPublicationWorkflow(index).new_version()
+            version = index.get_editable()
             if changes is not None:
-                version_index.body.save_raw_text(changes.as_html(False))
-            binding = metadata.getMetadata(version_index)
-            binding.setValues('silva-extra', release_info, reindex=1)
-            binding.setValues('silva-content', title_info, reindex=1)
+                version.body.save(version, self.request, changes.as_html(False))
+            binding = self._get_metadata(version)
+            binding.setValues('silva-content', title_info)
+            binding.setValues('silva-extra', release_info)
+            notify(ObjectModifiedEvent(version))
             IPublicationWorkflow(index).publish()
         else:
             logger.info(u'No description available for %s %s' %
