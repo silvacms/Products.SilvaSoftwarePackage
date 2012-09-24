@@ -24,16 +24,15 @@ from silva.core.conf.utils import ISilvaFactoryDispatcher
 from zeam.form import silva as silvaforms
 
 
-_version_reg = re.compile('^[0-9]+(\.[0-9]+)*(dev-r[0-9]+)?((a|b|rc)[0-9]*)?$')
+VERSION = re.compile('^[0-9]+(\.[0-9]+)*(dev-r[0-9]+)?((a|b|c|rc)[0-9]*)?$')
 def test_version_string(version):
     """test whether the version conforms to the required format.
     """
-    if not _version_reg.search(version):
+    if not VERSION.search(version):
         raise ValueError(u'Id is not a proper version!')
 
 
 class SilvaSoftwareRelease(Folder):
-
     security = ClassSecurityInfo()
     meta_type = 'Silva Software Release'
     grok.implements(interfaces.ISilvaSoftwareRelease)
