@@ -9,12 +9,14 @@ from Products.Silva.Folder.order import OrderManager
 from Products.SilvaSoftwarePackage import interfaces
 
 from five import grok
+from zope import interface, schema
 from zope.traversing.browser import absoluteURL
 
 from silva.core import conf as silvaconf
 from silva.core.interfaces import IAsset, IAddableContents
 from silva.core.views import views as silvaviews
 from silva.core.views.interfaces import IPreviewLayer
+from silva.core.smi.settings import Settings
 from zeam.form import silva as silvaforms
 
 
@@ -26,6 +28,9 @@ class SilvaSoftwarePackage(Folder):
 
     silvaconf.icon('software_package.png')
     silvaconf.priority(9)
+
+    is_package_deprecated = False
+    package_version_matrix = u""
 
     def get_silva_addables_allowed_in_container(self):
         result = ['Silva Document', 'Silva Software Release']
@@ -56,10 +61,32 @@ class PackageAdd(silvaforms.SMIAddForm):
     grok.name('Silva Software Package')
 
 
+class IPackageSettings(interface.Interface):
+    is_package_deprecated = schema.Bool(
+        title=u"Is this package deprecated ?",
+        description=u"A disclaimer will be presented on the package page " + \
+            u"if this is checked",
+        default=False)
+    package_version_matrix = schema.Text(
+        title=u"Version matrix for the package",
+        required=False)
+
+
+class PackageSettings(silvaforms.SMISubEditForm):
+    grok.context(interfaces.ISilvaSoftwarePackage)
+    grok.view(Settings)
+    grok.order(5)
+
+    label = u"Software package settings"
+    fields = silvaforms.Fields(IPackageSettings)
+
+
 class PackageView(silvaviews.View):
     grok.context(interfaces.ISilvaSoftwarePackage)
 
     def get_releases(self):
+        self.deprecated = self.context.is_package_deprecated
+        self.version_matrix = self.context.package_version_matrix
         releases = []
         publishables = self.content.get_ordered_publishables()
         publishables = [obj for obj in publishables

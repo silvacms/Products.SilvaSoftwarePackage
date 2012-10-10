@@ -1,16 +1,23 @@
 <tal:center
-   tal:define="groups view/groups">
+   tal:define="groups view/groups;
+               archives view/archives">
 
   <p tal:define="index content/get_default | nothing"
      tal:condition="index"
      tal:replace="structure index/@@content.html">View</p>
 
-  <tal:group_presentation tal:condition="groups"
-                          tal:repeat="group groups">
-    <tal:presentation tal:content="structure group/@@group_preview" />
-  </tal:group_presentation>
+  <tal:active tal:condition="groups">
+    <h3>Packages</h3>
+    <div class="software-groups"
+         tal:condition="groups"
+         tal:repeat="tag groups">
+      <tal:group tal:repeat="group python:groups[tag]">
+        <tal:presentation tal:content="structure group/@@group_preview" />
+      </tal:group>
+    </div>
+  </tal:active>
 
-  <table class="silvatable list"
+  <table class="software-packages silvatable list"
          tal:condition="not:groups">
     <thead>
       <tr>
@@ -27,5 +34,22 @@
       </tr>
     </tbody>
   </table>
+
+  <br clear="all" />
+
+  <tal:archive tal:condition="archives">
+    <h3>Archives</h3>
+    <p>
+      Those packages have been developed in the past and are not no
+      longer actively developed.
+    </p>
+    <div class="software-groups"
+         tal:condition="archives"
+         tal:repeat="tag archives">
+      <tal:group tal:repeat="group python:archives[tag]">
+        <tal:presentation tal:content="structure group/@@group_preview" />
+      </tal:group>
+    </div>
+  </tal:archive>
 
 </tal:center>

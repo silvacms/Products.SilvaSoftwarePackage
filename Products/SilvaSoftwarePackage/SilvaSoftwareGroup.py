@@ -8,11 +8,13 @@ from Products.SilvaSoftwarePackage import interfaces
 
 from five import grok
 from zope import component
+from zope import schema
 from zope.interface import Interface
 from zope.traversing.browser import absoluteURL
 
 from silva.core import conf as silvaconf
 from silva.core.interfaces import ILink, IFeedEntry, IFeedEntryProvider
+from silva.core.smi.settings import Settings
 from zeam.form import silva as silvaforms
 
 
@@ -22,6 +24,9 @@ class SilvaSoftwareGroup(Folder):
 
     silvaconf.icon('software_group.png')
     silvaconf.priority(8)
+
+    group_tag = u""
+    is_group_archive = False
 
     def get_silva_addables_allowed_in_container(self):
         return ['Silva Document',
@@ -35,24 +40,46 @@ class GroupAdd(silvaforms.SMIAddForm):
     grok.name('Silva Software Group')
 
 
+class IGroupSettings(Interface):
+    is_group_archive = schema.Bool(
+        title=u"Is this group an archive ?",
+        description=u"The group will be listed in the archive section",
+        default=False)
+    group_tag = schema.TextLine(
+        title=u"Group tag",
+        description=u"Mutliple groups will be presented together if " +\
+            u"they share the same tag",
+        required=False)
+
+
+class GroupSettings(silvaforms.SMISubEditForm):
+    grok.context(interfaces.ISilvaSoftwareGroup)
+    grok.view(Settings)
+    grok.order(5)
+
+    label = u"Software group settings"
+    fields = silvaforms.Fields(IGroupSettings)
+
 
 class GroupPreview(grok.View):
     grok.context(interfaces.ISilvaSoftwareGroup)
     grok.name('group_preview')
 
     def update(self):
+        self.is_archive = self.context.is_group_archive
         self.packages = []
-        for content in self.context.get_ordered_publishables():
-            if not (interfaces.ISilvaSoftwarePackage.providedBy(content) or
-                    ILink.providedBy(content)):
-                continue
-            if not content.is_published():
-                continue
-            if ILink.providedBy(content):
-                url = content.get_viewable().get_url()
-            else:
-                url = absoluteURL(content, self.request)
-            self.packages.append({'name': content.get_title(), 'url': url})
+        if not self.is_archive:
+            for content in self.context.get_ordered_publishables():
+                if not (interfaces.ISilvaSoftwarePackage.providedBy(content) or
+                        ILink.providedBy(content)):
+                    continue
+                if not content.is_published():
+                    continue
+                if ILink.providedBy(content):
+                    url = content.get_viewable().get_url()
+                else:
+                    url = absoluteURL(content, self.request)
+                self.packages.append({'name': content.get_title(), 'url': url})
 
 
 class ReleaseFeedEntry(object):

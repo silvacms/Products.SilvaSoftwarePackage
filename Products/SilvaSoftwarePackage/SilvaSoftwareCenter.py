@@ -62,7 +62,8 @@ class CenterView(silvaviews.View):
     grok.context(interfaces.ISilvaSoftwareGroup)
 
     def update(self):
-        self.groups = []
+        self.archives = {}
+        self.groups = {}
         self.packages = []
         for content in self.context.get_ordered_publishables():
             if not (interfaces.ISilvaSoftwareGroup.providedBy(content) or
@@ -72,7 +73,11 @@ class CenterView(silvaviews.View):
             if not content.is_published():
                 continue
             if interfaces.ISilvaSoftwareGroup.providedBy(content):
-                self.groups.append(content)
+                if content.is_group_archive:
+                    groups = self.archives.setdefault(content.group_tag, [])
+                else:
+                    groups = self.groups.setdefault(content.group_tag, [])
+                groups.append(content)
             else:
                 if ILink.providedBy(content):
                     url = content.get_viewable().get_url()

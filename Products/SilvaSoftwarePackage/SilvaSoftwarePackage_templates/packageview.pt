@@ -6,6 +6,17 @@
     Jump to releases
   </a>
 
+  <div class="align-right info plot rose"
+       tal:condition="view/deprecated">
+    <h2>Deprecated package</h2>
+    <p>
+      This product is no longer supported by Infrae. Use it at your
+      own risk and please don&#8217;t request support. This product
+      is listed here for archival purposes and developers who are
+      using it.
+    </p>
+  </div>
+
   <p tal:define="index content/get_default | nothing"
     tal:condition="index"
     tal:replace="structure index/@@content.html">View</p>
