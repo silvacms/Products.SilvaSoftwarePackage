@@ -102,11 +102,11 @@ class GroupExport(grok.View):
 
     def update(self):
         self.data = []
-        for software in self.context.get_ordered_publishables(
+        for package in self.context.get_ordered_publishables(
             interfaces.ISilvaSoftwarePackage):
-            software_json = self.export(software)
-            software_json['releases'] = releases_json = []
-            for release in software.get_ordered_publishables(
+            package_json = self.export(package)
+            package_json['releases'] = releases_json = []
+            for release in package.get_ordered_publishables(
                 interfaces.ISilvaSoftwareRelease):
                 release_json = self.export(release)
                 releases_json.append(release_json)
@@ -116,7 +116,7 @@ class GroupExport(grok.View):
                             'identifier': release_file.getId(),
                             'title': release_file.get_title(),
                             'url': absoluteURL(release_file, self.request)})
-            self.data.append(software_json)
+            self.data.append(package_json)
 
     def render(self):
         self.response.setHeader('Content-Type', 'application/json')
