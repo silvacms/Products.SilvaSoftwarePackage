@@ -13,7 +13,9 @@ silvaconf.extension_depends('SilvaDocument')
 
 class SilvaSoftwarePackageInstaller(DefaultInstaller):
     not_globally_addables = ['Silva Software Release',
-                             'Silva Software Package']
+                             'Silva Software Package',
+                             'Silva Software Group',
+                             'Silva Software Remote Group']
 
 
 class IExtension(Interface):

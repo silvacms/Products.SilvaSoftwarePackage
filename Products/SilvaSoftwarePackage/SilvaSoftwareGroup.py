@@ -2,8 +2,9 @@
 # See also LICENSE.txt
 # $Id$
 
+import json
+
 from Products.Silva.Folder import Folder
-from Products.SilvaMetadata.interfaces import IMetadataService
 from Products.SilvaSoftwarePackage import interfaces
 
 from five import grok
@@ -13,8 +14,10 @@ from zope.interface import Interface
 from zope.traversing.browser import absoluteURL
 
 from silva.core import conf as silvaconf
-from silva.core.interfaces import ILink, IFeedEntry, IFeedEntryProvider
+from silva.core.interfaces import ILink, IFile, IFeedEntry, IFeedEntryProvider
+from silva.core.services.interfaces import IMetadataService
 from silva.core.smi.settings import Settings
+from silva.core.xml.xmlexport import Exporter
 from zeam.form import silva as silvaforms
 
 
@@ -80,6 +83,44 @@ class GroupPreview(grok.View):
                 else:
                     url = absoluteURL(content, self.request)
                 self.packages.append({'name': content.get_title(), 'url': url})
+
+
+
+class GroupExport(grok.View):
+    grok.context(interfaces.ISilvaSoftwareGroup)
+    grok.name('group_export.json')
+
+    def export(self, container):
+        export = Exporter(container, self.request, {'only_container': True})
+        default = container.get_default()
+        if default is not None:
+            default = Exporter(default, self.request, {'external_rendering': True})
+        return {
+            'identifier': container.getId(),
+            'index': default is not None and default.getString() or None,
+            'export': export.getString()}
+
+    def update(self):
+        self.data = []
+        for software in self.context.get_ordered_publishables(
+            interfaces.ISilvaSoftwarePackage):
+            software_json = self.export(software)
+            software_json['releases'] = releases_json = []
+            for release in software.get_ordered_publishables(
+                interfaces.ISilvaSoftwareRelease):
+                release_json = self.export(release)
+                releases_json.append(release_json)
+                release_json['files'] = files_json = []
+                for release_file in release.get_non_publishables(IFile):
+                    files_json.append({
+                            'identifier': release_file.getId(),
+                            'title': release_file.get_title(),
+                            'url': absoluteURL(release_file, self.request)})
+            self.data.append(software_json)
+
+    def render(self):
+        self.response.setHeader('Content-Type', 'application/json')
+        return json.dumps(self.data)
 
 
 class ReleaseFeedEntry(object):

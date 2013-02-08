@@ -20,6 +20,10 @@ class ISilvaSoftwareGroup(ISilvaSoftwareContent):
     """A group of packages.
     """
 
+class ISilvaSoftwareRemoteGroup(ISilvaSoftwareGroup):
+    """A group of packages that is defined on a different server.
+    """
+
 
 class ISilvaSoftwareCenter(ISilvaSoftwareGroup, IPublication):
     """A Silva software center.

@@ -38,7 +38,9 @@ class SilvaSoftwareCenter(Publication):
     silvaconf.priority(9)
 
     def get_silva_addables_allowed_in_container(self):
-        return ['Silva Software Group', 'Silva Software Package',]
+        return ['Silva Software Group',
+                'Silva Software Remote Group',
+                'Silva Software Package',]
 
 
 @grok.subscribe(interfaces.ISilvaSoftwareContent, IObjectCreatedEvent)
