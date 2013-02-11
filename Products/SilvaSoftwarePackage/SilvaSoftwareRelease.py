@@ -15,11 +15,11 @@ from Products.SilvaSoftwarePackage import interfaces
 from five import grok
 from zope import component
 from zope.event import notify
-from zope.lifecycleevent import ObjectCreatedEvent
 
 from silva.core import conf as silvaconf
 from silva.core.views import views as silvaviews
-from silva.core.interfaces import IFile, IAddableContents
+from silva.core.interfaces import IFile, ILink
+from silva.core.interfaces import IAddableContents, ContentCreatedEvent
 from silva.core.conf.utils import ISilvaFactoryDispatcher
 from zeam.form import silva as silvaforms
 
@@ -47,12 +47,12 @@ class SilvaSoftwareRelease(Folder):
     security.declareProtected(
         SilvaPermissions.AccessContentsInformation, 'get_files')
     def get_files(self):
-        ret = []
-        for obj in self.objectValues():
-            if IFile.providedBy(obj):
-                ret.append(obj)
-        ret.sort(lambda a, b: cmp(a.id, b.id))
-        return ret
+        return self.get_non_publishables(IFile)
+
+    security.declareProtected(
+        SilvaPermissions.AccessContentsInformation, 'get_remote_files')
+    def get_remote_files(self):
+        return self.get_ordered_publishables(ILink)
 
 InitializeClass(SilvaSoftwareRelease)
 
@@ -62,7 +62,8 @@ class ReleaseAddForm(silvaforms.SMIAddForm):
     grok.name('Silva Software Release')
 
 
-def manage_addSilvaSoftwareRelease(container, version, title=None):
+def manage_addSilvaSoftwareRelease(container, version, title=None,
+                                   no_default_content=False):
     if ISilvaFactoryDispatcher.providedBy(container):
         container = container.Destination()
 
@@ -76,7 +77,7 @@ def manage_addSilvaSoftwareRelease(container, version, title=None):
     container._setObject(version, release)
     release = getattr(container, version)
     release.set_title(version)
-    notify(ObjectCreatedEvent(release))
+    notify(ContentCreatedEvent(release, no_default_content=no_default_content))
     return release
 
 
@@ -89,9 +90,21 @@ class ReleaseView(silvaviews.View):
         self.files = []
         locale = self.request.locale
         format = locale.dates.getFormatter('dateTime', 'medium').format
+        self.have_size = False
+        for entry in self.content.get_remote_files():
+            target = entry.get_viewable()
+            if target is None:
+                continue
+            mod_date = target.get_modification_datetime()
+            self.files.append(
+                {'name': entry.getId(),
+                 'url': target.get_url(),
+                 'date': format(mod_date.asdatetime()),
+                 'size': '-'})
         for entry in self.content.get_files():
             mod_date = entry.get_modification_datetime()
             size = entry.get_file_size()
+            self.have_size = True
             self.files.append(
                 {'name': entry.get_filename(),
                  'url': entry.absolute_url(),

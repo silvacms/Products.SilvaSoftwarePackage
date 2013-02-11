@@ -20,9 +20,15 @@ class ISilvaSoftwareGroup(ISilvaSoftwareContent):
     """A group of packages.
     """
 
+
 class ISilvaSoftwareRemoteGroup(ISilvaSoftwareGroup):
     """A group of packages that is defined on a different server.
     """
+
+    def synchronize():
+        """Synchronize software content with a group contained on a
+        remote server.
+        """
 
 
 class ISilvaSoftwareCenter(ISilvaSoftwareGroup, IPublication):

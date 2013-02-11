@@ -15,7 +15,8 @@
         <tr>
           <th class="align-left">Filename</th>
           <th class="align-left">Release date</th>
-          <th class="align-left">Size</th>
+          <th class="align-left"
+              tal:condition="view/have_size">Size</th>
         </tr>
       </thead>
       <tbody>
@@ -25,7 +26,8 @@
                tal:content="file/name" />
           </td>
           <td tal:content="file/date"></td>
-          <td tal:content="file/size"></td>
+          <td tal:content="file/size"
+              tal:condition="view/have_size"></td>
         </tr>
       </tbody>
     </table>

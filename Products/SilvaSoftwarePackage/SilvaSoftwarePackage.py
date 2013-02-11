@@ -105,12 +105,21 @@ class PackageView(silvaviews.View):
             return {'name': entry.get_filename(),
                     'url': absoluteURL(entry, self.request)}
 
+        def remote_detail(entry):
+            viewable = entry.get_viewable()
+            if viewable is not None:
+                return {'name': entry.getId(),
+                        'url': viewable.get_url()}
+            return {'name': None, 'url': None}
+
         locale = self.request.locale
         format = locale.dates.getFormatter('dateTime', 'medium').format
 
         for entry in publishables:
             crea_date = entry.get_default().get_creation_datetime()
-            files = map(file_detail, entry.get_files())
+            files = filter(lambda info: info['name'] is not None,
+                           map(remote_detail, entry.get_remote_files())) + \
+                           map(file_detail, entry.get_files())
             releases.append({'name': self.content.get_title() + ' ' + entry.id,
                              'url': absoluteURL(entry, self.request),
                              'date': format(crea_date.asdatetime()),

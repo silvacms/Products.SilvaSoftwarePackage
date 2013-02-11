@@ -8,7 +8,6 @@ import os.path
 
 from five import grok
 from zope.cachedescriptors.property import Lazy
-from zope.lifecycleevent.interfaces import IObjectCreatedEvent
 from zope.lifecycleevent.interfaces import IObjectCopiedEvent
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.traversing.browser import absoluteURL
@@ -22,7 +21,7 @@ from Products.SilvaSoftwarePackage import interfaces
 from Products.SilvaSoftwarePackage import rst_utils
 
 from silva.core import conf as silvaconf
-from silva.core.interfaces import ILink, IFile
+from silva.core.interfaces import ILink, IFile, IContentCreatedEvent
 from silva.core.interfaces.adapters import IPublicationWorkflow
 from silva.core.views import views as silvaviews
 from zeam.form import silva as silvaforms
@@ -43,12 +42,12 @@ class SilvaSoftwareCenter(Publication):
                 'Silva Software Package',]
 
 
-@grok.subscribe(interfaces.ISilvaSoftwareContent, IObjectCreatedEvent)
+@grok.subscribe(interfaces.ISilvaSoftwareContent, IContentCreatedEvent)
 def add_default_document(content, event):
-    if (event.object is not content or
-        IObjectCopiedEvent.providedBy(event)):
+    if event.no_default_content:
         return
-    if not hasattr(content.aq_base, 'index'):
+    default = content.get_default()
+    if default is None:
         factory = content.manage_addProduct['silva.app.document']
         factory.manage_addDocument('index', content.get_title())
         index = content._getOb('index')
