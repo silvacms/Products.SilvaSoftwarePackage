@@ -4,9 +4,7 @@
 
 from pkg_resources import parse_version
 
-from Products.Silva.Folder import Folder
 from Products.Silva.Folder.order import OrderManager
-from Products.SilvaSoftwarePackage import interfaces
 
 from five import grok
 from zope import interface, schema
@@ -19,8 +17,11 @@ from silva.core.views.interfaces import IPreviewLayer
 from silva.core.smi.settings import Settings
 from zeam.form import silva as silvaforms
 
+from . import interfaces
+from .SilvaSoftwareContent import SilvaSoftwareContent
 
-class SilvaSoftwarePackage(Folder):
+
+class SilvaSoftwarePackage(SilvaSoftwareContent):
     """A package represent a software and contains releases.
     """
     meta_type = 'Silva Software Package'

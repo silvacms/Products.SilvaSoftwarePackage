@@ -8,21 +8,21 @@ from App.class_init import InitializeClass
 from AccessControl import ClassSecurityInfo
 from Products.Silva import SilvaPermissions
 from Products.Silva import mangle
-from Products.Silva.Folder import Folder
-from Products.SilvaMetadata.interfaces import IMetadataService
-from Products.SilvaSoftwarePackage import interfaces
 
 from five import grok
 from zope import component
 from zope.event import notify
 
 from silva.core import conf as silvaconf
-from silva.core.views import views as silvaviews
-from silva.core.interfaces import IFile, ILink
-from silva.core.interfaces import IAddableContents, ContentCreatedEvent
 from silva.core.conf.utils import ISilvaFactoryDispatcher
+from silva.core.interfaces import IAddableContents, ContentCreatedEvent
+from silva.core.interfaces import IFile, ILink
+from silva.core.services.interfaces import IMetadataService
+from silva.core.views import views as silvaviews
 from zeam.form import silva as silvaforms
 
+from . import interfaces
+from .SilvaSoftwareContent import SilvaSoftwareContent
 
 VERSION = re.compile('^[0-9]+(\.[0-9]+)*(dev-r[0-9]+)?((a|b|c|rc)[0-9]*)?$')
 def test_version_string(version):
@@ -32,7 +32,7 @@ def test_version_string(version):
         raise ValueError(u'Id is not a proper version!')
 
 
-class SilvaSoftwareRelease(Folder):
+class SilvaSoftwareRelease(SilvaSoftwareContent):
     security = ClassSecurityInfo()
     meta_type = 'Silva Software Release'
     grok.implements(interfaces.ISilvaSoftwareRelease)

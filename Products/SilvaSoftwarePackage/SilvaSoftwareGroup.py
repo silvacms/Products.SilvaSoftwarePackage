@@ -4,9 +4,6 @@
 
 import json
 
-from Products.Silva.Folder import Folder
-from Products.SilvaSoftwarePackage import interfaces
-
 from five import grok
 from zope import component
 from zope import schema
@@ -20,8 +17,11 @@ from silva.core.smi.settings import Settings
 from silva.core.xml.xmlexport import Exporter
 from zeam.form import silva as silvaforms
 
+from . import interfaces
+from .SilvaSoftwareContent import SilvaSoftwareContent
 
-class SilvaSoftwareGroup(Folder):
+
+class SilvaSoftwareGroup(SilvaSoftwareContent):
     meta_type = 'Silva Software Group'
     grok.implements(interfaces.ISilvaSoftwareGroup)
 
@@ -30,6 +30,13 @@ class SilvaSoftwareGroup(Folder):
 
     group_tag = u""
     is_group_archive = False
+
+    def fulltext(self):
+        text = super(SilvaSoftwareGroup, self).fulltext()
+        default = self.get_default()
+        if default is not None and hasattr(default, 'fulltext'):
+            text.extend(default.fulltext())
+        return text
 
     def get_silva_addables_allowed_in_container(self):
         return ['Silva Document',

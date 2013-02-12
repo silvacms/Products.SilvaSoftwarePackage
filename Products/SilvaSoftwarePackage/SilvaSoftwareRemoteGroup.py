@@ -108,7 +108,7 @@ class GroupRemoteAdd(silvaforms.SMIAddForm):
 
 
 class GroupRemoteSettings(silvaforms.SMISubEditForm):
-    grok.context(interfaces.ISilvaSoftwareGroup)
+    grok.context(interfaces.ISilvaSoftwareRemoteGroup)
     grok.view(Settings)
     grok.order(4)
 
