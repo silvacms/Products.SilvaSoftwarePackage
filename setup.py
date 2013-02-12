@@ -35,5 +35,7 @@ setup(name='Products.SilvaSoftwarePackage',
       entry_points = """
       [zodbupdate]
       renames = Products.SilvaSoftwarePackage:CLASS_CHANGES
+      [silva.system.utils]
+      silva-software-update = Products.SilvaSoftwarePackage.system:UpdateRemoteGroupCommand
       """
       )
