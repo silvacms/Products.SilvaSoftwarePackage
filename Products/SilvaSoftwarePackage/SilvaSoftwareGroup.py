@@ -31,13 +31,6 @@ class SilvaSoftwareGroup(SilvaSoftwareContent):
     group_tag = u""
     is_group_archive = False
 
-    def fulltext(self):
-        text = super(SilvaSoftwareGroup, self).fulltext()
-        default = self.get_default()
-        if default is not None and hasattr(default, 'fulltext'):
-            text.extend(default.fulltext())
-        return text
-
     def get_silva_addables_allowed_in_container(self):
         return ['Silva Document',
                 'Silva Link',
