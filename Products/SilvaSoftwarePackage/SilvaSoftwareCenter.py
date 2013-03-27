@@ -8,7 +8,6 @@ import os.path
 
 from five import grok
 from zope.cachedescriptors.property import Lazy
-from zope.lifecycleevent.interfaces import IObjectCopiedEvent
 from zope.lifecycleevent import ObjectModifiedEvent
 from zope.traversing.browser import absoluteURL
 from zope import component
@@ -166,7 +165,7 @@ class CenterRegister(grok.View):
         package, package_name, package_version = self._get_package(description)
         release = getattr(package, package_version, None)
         if release is not None:
-            logger.info(u'Release %s of %s already registered' %
+            logger.info(u'Release %s of %s already registered, replacing.' %
                         (package_version, package_name))
 
         release_info = {'contactname': self.request.get('author', ''),
@@ -219,6 +218,8 @@ class CenterUpload(CenterRegister):
 
         archive = getattr(release, filename, None)
         if archive is not None:
+            logger.info(u'Release %s of %s is already uploaded, replacing.' %
+                        (package_version, package_name))
             release.manage_delObjects([filename])
             status = u'Replaced'
 

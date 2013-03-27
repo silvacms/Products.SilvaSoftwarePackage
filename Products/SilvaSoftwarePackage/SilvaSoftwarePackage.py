@@ -56,6 +56,13 @@ class PackageOrderManager(OrderManager):
     def move(self, content, position):
         return False
 
+    def repair(self, contents):
+        if super(PackageOrderManager, self).repair(contents):
+            # Validate order after repairing.
+            self.order.sort(key=parse_version)
+            return True
+        return False
+
 
 class PackageAdd(silvaforms.SMIAddForm):
     grok.context(interfaces.ISilvaSoftwarePackage)

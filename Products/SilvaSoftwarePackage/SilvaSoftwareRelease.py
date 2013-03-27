@@ -29,7 +29,7 @@ def test_version_string(version):
     """test whether the version conforms to the required format.
     """
     if not VERSION.search(version):
-        raise ValueError(u'Id is not a proper version!')
+        raise ValueError(u'{} is not a proper version!'.format(version))
 
 
 class SilvaSoftwareRelease(SilvaSoftwareContent):
