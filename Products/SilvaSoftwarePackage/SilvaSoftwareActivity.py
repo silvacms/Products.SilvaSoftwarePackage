@@ -73,6 +73,7 @@ class SilvaSoftwareActivity(Content, SimpleItem, ExternalSource):
     grok.implements(IBlockable)
     meta_type = 'Silva Software Activity'
     security = ClassSecurityInfo()
+    silvaconf.priority(9)
 
     _rss_url = None
     _data = None
@@ -229,6 +230,7 @@ class SilvaSoftwareActivityAggregator(Content, SimpleItem, ExternalSource):
     grok.implements(IBlockable)
     meta_type = 'Silva Software Activity Aggregator'
     security = ClassSecurityInfo()
+    silvaconf.priority(9)
 
     _data = None
     _most_actives = []
