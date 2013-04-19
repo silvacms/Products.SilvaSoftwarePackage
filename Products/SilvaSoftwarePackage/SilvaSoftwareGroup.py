@@ -25,7 +25,7 @@ class SilvaSoftwareGroup(SilvaSoftwareContent):
     meta_type = 'Silva Software Group'
     grok.implements(interfaces.ISilvaSoftwareGroup)
 
-    silvaconf.icon('software_group.png')
+    silvaconf.icon('SilvaSoftwareGroup.png')
     silvaconf.priority(8)
 
     group_tag = u""

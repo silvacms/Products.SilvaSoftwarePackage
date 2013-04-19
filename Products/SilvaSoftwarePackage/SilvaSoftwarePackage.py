@@ -27,7 +27,7 @@ class SilvaSoftwarePackage(SilvaSoftwareContent):
     meta_type = 'Silva Software Package'
     grok.implements(interfaces.ISilvaSoftwarePackage)
 
-    silvaconf.icon('software_package.png')
+    silvaconf.icon('SilvaSoftwarePackage.png')
     silvaconf.priority(9)
 
     is_package_deprecated = False

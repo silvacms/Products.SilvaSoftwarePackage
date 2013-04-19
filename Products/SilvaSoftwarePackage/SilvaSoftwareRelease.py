@@ -38,7 +38,7 @@ class SilvaSoftwareRelease(SilvaSoftwareContent):
     grok.implements(interfaces.ISilvaSoftwareRelease)
 
     silvaconf.factory('manage_addSilvaSoftwareRelease')
-    silvaconf.icon('software_release.png')
+    silvaconf.icon('SilvaSoftwareRelease.png')
     silvaconf.priority(9)
 
     def get_silva_addables_allowed_in_container(self):

@@ -75,6 +75,7 @@ class SilvaSoftwareActivity(Content, SimpleItem, ExternalSource):
     grok.implements(ISilvaSoftwareActivity)
     meta_type = 'Silva Software Activity'
     security = ClassSecurityInfo()
+    silvaconf.icon('SilvaSoftwareActivity.png')
     silvaconf.priority(9)
 
     _rss_url = None
@@ -232,6 +233,7 @@ class SilvaSoftwareActivityAggregator(Content, SimpleItem, ExternalSource):
     grok.implements(ISilvaSoftwareActivityAggregator)
     meta_type = 'Silva Software Activity Aggregator'
     security = ClassSecurityInfo()
+    silvaconf.icon('SilvaSoftwareActivity.png')
     silvaconf.priority(9)
 
     _data = None

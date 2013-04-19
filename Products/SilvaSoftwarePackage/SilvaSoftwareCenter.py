@@ -32,7 +32,7 @@ class SilvaSoftwareCenter(Publication):
     meta_type = 'Silva Software Center'
     grok.implements(interfaces.ISilvaSoftwareCenter)
 
-    silvaconf.icon('software_group.png')
+    silvaconf.icon('SilvaSoftwareCenter.png')
     silvaconf.priority(9)
 
     def get_silva_addables_allowed_in_container(self):
