@@ -58,4 +58,10 @@
     </a>
   </p>
 
+  <tal:activity tal:define="activity view/get_activity"
+                tal:condition="activity">
+    <h2><a name="skip-to-activity">Recent activity</a></h2>
+    <tal:activity tal:replace="structure activity"/>
+  </tal:activity>
+
 </tal:package>

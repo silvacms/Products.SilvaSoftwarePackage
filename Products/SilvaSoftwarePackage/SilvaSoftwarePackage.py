@@ -34,7 +34,9 @@ class SilvaSoftwarePackage(SilvaSoftwareContent):
     package_version_matrix = u""
 
     def get_silva_addables_allowed_in_container(self):
-        result = ['Silva Document', 'Silva Software Release']
+        result = ['Silva Document',
+                  'Silva Software Release',
+                  'Silva Software Activity']
         result.extend(IAddableContents(self).get_all_addables(IAsset))
         return result
 
@@ -91,6 +93,12 @@ class PackageSettings(silvaforms.SMISubEditForm):
 
 class PackageView(silvaviews.View):
     grok.context(interfaces.ISilvaSoftwarePackage)
+
+    def get_activity(self):
+        activities = self.context.objectValues('Silva Software Activity')
+        if len(activities):
+            return silvaviews.render(activities[0], self.request)
+        return None
 
     def get_releases(self):
         self.deprecated = self.context.is_package_deprecated

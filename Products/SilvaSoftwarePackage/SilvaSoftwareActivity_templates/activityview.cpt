@@ -1,0 +1,4 @@
+<tal:view>
+  <h1 tal:content="content.get_title_or_id()">Title</h1>
+  <tal:info tal:replace="structure view.info" />
+</tal:view>

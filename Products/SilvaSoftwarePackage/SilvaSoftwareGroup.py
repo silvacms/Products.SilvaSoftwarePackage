@@ -34,6 +34,7 @@ class SilvaSoftwareGroup(SilvaSoftwareContent):
     def get_silva_addables_allowed_in_container(self):
         return ['Silva Document',
                 'Silva Link',
+                'Silva Software Activity Aggregator',
                 'Silva Software Group',
                 'Silva Software Package',]
 

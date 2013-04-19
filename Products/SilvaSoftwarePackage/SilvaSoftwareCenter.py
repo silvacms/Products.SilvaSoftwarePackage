@@ -37,6 +37,7 @@ class SilvaSoftwareCenter(Publication):
 
     def get_silva_addables_allowed_in_container(self):
         return ['Silva Software Group',
+                'Silva Software Activity Aggregator',
                 'Silva Software Remote Group',
                 'Silva Software Package',]
 
