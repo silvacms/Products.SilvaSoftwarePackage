@@ -26,6 +26,8 @@ from silva.core.views import views as silvaviews
 from silva.core.conf.interfaces import ITitledContent
 from silva.fanstatic import need
 from zeam.form import silva as silvaforms
+from silva.core.contentlayout.interfaces import IBlockable
+from silva.core.contentlayout.blocks import BlockView
 
 
 class IGraphResources(IDefaultBrowserLayer):
@@ -68,6 +70,7 @@ class SilvaSoftwareActivity(Content, SimpleItem, ExternalSource):
     """Collect activity from an RSS feed and generate statistics about
     it.
     """
+    grok.implements(IBlockable)
     meta_type = 'Silva Software Activity'
     security = ClassSecurityInfo()
 
@@ -213,9 +216,17 @@ class ActivityView(silvaviews.View):
         self.info = silvaviews.render(self.context, self.request)
 
 
+class ActivityBlock(BlockView):
+    grok.context(SilvaSoftwareActivity)
+
+    def render(self):
+        return silvaviews.render(self.context, self.request)
+
+
 class SilvaSoftwareActivityAggregator(Content, SimpleItem, ExternalSource):
     """Aggregate multiple activities together.
     """
+    grok.implements(IBlockable)
     meta_type = 'Silva Software Activity Aggregator'
     security = ClassSecurityInfo()
 
@@ -341,3 +352,10 @@ class ActivityAggregatorView(silvaviews.View):
 
     def update(self):
         self.info = silvaviews.render(self.context, self.request)
+
+
+class ActivityAggregatorBlock(BlockView):
+    grok.context(SilvaSoftwareActivityAggregator)
+
+    def render(self):
+        return silvaviews.render(self.context, self.request)
