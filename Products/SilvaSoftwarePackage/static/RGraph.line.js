@@ -2640,6 +2640,7 @@
         var gutterRight = prop['chart.gutter.right'];
         var hmargin     = prop['chart.hmargin'];
         var interval    = (ca.width - (gutterLeft + gutterRight) - (2 * hmargin)) / (coords.length - 1);
+        var minyCoord   = ca.height - this.gutterBottom;
 
         this.context.strokeStyle = color;
 
@@ -2655,8 +2656,7 @@
 
         for (var j=1; j<P.length-2; ++j) {
             for (var t=0; t<10; ++t) {
-
-                var yCoord = Spline( t/10, P[j-1], P[j], P[j+1], P[j+2] );
+                var yCoord = Math.min(Spline( t/10, P[j-1], P[j], P[j+1], P[j+2] ), minyCoord);
 
                 xCoords.push(((j-1) * interval) + (t * (interval / 10)) + gutterLeft + hmargin);
                 co.lineTo(xCoords[xCoords.length - 1], yCoord);
@@ -2670,9 +2670,9 @@
         function Spline (t, P0, P1, P2, P3)
         {
             return 0.5 * ((2 * P1) +
-                         ((0-P0) + P2) * t +
-                         ((2*P0 - (5*P1) + (4*P2) - P3) * (t*t) +
-                         ((0-P0) + (3*P1)- (3*P2) + P3) * (t*t*t)));
+                          ((0-P0) + P2) * t +
+                          ((2*P0 - (5*P1) + (4*P2) - P3) * (t*t) +
+                           ((0-P0) + (3*P1)- (3*P2) + P3) * (t*t*t)));
         }
     }
 

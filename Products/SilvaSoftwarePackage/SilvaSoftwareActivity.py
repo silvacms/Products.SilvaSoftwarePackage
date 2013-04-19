@@ -283,7 +283,9 @@ class SilvaSoftwareActivityAggregator(Content, SimpleItem, ExternalSource):
     security.declareProtected(
         SilvaPermissions.AccessContentsInformation, 'get_most_active')
     def get_most_active(self, limit=5):
-        return map(getUtility(IIntIds).getObject, self._most_actives[:limit])
+        get_activity = getUtility(IIntIds).getObject
+        return map(lambda i: get_activity(i).get_container(),
+                   self._most_actives[:limit])
 
     def is_previewable(self):
         return False
