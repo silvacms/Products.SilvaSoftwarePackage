@@ -2,8 +2,17 @@
 # See also LICENSE.txt
 # $Id$
 
-from silva.core.interfaces import IPublication, IFolder
+from silva.core.interfaces import IPublication, IFolder, IContent
 from silva.core.layout.interfaces import ICustomizableTag
+from silva.core.contentlayout.interfaces import IBlockable
+
+
+class ISilvaSoftwareActivity(IContent, IBlockable):
+    pass
+
+
+class ISilvaSoftwareActivityAggregator(IContent, IBlockable):
+    pass
 
 
 class ISilvaNoAutomaticUpdate(ICustomizableTag):
