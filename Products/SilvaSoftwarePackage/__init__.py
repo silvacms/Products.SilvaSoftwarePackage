@@ -15,7 +15,9 @@ class SilvaSoftwarePackageInstaller(DefaultInstaller):
     not_globally_addables = ['Silva Software Release',
                              'Silva Software Package',
                              'Silva Software Group',
-                             'Silva Software Remote Group']
+                             'Silva Software Remote Group',
+                             'Silva Software Activity Aggregator',
+                             'Silva Software Activity']
 
 
 class IExtension(Interface):
