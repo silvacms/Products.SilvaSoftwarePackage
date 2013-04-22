@@ -1,12 +1,14 @@
 <tal:render>
-  <tal:activity tal:condition="view.changes">
-    <p>Changes in the last month:</p>
-    <canvas class="activity-graph" width="450" height="200"
-            tal:attributes="data-values view.values">
-      [No canvas support]
-    </canvas>
-  </tal:activity>
-  <tal:dead tal:condition="not view.changes">
-    This package have no activity whatsoever.
-  </tal:dead>
+  <div class="activity-wrapper">
+    <tal:activity tal:condition="view.changes">
+      <p>Changes in the last month:</p>
+      <canvas class="activity-graph" width="450" height="200"
+              tal:attributes="data-values view.values">
+        [No canvas support]
+      </canvas>
+    </tal:activity>
+    <tal:dead tal:condition="not view.changes">
+      This package have no activity whatsoever.
+    </tal:dead>
+  </div>
 </tal:render>
