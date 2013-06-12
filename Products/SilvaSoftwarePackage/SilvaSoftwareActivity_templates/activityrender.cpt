@@ -8,7 +8,7 @@
       </canvas>
     </tal:activity>
     <tal:dead tal:condition="not view.changes">
-      This package have no activity whatsoever.
+      This package has no recent activity.
     </tal:dead>
   </div>
 </tal:render>

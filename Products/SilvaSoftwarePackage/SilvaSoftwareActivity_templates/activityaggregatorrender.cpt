@@ -8,7 +8,7 @@
       </canvas>
     </tal:activity>
     <tal:dead tal:condition="view.include_changes and not view.changes">
-      <p>This package have no activity whatsoever.</p>
+      <p>This package has no recent activity.</p>
     </tal:dead>
     <tal:actives tal:condition="view.include_actives and view.actives">
       <p>Most active packages:</p>
