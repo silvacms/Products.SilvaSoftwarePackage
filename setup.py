@@ -5,7 +5,7 @@ version = '3.0dev'
 
 setup(name='Products.SilvaSoftwarePackage',
       version=version,
-      description="SilvaSoftwarePackage provides a small set of objects to present software releases to the public",
+      description="Content types for Silva CMS to present software releases to the public and download them",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("Products", "SilvaSoftwarePackage", "HISTORY.txt")).read(),
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
@@ -20,7 +20,7 @@ setup(name='Products.SilvaSoftwarePackage',
       keywords='silva software package release eggshop',
       author='Guido Wesdorp plus the usual suspects',
       author_email='info@infrae.com',
-      url='http://infrae.com/products/silva',
+      url='https://github.com/silvacms/Products.SilvaSoftwarePackage',
       license='BSD',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['Products'],

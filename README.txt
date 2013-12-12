@@ -15,3 +15,9 @@ object, but instead it can only contain Document objects and Asset
 objects. There's also an index document that will be displayed on
 public view, here some changelog and such can be displayed, together
 with the File Asset objects contained in the SilvaSoftwareRelease.
+
+Code repository
+===============
+
+You can find the code of this extension in Git:
+https://github.com/silvacms/Products.SilvaSoftwarePackage
